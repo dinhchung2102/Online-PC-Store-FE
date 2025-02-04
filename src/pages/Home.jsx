@@ -1,18 +1,18 @@
 
-import { Button, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+
+import Header from '~/components/Header';
 
 
 
 function Home() {
-    return (
-        <Container>
-            <h1>Hello my friend <FontAwesomeIcon icon={faHeart} /></h1>
-            
-            <Button>Click me!</Button>
-        </Container>
-    );
+  return (
+    <div >
+      <Header />
+    </div>
+  );
 }
 
 export default Home;
