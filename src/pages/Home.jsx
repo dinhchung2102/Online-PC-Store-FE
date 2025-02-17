@@ -1,18 +1,85 @@
+import {
+  useColorScheme
+} from '@mui/material/styles'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
+import LightModeIcon from '@mui/icons-material/LightMode'
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 
-import Header from '~/components/Header';
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
 
+function ModeSelect() {
+  const { mode, setMode } = useColorScheme()
+
+  const handleChange = (event) => {
+    setMode(event.target.value)
+  }
+
+  return (
+    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+      <InputLabel id="label-select-dark-light-mode">Mode</InputLabel>
+      <Select
+        labelId="label-select-dark-light-mode"
+        id="select-dark-light-mode"
+        value={mode}
+        label="Mode"
+        onChange={handleChange}
+      >
+        <MenuItem value='light'>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <LightModeIcon fontSize='small' /> Light
+          </div>
+        </MenuItem>
+        <MenuItem value='dark'>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <DarkModeOutlinedIcon fontSize='small' /> Dark
+          </Box>
+        </MenuItem>
+        <MenuItem value='system'>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SettingsBrightnessIcon fontSize='small' /> System
+          </Box>
+        </MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
 
 function Home() {
   return (
-    <div >
-      <Header />
-    </div>
-  );
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      <Box sx={{
+        backgroundColor: 'primary.light',
+        height: (theme) => theme.appPC.HomeBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <ModeSelect />
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.dark',
+        width: '100%',
+        height: (theme) => theme.appPC.boardBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+
+      }}>
+        board bar
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.main',
+        height: (theme) => `calc(100vh - ${theme.appPC.appBarHeight} - ${theme.appPC.boardBarHeight})`
+      }}>
+        content
+      </Box>
+    </Container>
+  )
 }
 
-export default Home;
+export default Home
