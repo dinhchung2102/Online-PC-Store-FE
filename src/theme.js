@@ -1,16 +1,19 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
-import { teal, deepOrange, cyan, orange } from '@mui/material/colors'
+import { deepOrange, cyan, orange } from '@mui/material/colors'
 
 // Create a theme instance.
 const theme = extendTheme({
   appPC: {
-    appBarHeight: '48px',
-    boardBarHeight: '58px'
+    HeaderHeight: '60px',
+    boardBarHeight: '58px',
+    screenWidth: '80vw',
   },
   colorSchemes: {
     light: {
       palette: {
-        primary: teal,
+        primary: {
+          main: '#d6011b',
+        },
         secondary: deepOrange
       }
     },
