@@ -9,8 +9,13 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import logo from '~/assets/logo/PC_online.png'
 
 import { Link } from "react-router";
+import React from "react";
+import BasicModal from "./Modal";
 
 function Header() {
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     return (
         <Box sx={{
             backgroundColor: 'primary.main',
@@ -80,7 +85,7 @@ function Header() {
                         }}
                         >Giỏ hàng</Typography>
                     </Link>
-                    <Link style={{
+                    <Button onClick={handleOpen} style={{
                         display: 'flex',
                         alignItems: 'center',
                         color: '#fff',
@@ -95,9 +100,10 @@ function Header() {
                             marginLeft: '4px',
                         }}
                         >Đăng nhập Đăng kí</Typography>
-                    </Link>
+                    </Button>
                 </Box>
             </Box>
+            <BasicModal open={open} handleClose={handleClose}/>
         </Box>
     );
 }
