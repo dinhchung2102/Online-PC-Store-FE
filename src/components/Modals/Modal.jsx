@@ -1,20 +1,26 @@
+import React from 'react';
+
 import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Button, Tab, Tabs } from '@mui/material';
+
 import PropTypes from 'prop-types';
-import React from 'react';
+//icon
+import CloseIcon from '@mui/icons-material/Close';
+import Login from './Login';
+import SignUp from './SignUp';
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 500,
+  minHeight: 500,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  borderRadius: 4,
 };
 
 function CustomTabPanel(props) {
@@ -28,7 +34,7 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
     </div>
   );
 }
@@ -54,20 +60,22 @@ export default function BasicModal({ open, handleClose }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Button onClick={handleClose}>Close</Button>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Item One" />
-            <Tab label="Item Two" />
-            <Tab label="Item Three" />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button onClick={handleClose}>
+              <CloseIcon />
+            </Button>
+          </Box>
+          <Tabs value={value} onChange={handleChange} centered variant="fullWidth" sx={{
+
+          }}>
+            <Tab label="Đăng nhập" />
+            <Tab label="Đăng kí" />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
-            Item One
+            <Login />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            Item Two
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            Item Three
+            <SignUp />
           </CustomTabPanel>
         </Box>
 

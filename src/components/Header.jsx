@@ -10,7 +10,7 @@ import logo from '~/assets/logo/PC_online.png'
 
 import { Link } from "react-router";
 import React from "react";
-import BasicModal from "./Modal";
+import BasicModal from "./Modals/Modal";
 
 function Header() {
     const [open, setOpen] = React.useState(false);
@@ -85,7 +85,7 @@ function Header() {
                         }}
                         >Giỏ hàng</Typography>
                     </Link>
-                    <Button onClick={handleOpen} style={{
+                    <Link onClick={handleOpen} style={{
                         display: 'flex',
                         alignItems: 'center',
                         color: '#fff',
@@ -100,7 +100,7 @@ function Header() {
                             marginLeft: '4px',
                         }}
                         >Đăng nhập Đăng kí</Typography>
-                    </Button>
+                    </Link>
                 </Box>
             </Box>
             <BasicModal open={open} handleClose={handleClose}/>
