@@ -11,6 +11,7 @@ import {
   ListItemText,
   Avatar,
   Divider,
+  Modal 
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
