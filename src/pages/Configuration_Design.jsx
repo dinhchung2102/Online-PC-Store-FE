@@ -17,6 +17,7 @@ import { styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Header from "../components/Header";
 import Footer from '../components/Footer';
+import ProductList_Modal from "../components/Modals/ProductList_Modal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css/autoplay";
@@ -325,6 +326,9 @@ function Configuration_Design() {
   const banners = [banner1, banner2];
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <Container
@@ -428,7 +432,7 @@ function Configuration_Design() {
             {/* Các hình ảnh nằm ngang */}
             <Grid container spacing={2} sx={{ width: "100%" }}>
               <Grid item xs={3}>
-                <Box sx={{ position: "relative" }}>
+                <Box onClick={handleOpen} sx={{ position: "relative" }}>
                   <img
                     src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:100/q:90/plain/https://dashboard.cellphones.com.vn/storage/1.png"
                     alt="PC Gaming"
@@ -776,6 +780,13 @@ function Configuration_Design() {
       <Box sx={{ width: "100%" }}>
         <Footer />
       </Box>
+
+      <ProductList_Modal
+        open={open}
+        handleClose={handleClose}
+        title="Text in a modal"
+        description="Duis mollis, est non commodo luctus, nisi erat porttitor ligula."
+      />
     </Container>
   );
 }
