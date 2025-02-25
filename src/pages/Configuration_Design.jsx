@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -11,12 +11,12 @@ import {
   ListItemText,
   Avatar,
   Divider,
-  Modal 
+  Modal,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Header from "../components/Header";
-import Footer from '../components/Footer';
+import Footer from "../components/Footer";
 import ProductList_Modal from "../components/Modals/ProductList_Modal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
@@ -26,7 +26,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import banner1 from "../assets/images/pc-10-trieu-desktop-15-11.webp";
 import banner2 from "../assets/images/pc-15-trieu-desktop-15-11.webp";
-import Grid from "@mui/material/Grid"; // Sử dụng Grid từ MUI chính thức
+import Grid from "@mui/material/Grid";
 import imgPhanVan from "../assets/images/Gemini_Generated_Image_h0akdah0akdah0ak1.png";
 import MessageIcon from "@mui/icons-material/Message";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -47,298 +47,287 @@ import imgTanNhiet from "../assets/images/tan-nhiet-cpu-neww.png";
 import imgvga from "../assets/images/vga-new.png";
 import imgCase from "../assets/images/vo-case-new.png";
 import imgCuaHang from "../assets/images/Cua_hang.webp";
-
-const renderComponentCard = (imageSrc, title, onClick) => (
-  <ListItem
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      padding: 3,
-      backgroundColor: "#f0f0f0",
-      marginBottom: "8px",
-      borderRadius: 3,
-    }}
-  >
-    <img
-      src={imageSrc}
-      alt={title}
-      style={{ height: "60px", marginRight: "16px" }}
-    />
-    <Box sx={{ flexGrow: 1 }}>
-      <Typography variant="h6">{title}</Typography>
-    </Box>
-    <Button
-      variant="outlined"
-      sx={{
-        textTransform: "none",
-        backgroundColor: "#E11B1D",
-        width: "15vh",
-        color: "white",
-        "&:hover": {
-          color: "#E11B1D", // Màu chữ sẽ chuyển sang đỏ khi hover
-          backgroundColor: "#f0f0f0", // Thay đổi nền nếu cần thiết
-        },
-      }}
-      onClick={onClick}
-    >
-      Chọn
-    </Button>
-  </ListItem>
-);
-
-const handleClick = () => {
-  console.log("Chọn đã được nhấn!");
-};
-
-const StoreItem = ({
-  imageUrl,
-  address,
-  hours,
-  hotline,
-  mapLink,
-  phoneLink,
-}) => (
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      width: 292.5,
-      marginRight: 1,
-      backgroundColor: "#fff",
-      borderRadius: 2,
-      boxShadow: 1,
-      padding: 1,
-      border: 1,
-      borderColor: "rgba(145, 158, 171, 0.24)",
-    }}
-  >
-    {/* Image */}
-    <a href={mapLink} target="_blank" rel="noopener noreferrer">
-      <img
-        src={imageUrl}
-        alt={address}
-        width="100%"
-        style={{ borderRadius: "8px", objectFit: "cover" }}
-      />
-    </a>
-
-    {/* Store Info */}
-    <Box sx={{ paddingTop: 1, textAlign: "start" }}>
-      <Typography variant="h6" color="text.primary" noWrap>
-        {address}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        Mở cửa: {hours}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        Hotline: {hotline}
-      </Typography>
-    </Box>
-
-    <Divider sx={{ marginY: 1 }} />
-
-    {/* Buttons (Call and Directions) */}
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "5px 0px",
-      }}
-    >
-      <Button
-        href={phoneLink}
-        startIcon={<PhoneInTalk />}
-        variant="contained"
-        sx={{
-          width: "45%",
-          textTransform: "none",
-          fontSize: "13px",
-          backgroundColor: "white",
-          color: "#DF062D",
-          border: 1,
-          borderColor: "#DF062D",
-          "&:hover": { backgroundColor: "rgba(224, 94, 94, 0.5)" },
-        }}
-      >
-        Liên hệ
-      </Button>
-      <Button
-        href={mapLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        startIcon={<Directions />}
-        variant="contained"
-        sx={{
-          width: "45%",
-          textTransform: "none",
-          fontSize: "13px",
-          backgroundColor: "white",
-          color: "#DF062D",
-          border: 1,
-          borderColor: "#DF062D",
-          "&:hover": { backgroundColor: "rgba(224, 94, 94, 0.5)" },
-        }}
-      >
-        Chỉ đường
-      </Button>
-    </Box>
-  </Box>
-);
-
-const StoreList = () => {
-  const swiperRef = useRef(null);
-  // Mảng dữ liệu của các cửa hàng
-  const stores = [
-    {
-      address: "190B Hoàng Văn Thụ, P4, Quận Tân Bình",
-      hours: "9h-22h (tất cả các ngày trong tuần)",
-      hotline: "18001770",
-      mapLink: "https://g.page/cps377hcm?share",
-      phoneLink: "tel:18001770",
-    },
-    {
-      address: "377-379 Điện Biên Phủ, P. 25, Q. Bình Thạnh",
-      hours: "8h-22h (tất cả các ngày trong tuần)",
-      hotline: "(028) 7107 7377",
-      mapLink: "https://g.page/cps377hcm?share",
-      phoneLink: "tel:02871077377",
-    },
-    {
-      address: "133 Thái Hà, P. Trung Liệt, Q, Đống Đa",
-      hours: "8h-22h (tất cả các ngày trong tuần)",
-      hotline: "(024) 7100 3133",
-      mapLink: "https://g.page/r/CZcTd_IfEBt9EBA",
-      phoneLink: "tel:02471003133",
-    },
-    {
-      address: "4A Nguyễn Văn Cừ, Q.1, TP.HCM",
-      hours: "9h-22h (tất cả các ngày trong tuần)",
-      hotline: "(028) 7100 3134",
-      mapLink: "https://g.page/cps377hcm?share",
-      phoneLink: "tel:02871003134",
-    },
-    {
-      address: "123 Lê Lợi, Q.1, TP.HCM",
-      hours: "9h-22h (tất cả các ngày trong tuần)",
-      hotline: "(028) 7100 3135",
-      mapLink: "https://g.page/cps377hcm?share",
-      phoneLink: "tel:02871003135",
-    },
-    {
-      address: "456 Nguyễn Trãi, Q.5, TP.HCM",
-      hours: "9h-22h (tất cả các ngày trong tuần)",
-      hotline: "(028) 7100 3136",
-      mapLink: "https://g.page/cps377hcm?share",
-      phoneLink: "tel:02871003136",
-    },
-  ];
-  // Lắng nghe sự kiện chuyển slide
-  useEffect(() => {
-    const swiperInstance = document.querySelector(".swiper").swiper;
-
-    return () => {
-      // Hủy sự kiện khi component bị unmount
-      swiperInstance.off("slideNextTransitionStart");
-      swiperInstance.off("slidePrevTransitionStart");
-      swiperInstance.off("slideChange");
-    };
-  }, []);
-
-  return (
-    <Swiper
-      ref={swiperRef} // Gán ref cho Swiper
-      spaceBetween={10}
-      slidesPerView={4}
-      scrollbar={{ draggable: true }}
-      modules={[Navigation]} // Chỉ sử dụng module navigation, nhưng sẽ tắt navigation mặc định
-      style={{ width: "100%" }}
-    >
-      {/* Loop through stores and create a slide for each */}
-      {stores.map((store, index) => (
-        <SwiperSlide key={index}>
-          <StoreItem
-            imageUrl={imgCuaHang}
-            address={store.address}
-            hours={store.hours}
-            hotline={store.hotline}
-            mapLink={store.mapLink}
-            phoneLink={store.phoneLink}
-          />
-        </SwiperSlide>
-      ))}
-
-      {/* Navigation buttons */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "0px",
-          transform: "translateY(-50%)",
-          zIndex: 1000, // Đảm bảo các nút không bị che khuất
-        }}
-      >
-        <Button
-          onClick={() => swiperRef.current.swiper.slidePrev()} // Di chuyển đến slide trước
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
-            color: "#DF062D",
-            padding: "1px",
-            cursor: "pointer",
-            "&:hover": {
-              backgroundColor: "rgba(224, 94, 94, 0.2)",
-            },
-          }}
-        >
-          <NavigateBeforeIcon sx={{ fontSize: "40px" }} />
-        </Button>
-      </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          right: "20px",
-          transform: "translateY(-50%)",
-          zIndex: 1000, // Đảm bảo các nút không bị che khuất
-        }}
-      >
-        <Button
-          onClick={() => swiperRef.current.swiper.slideNext()} // Di chuyển đến slide tiếp theo
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
-            color: "#DF062D",
-            padding: "1px",
-            cursor: "pointer",
-            "&:hover": {
-              backgroundColor: "rgba(224, 94, 94, 0.2)",
-            },
-          }}
-        >
-          <NavigateNextIcon sx={{ fontSize: "40px" }} />
-        </Button>
-      </Box>
-    </Swiper>
-  );
-};
+import { Link } from "react-router";
 
 function Configuration_Design() {
   const banners = [banner1, banner2];
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
+  const [title, setTitle] = useState("CPU");
+
+  const handleOpen = (newTitle) => {
+    setTitle(newTitle);
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+  const renderComponentCard = (imageSrc, title, onClick) => (
+    <ListItem
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        padding: 3,
+        backgroundColor: "#f0f0f0",
+        marginBottom: "8px",
+        borderRadius: 3,
+      }}
+    >
+      <img
+        src={imageSrc}
+        alt={title}
+        style={{ height: "60px", marginRight: "16px" }}
+      />
+      <Box sx={{ flexGrow: 1 }}>
+        <Typography variant="h6">{title}</Typography>
+      </Box>
+      <Button
+        variant="outlined"
+        sx={{
+          textTransform: "none",
+          backgroundColor: "#E11B1D",
+          width: "15vh",
+          color: "white",
+          "&:hover": {
+            color: "#E11B1D",
+            backgroundColor: "#f0f0f0",
+          },
+        }}
+        onClick={onClick}
+      >
+        Chọn
+      </Button>
+    </ListItem>
+  );
+
+  const StoreItem = ({
+    imageUrl,
+    address,
+    hours,
+    hotline,
+    mapLink,
+    phoneLink,
+  }) => (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: 292.5,
+        marginRight: 1,
+        backgroundColor: "#fff",
+        borderRadius: 2,
+        boxShadow: 1,
+        padding: 1,
+        border: 1,
+        borderColor: "rgba(145, 158, 171, 0.24)",
+      }}
+    >
+      <Link href={mapLink} target="_blank" rel="noopener noreferrer">
+        <img
+          src={imageUrl}
+          alt={address}
+          width="100%"
+          style={{ borderRadius: "8px", objectFit: "cover" }}
+        />
+      </Link>
+      <Box sx={{ paddingTop: 1, textAlign: "start" }}>
+        <Typography variant="h6" color="text.primary" noWrap>
+          {address}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Mở cửa: {hours}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Hotline: {hotline}
+        </Typography>
+      </Box>
+
+      <Divider sx={{ marginY: 1 }} />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "5px 0px",
+        }}
+      >
+        <Button
+          href={phoneLink}
+          startIcon={<PhoneInTalk />}
+          variant="contained"
+          sx={{
+            width: "45%",
+            textTransform: "none",
+            fontSize: "13px",
+            backgroundColor: "white",
+            color: "#DF062D",
+            border: 1,
+            borderColor: "#DF062D",
+            "&:hover": { backgroundColor: "rgba(224, 94, 94, 0.5)" },
+          }}
+        >
+          Liên hệ
+        </Button>
+        <Button
+          href={mapLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<Directions />}
+          variant="contained"
+          sx={{
+            width: "45%",
+            textTransform: "none",
+            fontSize: "13px",
+            backgroundColor: "white",
+            color: "#DF062D",
+            border: 1,
+            borderColor: "#DF062D",
+            "&:hover": { backgroundColor: "rgba(224, 94, 94, 0.5)" },
+          }}
+        >
+          Chỉ đường
+        </Button>
+      </Box>
+    </Box>
+  );
+
+  const StoreList = () => {
+    const swiperRef = useRef(null);
+    const stores = [
+      {
+        address: "190B Hoàng Văn Thụ, P4, Quận Tân Bình",
+        hours: "9h-22h (tất cả các ngày trong tuần)",
+        hotline: "18001770",
+        mapLink: "https://g.page/cps377hcm?share",
+        phoneLink: "tel:18001770",
+      },
+      {
+        address: "377-379 Điện Biên Phủ, P. 25, Q. Bình Thạnh",
+        hours: "8h-22h (tất cả các ngày trong tuần)",
+        hotline: "(028) 7107 7377",
+        mapLink: "https://g.page/cps377hcm?share",
+        phoneLink: "tel:02871077377",
+      },
+      {
+        address: "133 Thái Hà, P. Trung Liệt, Q, Đống Đa",
+        hours: "8h-22h (tất cả các ngày trong tuần)",
+        hotline: "(024) 7100 3133",
+        mapLink: "https://g.page/r/CZcTd_IfEBt9EBA",
+        phoneLink: "tel:02471003133",
+      },
+      {
+        address: "4A Nguyễn Văn Cừ, Q.1, TP.HCM",
+        hours: "9h-22h (tất cả các ngày trong tuần)",
+        hotline: "(028) 7100 3134",
+        mapLink: "https://g.page/cps377hcm?share",
+        phoneLink: "tel:02871003134",
+      },
+      {
+        address: "123 Lê Lợi, Q.1, TP.HCM",
+        hours: "9h-22h (tất cả các ngày trong tuần)",
+        hotline: "(028) 7100 3135",
+        mapLink: "https://g.page/cps377hcm?share",
+        phoneLink: "tel:02871003135",
+      },
+      {
+        address: "456 Nguyễn Trãi, Q.5, TP.HCM",
+        hours: "9h-22h (tất cả các ngày trong tuần)",
+        hotline: "(028) 7100 3136",
+        mapLink: "https://g.page/cps377hcm?share",
+        phoneLink: "tel:02871003136",
+      },
+    ];
+
+    useEffect(() => {
+      const swiperInstance = document.querySelector(".swiper").swiper;
+
+      return () => {
+        swiperInstance.off("slideNextTransitionStart");
+        swiperInstance.off("slidePrevTransitionStart");
+        swiperInstance.off("slideChange");
+      };
+    }, []);
+
+    return (
+      <Swiper
+        ref={swiperRef}
+        spaceBetween={10}
+        slidesPerView={4}
+        scrollbar={{ draggable: true }}
+        modules={[Navigation]}
+        style={{ width: "100%" }}
+      >
+        {stores.map((store, index) => (
+          <SwiperSlide key={index}>
+            <StoreItem
+              imageUrl={imgCuaHang}
+              address={store.address}
+              hours={store.hours}
+              hotline={store.hotline}
+              mapLink={store.mapLink}
+              phoneLink={store.phoneLink}
+            />
+          </SwiperSlide>
+        ))}
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "0px",
+            transform: "translateY(-50%)",
+            zIndex: 1000,
+          }}
+        >
+          <Button
+            onClick={() => swiperRef.current.swiper.slidePrev()}
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              color: "#DF062D",
+              padding: "1px",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "rgba(224, 94, 94, 0.2)",
+              },
+            }}
+          >
+            <NavigateBeforeIcon sx={{ fontSize: "40px" }} />
+          </Button>
+        </Box>
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: "20px",
+            transform: "translateY(-50%)",
+            zIndex: 1000,
+          }}
+        >
+          <Button
+            onClick={() => swiperRef.current.swiper.slideNext()}
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              color: "#DF062D",
+              padding: "1px",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "rgba(224, 94, 94, 0.2)",
+              },
+            }}
+          >
+            <NavigateNextIcon sx={{ fontSize: "40px" }} />
+          </Button>
+        </Box>
+      </Swiper>
+    );
+  };
   return (
     <Container
       disableGutters
       maxWidth={false}
       sx={{
         height: "100vh",
-        display: "flex", // Sử dụng flexbox để căn giữa
-        flexDirection: "column", // Đảm bảo các phần tử trong container được sắp xếp theo chiều dọc
-        alignItems: "center", // Căn giữa theo chiều ngang
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Box sx={{ width: "100%" }}>
@@ -346,7 +335,7 @@ function Configuration_Design() {
       </Box>
       <Box
         sx={{
-          width: "100%", // Header giữ nguyên chiều rộng 100%
+          width: "100%",
           height: "auto",
           position: "relative",
         }}
@@ -407,10 +396,10 @@ function Configuration_Design() {
           textAlign: "center",
           padding: 4,
           display: "flex",
-          justifyContent: "center", // Căn giữa nội dung trong Box thứ 2
-          alignItems: "center", // Căn giữa theo chiều dọc
-          width: "90%", // Điều chỉnh chiều rộng của Box thứ 2
-          height: "auto", // Đảm bảo Box thứ 2 có chiều cao thích ứng
+          justifyContent: "center",
+          alignItems: "center",
+          width: "90%",
+          height: "auto",
           minHeight: "200px",
         }}
       >
@@ -429,10 +418,13 @@ function Configuration_Design() {
             <Typography variant="h4" gutterBottom>
               Gợi ý cấu hình PC theo nhu cầu
             </Typography>
-            {/* Các hình ảnh nằm ngang */}
+
             <Grid container spacing={2} sx={{ width: "100%" }}>
               <Grid item xs={3}>
-                <Box onClick={handleOpen} sx={{ position: "relative" }}>
+                <Box
+                  onClick={() => handleOpen("PC Gaming")}
+                  sx={{ position: "relative" }}
+                >
                   <img
                     src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:100/q:90/plain/https://dashboard.cellphones.com.vn/storage/1.png"
                     alt="PC Gaming"
@@ -461,7 +453,10 @@ function Configuration_Design() {
               </Grid>
 
               <Grid item xs={3}>
-                <Box sx={{ position: "relative" }}>
+                <Box
+                  onClick={() => handleOpen("PC Đồ họa")}
+                  sx={{ position: "relative" }}
+                >
                   <img
                     src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:100/q:90/plain/https://dashboard.cellphones.com.vn/storage/2.png"
                     alt="PC Đồ họa"
@@ -490,7 +485,10 @@ function Configuration_Design() {
               </Grid>
 
               <Grid item xs={3}>
-                <Box sx={{ position: "relative" }}>
+                <Box
+                  onClick={() => handleOpen("PC Văn phòng - Học tập")}
+                  sx={{ position: "relative" }}
+                >
                   <img
                     src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:100/q:90/plain/https://dashboard.cellphones.com.vn/storage/3.png"
                     alt="PC Văn phòng - Học tập"
@@ -570,8 +568,8 @@ function Configuration_Design() {
         sx={{
           textAlign: "center",
           padding: 4,
-          justifyContent: "center", // Căn giữa nội dung trong Box thứ 2
-          alignItems: "center", // Căn giữa theo chiều dọc
+          justifyContent: "center",
+          alignItems: "center",
           width: "90%",
         }}
       >
@@ -581,32 +579,52 @@ function Configuration_Design() {
             xs={8}
             sx={{
               height: "auto",
-              display: "flex", // Sử dụng flexbox để căn chỉnh các phần tử bên trong
-              flexDirection: "column", // Đảm bảo các phần tử nằm theo chiều dọc
-              justifyContent: "flex-start", // Căn đầu nội dung ra phía trên
-              alignItems: "flex-start", // Căn nội dung sang bên trái
-              paddingLeft: 2, // Thêm padding trái để cách mép
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              paddingLeft: 2,
               backgroundColor: "pi",
             }}
           >
             <Typography variant="h4" gutterBottom>
               Tự chọn cấu hình PC cho bạn
             </Typography>
-            {/* Build Components List */}
+
             <List sx={{ paddingRight: 5, width: "100%" }}>
-              {renderComponentCard(imgCPU, "CPU", handleClick)}
-              {renderComponentCard(imgvga, "Card màn hình", handleClick)}
-              {renderComponentCard(imgBanPhim, "Bàn phím", handleClick)}
-              {renderComponentCard(imgCase, "Case", handleClick)}
-              {renderComponentCard(imgChuot, "Chuột", handleClick)}
-              {renderComponentCard(imgHHD, "Ổ cứng HHD", handleClick)}
-              {renderComponentCard(imgMainBoard, "Mainboard", handleClick)}
-              {renderComponentCard(imgManHinh, "Màn hình", handleClick)}
-              {renderComponentCard(imgNguon, "Nguồn", handleClick)}
-              {renderComponentCard(imgRAM, "RAM", handleClick)}
-              {renderComponentCard(imgSSD, "Ổ cứng SSD", handleClick)}
-              {renderComponentCard(imgTaiNghe, "Tai nghe", handleClick)}
-              {renderComponentCard(imgTanNhiet, "Tản nhiệt CPU", handleClick)}
+              {renderComponentCard(imgCPU, "CPU", () => handleOpen("CPU"))}
+              {renderComponentCard(imgvga, "Card màn hình", () =>
+                handleOpen("Card màn hình")
+              )}
+              {renderComponentCard(imgBanPhim, "Bàn phím", () =>
+                handleOpen("Bàn phím")
+              )}
+              {renderComponentCard(imgCase, "Case", () => handleOpen("Case"))}
+              {renderComponentCard(imgChuot, "Chuột", () =>
+                handleOpen("Chuột")
+              )}
+              {renderComponentCard(imgHHD, "Ổ cứng HHD", () =>
+                handleOpen("Ổ cứng HHD")
+              )}
+              {renderComponentCard(imgMainBoard, "Mainboard", () =>
+                handleOpen("Mainboard")
+              )}
+              {renderComponentCard(imgManHinh, "Màn hình", () =>
+                handleOpen("Màn hình")
+              )}
+              {renderComponentCard(imgNguon, "Nguồn", () =>
+                handleOpen("Nguồn")
+              )}
+              {renderComponentCard(imgRAM, "RAM", () => handleOpen("RAM"))}
+              {renderComponentCard(imgSSD, "Ổ cứng SSD", () =>
+                handleOpen("Ổ cứng SSD")
+              )}
+              {renderComponentCard(imgTaiNghe, "Tai nghe", () =>
+                handleOpen("Tai nghe")
+              )}
+              {renderComponentCard(imgTanNhiet, "Tản nhiệt CPU", () =>
+                handleOpen("Tản nhiệt CPU")
+              )}
             </List>
           </Grid>
           <Grid
@@ -621,7 +639,6 @@ function Configuration_Design() {
               justifyContent: "space-between",
             }}
           >
-            {/* Total Money Box */}
             <Box
               className="desktop"
               sx={{
@@ -631,10 +648,9 @@ function Configuration_Design() {
                 border: 2,
                 borderColor: "#DF062D",
                 padding: 2,
-                width: "100%", // Đảm bảo box chiếm toàn bộ chiều rộng
+                width: "100%",
               }}
             >
-              {/* Total Money Box */}
               <Box
                 sx={{
                   display: "flex",
@@ -731,8 +747,6 @@ function Configuration_Design() {
                 </Button>
               </Box>
             </Box>
-
-            {/* Video Box */}
             <Box
               id="boxWatch"
               sx={{ width: "100%", marginTop: "16px", height: "auto" }}
@@ -766,8 +780,8 @@ function Configuration_Design() {
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center", // Căn giữa nội dung trong Box thứ 2
-          alignItems: "flex-start", // Căn giữa theo chiều dọc
+          justifyContent: "center",
+          alignItems: "flex-start",
           width: "90%",
         }}
       >
@@ -781,12 +795,7 @@ function Configuration_Design() {
         <Footer />
       </Box>
 
-      <ProductList_Modal
-        open={open}
-        handleClose={handleClose}
-        title="Text in a modal"
-        description="Duis mollis, est non commodo luctus, nisi erat porttitor ligula."
-      />
+      <ProductList_Modal open={open} handleClose={handleClose} title={title} />
     </Container>
   );
 }
