@@ -1,20 +1,48 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
+import { callAPI, callApiDistrict, callApiWard, host } from "./callApiProvince";
 
 
 function SelectAddress() {
-  const [ward, setWard] = React.useState('');
-  const [district, setDistrict] = React.useState('');
-  const [city, setCity] = React.useState('');
+  const [ward, setWard] = React.useState([]);
+  const [district, setDistrict] = React.useState([]);
+  const [provinces, setProvinces] = React.useState([]);
+
+  const [selectedProvince, setSelectedProvince] = React.useState('');
+  const [selectDistrict, setSelectDistrict] = React.useState('');
+  const [selectWard, setSelectWard] = React.useState('');
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await callAPI('https://provinces.open-api.vn/api/?depth=1');
+      setProvinces(data)
+    };
+    fetchData();
+  }, []);
 
   const handleChangeWard = (event) => {
-    setWard(event.target.value);
+    setSelectWard(event.target.value);
   };
-  const handleChangeDistrict = (event) => {
-    setDistrict(event.target.value);
+  const handleChangeDistrict = async (event) => {
+    setSelectDistrict(event.target.value);
+
+    try {
+      const data = await callApiWard(host + "d/" + `${event.target.value}` + "?depth=2");
+      setWard(data.wards);
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+    }
   };
-  const handleChangeCity = (event) => {
-    setCity(event.target.value);
+  const handleChangeProvinces = async (event) => {
+    console.log(event.target.value);
+    setSelectedProvince(event.target.value);
+
+    try {
+      const data = await callApiDistrict(host + "p/" + `${event.target.value}` + "?depth=2");
+      setDistrict(data.districts);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
   };
   return (
     <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', width: '100%' }}>
@@ -23,41 +51,41 @@ function SelectAddress() {
         <Select
           labelId="select-ward-label"
           id="select-ward"
-          value={ward}
+          value={selectWard}
           label="Phường, xã"
           onChange={handleChangeWard}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {ward && ward.map((ward) => (
+            <MenuItem key={ward.code} value={ward.code}>{ward.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl sx={{ width: '100%' }} size="small">
-        <InputLabel id="select-district-label">Quận huyện</InputLabel>
+        <InputLabel id="select-district-label">Quận, huyện</InputLabel>
         <Select
           labelId="select-district-label"
           id="select-district"
-          value={district}
+          value={selectDistrict}
           label="Quận, huyện"
           onChange={handleChangeDistrict}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {district && district.map((district) => (
+            <MenuItem key={district.code} value={district.code}>{district.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl sx={{ width: '100%' }} size="small">
-        <InputLabel id="select-city-label">Tỉnh, thành phố</InputLabel>
+        <InputLabel id="select-provinces-label">Tỉnh, thành phố</InputLabel>
         <Select
-          labelId="select-city-label"
-          id="select-city"
-          value={city}
+          labelId="select-provinces-label"
+          id="select-provinces"
+          value={selectedProvince}
           label="Tỉnh, thành phố"
-          onChange={handleChangeCity}
+          onChange={handleChangeProvinces}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {provinces && provinces.map((province) => (
+            <MenuItem key={province.code} value={province.code}>{province.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>
