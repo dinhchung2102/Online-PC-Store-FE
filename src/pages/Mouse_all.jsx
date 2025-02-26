@@ -15,7 +15,7 @@ import {
   Stack,
 } from "@mui/material";
 import Header from "./Header";
-import Footer from "./Footer";
+import Footer from "~/components/Footer";
 import FilterListIcon from "@mui/icons-material/FilterList";
 const products = [
   {
@@ -248,7 +248,6 @@ const MouseAll = () => {
         bgcolor="white"
         boxShadow={1}
       >
-        
         <Stack direction="row" spacing={1} sx={{ mx: 2 }}>
           {[
             "Tình trạng sản phẩm",
@@ -302,7 +301,7 @@ const MouseAll = () => {
           ))}
         </Grid>
       </Box>
-      <Footer></Footer>
+      <Footer />
     </Container>
   );
 };

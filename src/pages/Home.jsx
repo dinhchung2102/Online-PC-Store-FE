@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import FlashSaleBanner from './FlashSaleBanner';
+import FlashSaleBanner from "./FlashSaleBanner";
 import {
   Box,
   Typography,
@@ -42,9 +42,8 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "./Footer";
+import Footer from "~/components/Footer";
 import Header from "./Header";
-
 
 const services = [
   { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -207,8 +206,6 @@ const laptops = [
   },
 ];
 
-
-
 function Home() {
   return (
     <Container
@@ -355,10 +352,8 @@ function Home() {
       </Box>
 
       <Box>
-      <FlashSaleBanner />
+        <FlashSaleBanner />
       </Box>
-
-
 
       {/* Chuột bán chạy */}
       <Box
@@ -460,90 +455,114 @@ function Home() {
         </Swiper>
       </Box>
       {/* Laptop bán chạy */}
-      <Box sx={{ maxWidth: "100%", backgroundColor: "rgb(255, 255, 255)",borderRadius:"10px",mt:2,p:2  }}>
-      {/* Thanh tiêu đề */}
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
-        <Typography variant="h6" sx={{  fontWeight: "bold" }}>
-          Laptop gaming bán chạy
-        </Typography>
-
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <LocalShippingIcon sx={{ color: "red" }} />
-          <Typography variant="body1">Miễn phí giao hàng</Typography>
-        </Stack>
-
-        {/* Đẩy phần brand và link sang phải */}
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* Danh sách thương hiệu */}
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography><Button>ASUS</Button></Typography>
-          <Typography><Button>ACER</Button></Typography>
-          <Typography><Button>MSI</Button></Typography>
-          <Typography><Button>LENOVO</Button></Typography>
-          <Typography><Button>GIGABYTE</Button></Typography>
-          <Typography><Button>DELL</Button></Typography>
-        </Stack>
-
-        {/* Link 'Xem tất cả' */}
-        <Link
-          href="#"
-          underline="none"
-          sx={{ color: "blue", fontWeight: "bold" }}
-        >
-          Xem tất cả
-        </Link>
-      </Stack>
-
-      {/* Slider hiển thị laptop */}
-      <Swiper
-        slidesPerView={4}       // Số laptop hiển thị cùng lúc
-        spaceBetween={20}       // Khoảng cách giữa các card
-        navigation={true}       // Nút điều hướng
-        modules={[Navigation]}  // Import module Navigation
-        style={{ zIndex: 1 }}   // Đảm bảo không bị che
+      <Box
+        sx={{
+          maxWidth: "100%",
+          backgroundColor: "rgb(255, 255, 255)",
+          borderRadius: "10px",
+          mt: 2,
+          p: 2,
+        }}
       >
-        {laptops.map((lap) => (
-          <SwiperSlide key={lap.id}>
-            <Card sx={{ textAlign: "center", boxShadow: 5, borderRadius: 0 }}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={lap.image}
-                alt={lap.name}
-                sx={{ objectFit: "contain" }}
-              />
-              <CardContent>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {lap.name}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
-                  {lap.specs}
-                </Typography>
-                <Typography variant="body2" sx={{ textDecoration: "line-through" }}>
-                  {lap.oldPrice}
-                </Typography>
-                <Typography variant="h6" color="primary" fontWeight="bold">
-                  {lap.price}{" "}
-                  <span style={{ color: "red", fontSize: "0.8rem" }}>{lap.discount}</span>
-                </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 1 }}>
-                  Mua ngay
-                </Button>
-              </CardContent>
-            </Card>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </Box>
+        {/* Thanh tiêu đề */}
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Laptop gaming bán chạy
+          </Typography>
+
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <LocalShippingIcon sx={{ color: "red" }} />
+            <Typography variant="body1">Miễn phí giao hàng</Typography>
+          </Stack>
+
+          {/* Đẩy phần brand và link sang phải */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* Danh sách thương hiệu */}
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography>
+              <Button>ASUS</Button>
+            </Typography>
+            <Typography>
+              <Button>ACER</Button>
+            </Typography>
+            <Typography>
+              <Button>MSI</Button>
+            </Typography>
+            <Typography>
+              <Button>LENOVO</Button>
+            </Typography>
+            <Typography>
+              <Button>GIGABYTE</Button>
+            </Typography>
+            <Typography>
+              <Button>DELL</Button>
+            </Typography>
+          </Stack>
+
+          {/* Link 'Xem tất cả' */}
+          <Link
+            href="#"
+            underline="none"
+            sx={{ color: "blue", fontWeight: "bold" }}
+          >
+            Xem tất cả
+          </Link>
+        </Stack>
+
+        {/* Slider hiển thị laptop */}
+        <Swiper
+          slidesPerView={4} // Số laptop hiển thị cùng lúc
+          spaceBetween={20} // Khoảng cách giữa các card
+          navigation={true} // Nút điều hướng
+          modules={[Navigation]} // Import module Navigation
+          style={{ zIndex: 1 }} // Đảm bảo không bị che
+        >
+          {laptops.map((lap) => (
+            <SwiperSlide key={lap.id}>
+              <Card sx={{ textAlign: "center", boxShadow: 5, borderRadius: 0 }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={lap.image}
+                  alt={lap.name}
+                  sx={{ objectFit: "contain" }}
+                />
+                <CardContent>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {lap.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
+                    {lap.specs}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ textDecoration: "line-through" }}
+                  >
+                    {lap.oldPrice}
+                  </Typography>
+                  <Typography variant="h6" color="primary" fontWeight="bold">
+                    {lap.price}{" "}
+                    <span style={{ color: "red", fontSize: "0.8rem" }}>
+                      {lap.discount}
+                    </span>
+                  </Typography>
+                  <Button variant="contained" color="primary" sx={{ mt: 1 }}>
+                    Mua ngay
+                  </Button>
+                </CardContent>
+              </Card>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
 
       {/* Footer */}
-      <Footer></Footer>
+      <Footer />
     </Container>
   );
 }
 
 /* Component nút điều hướng */
-
 
 export default Home;
