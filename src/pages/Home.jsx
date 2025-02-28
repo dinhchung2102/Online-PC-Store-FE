@@ -15,35 +15,19 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import SellOutlinedIcon from "@mui/icons-material/SellOutlined"; // Icon Build PC
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined"; // Icon Tin công nghệ
 import BuildCircleOutlinedIcon from "@mui/icons-material/BuildCircleOutlined"; // Icon Dịch vụ sửa chữa
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined"; // Icon Dịch vụ kỹ thuật
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined"; // Icon Thu cũ đổi mới
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"; // Icon Tra cứu bảo hành
-import LaptopMacIcon from "@mui/icons-material/LaptopMac";
-import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
-import ComputerIcon from "@mui/icons-material/Computer";
-import MemoryIcon from "@mui/icons-material/Memory";
-import PowerIcon from "@mui/icons-material/Power";
-import SdStorageIcon from "@mui/icons-material/SdStorage";
-import SpeakerIcon from "@mui/icons-material/Speaker";
-import TvIcon from "@mui/icons-material/Tv";
-import KeyboardIcon from "@mui/icons-material/Keyboard";
-import MouseIcon from "@mui/icons-material/Mouse";
-import HeadsetIcon from "@mui/icons-material/Headset";
-import ChairIcon from "@mui/icons-material/Chair";
-import WifiIcon from "@mui/icons-material/Wifi";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import UsbIcon from "@mui/icons-material/Usb";
-import InfoIcon from "@mui/icons-material/Info";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "./Footer";
-import Header from "./Header";
+import Footer from "~/components/Footer";
+import Header from "~/components/Header";
+import Categories from "~/components/Categories";
 
 
 const services = [
@@ -54,24 +38,7 @@ const services = [
   { icon: <CurrencyExchangeOutlinedIcon />, text: "Thu cũ đổi mới" },
   { icon: <VerifiedOutlinedIcon />, text: "Tra cứu bảo hành" },
 ];
-const categories = [
-  { icon: <LaptopMacIcon />, text: "Laptop" },
-  { icon: <LaptopChromebookIcon />, text: "Laptop Gaming" },
-  { icon: <ComputerIcon />, text: "PC GVN" },
-  { icon: <MemoryIcon />, text: "Main, CPU, VGA" },
-  { icon: <PowerIcon />, text: "Case, Nguồn, Tản" },
-  { icon: <SdStorageIcon />, text: "Ổ cứng, RAM, Thẻ nhớ" },
-  { icon: <SpeakerIcon />, text: "Loa, Micro, Webcam" },
-  { icon: <TvIcon />, text: "Màn hình" },
-  { icon: <KeyboardIcon />, text: "Bàn phím" },
-  { icon: <MouseIcon />, text: "Chuột + Lót chuột" },
-  { icon: <HeadsetIcon />, text: "Tai Nghe" },
-  { icon: <ChairIcon />, text: "Ghế - Bàn" },
-  { icon: <WifiIcon />, text: "Phần mềm, mạng" },
-  { icon: <SportsEsportsIcon />, text: "Handheld, Console" },
-  { icon: <UsbIcon />, text: "Phụ kiện (Hub, sạc, cáp..)" },
-  { icon: <InfoIcon />, text: "Dịch vụ và thông tin khác" },
-];
+
 
 const banners = [
   "/image/1a.png",
@@ -84,12 +51,11 @@ const banners = [
   "/image/1h.png",
 ];
 const product1 = ["/image/4.png", "/image/5.png"];
-const product2 = ["/image/71.png", "/image/72.png"];
+const product2 = [];
 const product3 = [
   "/image/1.png",
   "/image/2.png",
   "/image/3.png",
-  "/image/74.png",
 ];
 
 const productsMouse = [
@@ -210,13 +176,14 @@ const laptops = [
 
 
 function Home() {
+
   return (
     <Container
       maxWidth={false}
       sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", width: "1442px" }}
     >
       {/* Header */}
-      <Header></Header>
+      <Header />
 
       {/* Danh mục sản phẩm */}
       <Box
@@ -250,36 +217,19 @@ function Home() {
         sx={{
           display: "flex",
           justifyContent: "center",
-          gap: 2,
+          gap: 1,
           flexDirection: "row",
+          paddingY: 2
         }}
       >
         {/* Sidebar */}
-        <Box
-          sx={{
-            width: 280,
-            bgcolor: "rgb(255, 255, 255)",
-            borderRadius: "8px",
-            marginTop: 2,
-            height: "875px",
-          }}
-        >
-          <List>
-            {categories.map((item, index) => (
-              <ListItem button key={index}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+        <Categories/>
 
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
-            p: 2,
+            gap: 4,
             width: "50%",
             borderRadius: "10px",
             mt: -1,
@@ -294,7 +244,8 @@ function Home() {
               slidesToScroll={1}
               autoplay
               autoplaySpeed={2000}
-              sx={{ borderRadius: "10px" }}
+              arrows={false}
+              sx={{ borderRadius: "10px", }}
             >
               {banners.map((banner, index) => (
                 <Box
@@ -336,10 +287,9 @@ function Home() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "start",
             flexDirection: "column",
             gap: 1,
-            mt: -1,
           }}
         >
           {product3.map((product, index) => (
@@ -355,7 +305,7 @@ function Home() {
       </Box>
 
       <Box>
-      <FlashSaleBanner />
+        <FlashSaleBanner />
       </Box>
 
 
@@ -460,82 +410,82 @@ function Home() {
         </Swiper>
       </Box>
       {/* Laptop bán chạy */}
-      <Box sx={{ maxWidth: "100%", backgroundColor: "rgb(255, 255, 255)",borderRadius:"10px",mt:2,p:2  }}>
-      {/* Thanh tiêu đề */}
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
-        <Typography variant="h6" sx={{  fontWeight: "bold" }}>
-          Laptop gaming bán chạy
-        </Typography>
+      <Box sx={{ maxWidth: "100%", backgroundColor: "rgb(255, 255, 255)", borderRadius: "10px", mt: 2, p: 2 }}>
+        {/* Thanh tiêu đề */}
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Laptop gaming bán chạy
+          </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <LocalShippingIcon sx={{ color: "red" }} />
-          <Typography variant="body1">Miễn phí giao hàng</Typography>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <LocalShippingIcon sx={{ color: "red" }} />
+            <Typography variant="body1">Miễn phí giao hàng</Typography>
+          </Stack>
+
+          {/* Đẩy phần brand và link sang phải */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* Danh sách thương hiệu */}
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography><Button>ASUS</Button></Typography>
+            <Typography><Button>ACER</Button></Typography>
+            <Typography><Button>MSI</Button></Typography>
+            <Typography><Button>LENOVO</Button></Typography>
+            <Typography><Button>GIGABYTE</Button></Typography>
+            <Typography><Button>DELL</Button></Typography>
+          </Stack>
+
+          {/* Link 'Xem tất cả' */}
+          <Link
+            href="#"
+            underline="none"
+            sx={{ color: "blue", fontWeight: "bold" }}
+          >
+            Xem tất cả
+          </Link>
         </Stack>
 
-        {/* Đẩy phần brand và link sang phải */}
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* Danh sách thương hiệu */}
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography><Button>ASUS</Button></Typography>
-          <Typography><Button>ACER</Button></Typography>
-          <Typography><Button>MSI</Button></Typography>
-          <Typography><Button>LENOVO</Button></Typography>
-          <Typography><Button>GIGABYTE</Button></Typography>
-          <Typography><Button>DELL</Button></Typography>
-        </Stack>
-
-        {/* Link 'Xem tất cả' */}
-        <Link
-          href="#"
-          underline="none"
-          sx={{ color: "blue", fontWeight: "bold" }}
+        {/* Slider hiển thị laptop */}
+        <Swiper
+          slidesPerView={4}       // Số laptop hiển thị cùng lúc
+          spaceBetween={20}       // Khoảng cách giữa các card
+          navigation={true}       // Nút điều hướng
+          modules={[Navigation]}  // Import module Navigation
+          style={{ zIndex: 1 }}   // Đảm bảo không bị che
         >
-          Xem tất cả
-        </Link>
-      </Stack>
-
-      {/* Slider hiển thị laptop */}
-      <Swiper
-        slidesPerView={4}       // Số laptop hiển thị cùng lúc
-        spaceBetween={20}       // Khoảng cách giữa các card
-        navigation={true}       // Nút điều hướng
-        modules={[Navigation]}  // Import module Navigation
-        style={{ zIndex: 1 }}   // Đảm bảo không bị che
-      >
-        {laptops.map((lap) => (
-          <SwiperSlide key={lap.id}>
-            <Card sx={{ textAlign: "center", boxShadow: 5, borderRadius: 0 }}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={lap.image}
-                alt={lap.name}
-                sx={{ objectFit: "contain" }}
-              />
-              <CardContent>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {lap.name}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
-                  {lap.specs}
-                </Typography>
-                <Typography variant="body2" sx={{ textDecoration: "line-through" }}>
-                  {lap.oldPrice}
-                </Typography>
-                <Typography variant="h6" color="primary" fontWeight="bold">
-                  {lap.price}{" "}
-                  <span style={{ color: "red", fontSize: "0.8rem" }}>{lap.discount}</span>
-                </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 1 }}>
-                  Mua ngay
-                </Button>
-              </CardContent>
-            </Card>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </Box>
+          {laptops.map((lap) => (
+            <SwiperSlide key={lap.id}>
+              <Card sx={{ textAlign: "center", boxShadow: 5, borderRadius: 0 }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={lap.image}
+                  alt={lap.name}
+                  sx={{ objectFit: "contain" }}
+                />
+                <CardContent>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {lap.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
+                    {lap.specs}
+                  </Typography>
+                  <Typography variant="body2" sx={{ textDecoration: "line-through" }}>
+                    {lap.oldPrice}
+                  </Typography>
+                  <Typography variant="h6" color="primary" fontWeight="bold">
+                    {lap.price}{" "}
+                    <span style={{ color: "red", fontSize: "0.8rem" }}>{lap.discount}</span>
+                  </Typography>
+                  <Button variant="contained" color="primary" sx={{ mt: 1 }}>
+                    Mua ngay
+                  </Button>
+                </CardContent>
+              </Card>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
 
       {/* Footer */}
       <Footer></Footer>
