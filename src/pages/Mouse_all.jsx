@@ -14,7 +14,9 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import Header from "./Header";
+
+import Header from "~/components/Header";
+
 import Footer from "~/components/Footer";
 import FilterListIcon from "@mui/icons-material/FilterList";
 const products = [
