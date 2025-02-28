@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import FlashSaleBanner from './FlashSaleBanner';
+import FlashSaleBanner from "./FlashSaleBanner";
 import {
   Box,
   Typography,
@@ -26,8 +26,11 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "~/components/Footer";
+
 import Header from "~/components/Header";
 import Categories from "~/components/Categories";
+
+
 
 
 const services = [
@@ -173,8 +176,6 @@ const laptops = [
   },
 ];
 
-
-
 function Home() {
 
   return (
@@ -308,8 +309,6 @@ function Home() {
         <FlashSaleBanner />
       </Box>
 
-
-
       {/* Chuột bán chạy */}
       <Box
         sx={{
@@ -410,7 +409,17 @@ function Home() {
         </Swiper>
       </Box>
       {/* Laptop bán chạy */}
-      <Box sx={{ maxWidth: "100%", backgroundColor: "rgb(255, 255, 255)", borderRadius: "10px", mt: 2, p: 2 }}>
+
+      <Box
+        sx={{
+          maxWidth: "100%",
+          backgroundColor: "rgb(255, 255, 255)",
+          borderRadius: "10px",
+          mt: 2,
+          p: 2,
+        }}
+      >
+
         {/* Thanh tiêu đề */}
         <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -422,17 +431,31 @@ function Home() {
             <Typography variant="body1">Miễn phí giao hàng</Typography>
           </Stack>
 
+
           {/* Đẩy phần brand và link sang phải */}
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Danh sách thương hiệu */}
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography><Button>ASUS</Button></Typography>
-            <Typography><Button>ACER</Button></Typography>
-            <Typography><Button>MSI</Button></Typography>
-            <Typography><Button>LENOVO</Button></Typography>
-            <Typography><Button>GIGABYTE</Button></Typography>
-            <Typography><Button>DELL</Button></Typography>
+            <Typography>
+              <Button>ASUS</Button>
+            </Typography>
+            <Typography>
+              <Button>ACER</Button>
+            </Typography>
+            <Typography>
+              <Button>MSI</Button>
+            </Typography>
+            <Typography>
+              <Button>LENOVO</Button>
+            </Typography>
+            <Typography>
+              <Button>GIGABYTE</Button>
+            </Typography>
+            <Typography>
+              <Button>DELL</Button>
+            </Typography>
+
           </Stack>
 
           {/* Link 'Xem tất cả' */}
@@ -447,11 +470,13 @@ function Home() {
 
         {/* Slider hiển thị laptop */}
         <Swiper
-          slidesPerView={4}       // Số laptop hiển thị cùng lúc
-          spaceBetween={20}       // Khoảng cách giữa các card
-          navigation={true}       // Nút điều hướng
-          modules={[Navigation]}  // Import module Navigation
-          style={{ zIndex: 1 }}   // Đảm bảo không bị che
+
+          slidesPerView={4} // Số laptop hiển thị cùng lúc
+          spaceBetween={20} // Khoảng cách giữa các card
+          navigation={true} // Nút điều hướng
+          modules={[Navigation]} // Import module Navigation
+          style={{ zIndex: 1 }} // Đảm bảo không bị che
+
         >
           {laptops.map((lap) => (
             <SwiperSlide key={lap.id}>
@@ -470,12 +495,21 @@ function Home() {
                   <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
                     {lap.specs}
                   </Typography>
-                  <Typography variant="body2" sx={{ textDecoration: "line-through" }}>
+
+                  <Typography
+                    variant="body2"
+                    sx={{ textDecoration: "line-through" }}
+                  >
+
                     {lap.oldPrice}
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
                     {lap.price}{" "}
-                    <span style={{ color: "red", fontSize: "0.8rem" }}>{lap.discount}</span>
+
+                    <span style={{ color: "red", fontSize: "0.8rem" }}>
+                      {lap.discount}
+                    </span>
+
                   </Typography>
                   <Button variant="contained" color="primary" sx={{ mt: 1 }}>
                     Mua ngay
@@ -488,12 +522,11 @@ function Home() {
       </Box>
 
       {/* Footer */}
-      <Footer></Footer>
+      <Footer />
     </Container>
   );
 }
 
 /* Component nút điều hướng */
-
 
 export default Home;
