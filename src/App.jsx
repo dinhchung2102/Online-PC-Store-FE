@@ -5,7 +5,9 @@ import About from "./pages/About"
 import Configuration_Design from "./pages/Configuration_Design";
 import Mouse_all from "./pages/Mouse_all";
 import Shopping_Cart from "./pages/Shopping_Cart";
-import ListProduct from "./pages/ListProduct";
+
+import Detail_Account from "./pages/Detail_Account";
+
 function App() {
 
   return (
@@ -16,7 +18,9 @@ function App() {
         <Route path="/configuration-design" element={<Configuration_Design />} />
         <Route path="/mouse-all" element={<Mouse_all />} />
         <Route path="/shopping-cart" element={<Shopping_Cart />} />
-        <Route path="/products" element={<ListProduct />} />
+
+        <Route path="/Detail_Account" element={<Detail_Account />} />
+
       </Routes>
     </Router>
   )
