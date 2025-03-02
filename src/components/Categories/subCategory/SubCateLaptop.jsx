@@ -93,12 +93,12 @@ const CATEGORY = [
 
 function SubCateLaptop() {
   return (
-    <Box fullWidth>
+    <Box >
       <Grid container spacing={2} columns={5}>
         {CATEGORY.map((item, index) => (
           <Grid key={index} sx={{ mb: 2 }} xs={1}>
-            <Typography variant="subtitle2" sx={{ color: 'red' }}>{item.nameCate}</Typography>
-            <Box sx={{ }}>
+            <Typography variant="subtitle2" sx={{ color: 'red', cursor: 'pointer' }}>{item.nameCate}</Typography>
+            <Box sx={{}}>
               {item.subCate.map((subItem, subIndex) => (
                 <Typography key={subIndex} sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}>{subItem}</Typography>
               ))}
