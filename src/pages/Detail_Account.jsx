@@ -1,6 +1,7 @@
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
-import React from "react";
+import NewAddressModal from "./NewAddressModal";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,7 +9,6 @@ import {
   Container,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -29,9 +29,25 @@ import {
 } from "@mui/icons-material";
 
 const UserProfile = () => {
-    const [selectedScreen, setSelectedScreen] = React.useState("account"); 
+  const [selectedScreen, setSelectedScreen] = React.useState("account");
+  const [open, setOpen] = useState(false);
+  const handleDeleteAddress = (id) => {
+    setAddresses(addresses.filter((addr) => addr.id !== id));
+  };
+  const [addresses, setAddresses] = useState([
+    {
+      id: 1,
+      name: "Anh Lợi",
+      phone: "0898669176",
+      address: "Huỳnh Khương An, Phường 05, Quận Gò Vấp, Hồ Chí Minh, Vietnam",
+      default: true,
+    },
+  ]);
+  const handleAddAddress = (newAddress) => {
+    setAddresses([...addresses, { id: addresses.length + 1, ...newAddress }]);
+    setOpen(false); // Đóng modal sau khi thêm
+  };
   return (
-    
     <Container
       maxWidth={false}
       sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", width: "1442px" }}
@@ -103,12 +119,11 @@ const UserProfile = () => {
         {/* Main Content */}
         <Grid item xs={12} md={8}>
           <Box p={3} borderRadius={2} boxShadow={2} mt={3} bgcolor="#fff">
-            <Typography variant="h5" mb={2}>
-              Thông tin tài khoản
-            </Typography>
-
             {selectedScreen === "account" && (
               <>
+                <Typography variant="h5" mb={2}>
+                  Thông tin tài khoản
+                </Typography>
                 <Box display="flex" alignItems="center" mb={2}>
                   <Typography sx={{ width: "20%" }}>Họ tên</Typography>
                   <TextField
@@ -221,30 +236,69 @@ const UserProfile = () => {
             )}
 
             {selectedScreen === "address" && (
-            <>
-              <Button variant="contained" color="primary" sx={{ mb: 2 }}>
-                + Thêm địa chỉ mới
-              </Button>
-              <Box p={2} border="1px solid #ddd" borderRadius={1}>
-                <Button variant="outlined" color="error" size="small" sx={{ mb: 1 }}>
-                  Mặc định
-                </Button>
-                <Typography fontWeight="bold">Anh Lợi | 0898669176</Typography>
-                <Typography>
-                  Huỳnh Khương An, Phường 05, Quận Gò Vấp, Hồ Chí Minh, Vietnam
-                </Typography>
-                <Typography color="primary" sx={{ cursor: "pointer", mt: 1 }}>
-                  Cập nhật
-                </Typography>
-              </Box>
-            </>
-          )}
-          {selectedScreen === "orders" && (
-            <>
-              <Typography variant="h5">Quản lý đơn hàng</Typography>
-              {/* Nội dung quản lý đơn hàng */}
-            </>
-          )}
+              <>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="h5" mb={2}>
+                    Thông tin tài khoản
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mb: 2 }}
+                    onClick={() => setOpen(true)}
+                  >
+                    + Thêm địa chỉ mới
+                  </Button>
+                </Box>
+                {addresses.map((addr) => (
+                  <Box
+                    key={addr.id}
+                    p={2}
+                    border="1px solid #ddd"
+                    borderRadius={1}
+                    mb={1}
+                  >
+                    {addr.default && (
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        sx={{ mb: 1 }}
+                      >
+                        Mặc định
+                      </Button>
+                    )}
+                    <Typography fontWeight="bold">
+                      {addr.name} | {addr.phone}
+                    </Typography>
+                    <Typography>{addr.address}</Typography>
+                    <Box sx={{ display: "flex", }}>
+                    <Typography
+                      color="primary"
+                      sx={{ cursor: "pointer", mt: 1 }}
+                    >
+                      Cập nhật
+                    </Typography>
+                    <Typography
+                      color="primary"
+                      sx={{ cursor: "pointer", mt: 1,ml:2 }}
+                      onClick={() => handleDeleteAddress(addr.id)}
+                    >
+                      Xóa
+                    </Typography >
+                    </Box>
+                  </Box>
+                ))}
+                <NewAddressModal open={open} handleClose={() => setOpen(false)} onAdd={handleAddAddress} />
+               
+              </>
+            )}
+            {selectedScreen === "orders" && (
+              <>
+                <Typography variant="h5">Quản lý đơn hàng</Typography>
+                {/* Nội dung quản lý đơn hàng */}
+              </>
+            )}
           </Box>
         </Grid>
       </Grid>
