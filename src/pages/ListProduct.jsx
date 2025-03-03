@@ -1,9 +1,13 @@
 import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
 import Header from "~/components/Header";
+import { useParams } from "react-router";
 
 import HomeIcon from '@mui/icons-material/Home';
 
 function ListProduct() {
+
+  const { category } = useParams();
+
   return (
     <Box
       sx={{
@@ -22,7 +26,7 @@ function ListProduct() {
             <HomeIcon />
             Trang chủ
           </Link>
-          <Typography sx={{  }}></Typography>
+          <Typography sx={{  }}>{category}</Typography>
         </Breadcrumbs>
       </Box>
     </Box>

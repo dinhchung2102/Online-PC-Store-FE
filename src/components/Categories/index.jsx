@@ -58,7 +58,7 @@ const categories = [
 
 function Categories() {
 
-  const [hoverCate, setHoverCate] = useState(true);
+  const [hoverCate, setHoverCate] = useState(false);
   const [cateFocus, setCateFocus] = useState("");
 
   const handleGetLabelName = (e) => {

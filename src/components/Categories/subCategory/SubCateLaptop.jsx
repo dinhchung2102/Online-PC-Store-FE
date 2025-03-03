@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import { useNavigate } from "react-router";
 
 const CATEGORY = [
   {
@@ -92,6 +93,7 @@ const CATEGORY = [
 ];
 
 function SubCateLaptop() {
+  const navigate = useNavigate();
   return (
     <Box >
       <Grid container spacing={2} columns={5}>
@@ -100,7 +102,13 @@ function SubCateLaptop() {
             <Typography variant="subtitle2" sx={{ color: 'red', cursor: 'pointer' }}>{item.nameCate}</Typography>
             <Box sx={{}}>
               {item.subCate.map((subItem, subIndex) => (
-                <Typography key={subIndex} sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}>{subItem}</Typography>
+                <Typography
+                  onClick={() => {navigate(`/products/${subItem}`)}}
+                  key={subIndex}
+                  sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}
+                >
+                  {subItem}
+                </Typography>
               ))}
             </Box>
           </Grid>
