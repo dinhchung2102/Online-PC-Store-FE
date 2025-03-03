@@ -5,6 +5,7 @@ import About from "./pages/About"
 import Configuration_Design from "./pages/Configuration_Design";
 import Mouse_all from "./pages/Mouse_all";
 import Shopping_Cart from "./pages/Shopping_Cart";
+import ListProduct from "~/pages/ListProduct";
 
 import Detail_Account from "./pages/Detail_Account";
 
@@ -20,6 +21,8 @@ function App() {
         <Route path="/shopping-cart" element={<Shopping_Cart />} />
 
         <Route path="/Detail_Account" element={<Detail_Account />} />
+        <Route path="/products/:category" element={<ListProduct />} />
+
 
       </Routes>
     </Router>

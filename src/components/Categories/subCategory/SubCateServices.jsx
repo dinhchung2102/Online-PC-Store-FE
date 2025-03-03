@@ -1,8 +1,53 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import { useNavigate } from "react-router";
+
+const CATEGORY = [
+  {
+    nameCate: "Dịch vụ",
+    subCate: [
+      "Dịch vụ kỹ thuật tại nhà",
+      "Dịch vụ sửa chữa"
+    ]
+  },
+  {
+    nameCate: "Chính sách",
+    subCate: [
+      "Chính sách & bảng giá thu VGA qua sử dụng",
+      "Chính sách bảo hành",
+      "Chính sách giao hàng",
+      "Chính sách đổi trả"
+    ]
+  },
+  {
+    nameCate: "Build PC",
+    subCate: []
+  }
+];
 
 function SubCateServices() {
+  const navigate = useNavigate();
   return (
-    <Box>SubCateServices</Box>
+    <Box >
+      <Grid container spacing={2} columns={5}>
+        {CATEGORY.map((item, index) => (
+          <Grid key={index} sx={{ mb: 2 }} xs={1}>
+            <Typography variant="subtitle2" sx={{ color: 'red', cursor: 'pointer' }}>{item.nameCate}</Typography>
+            <Box sx={{}}>
+              {item.subCate.map((subItem, subIndex) => (
+                <Typography
+                  onClick={() => { navigate(`/products/${subItem}`) }}
+                  key={subIndex}
+                  sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}
+                >
+                  {subItem}
+                </Typography>
+              ))}
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 }
 
