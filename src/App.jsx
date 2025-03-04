@@ -8,6 +8,7 @@ import Shopping_Cart from "./pages/Shopping_Cart";
 import ListProduct from "~/pages/ListProduct";
 import Article_Details from "./pages/Article_Details";
 import Detail_Account from "./pages/Detail_Account";
+import Blogs from "./pages/Blogs";
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
         <Route path="/article-details" element={<Article_Details />} />
         <Route path="/Detail_Account" element={<Detail_Account />} />
         <Route path="/products/:category" element={<ListProduct />} />
-
+        <Route path="/blogs" element={<Blogs />} />
 
       </Routes>
     </Router>
