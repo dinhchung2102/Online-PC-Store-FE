@@ -4,23 +4,34 @@ import FormControl from '@mui/material/FormControl';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import { handleLogin } from '~/services/authService';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from "react-router";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(true); // State để lưu lỗi
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+
+  }, []);
 
   const handleSubmit = async () => {
     console.log("Đăng nhập");
-    // e.preventDefault();
+    setLoading(true)
     setError(true); // Xóa lỗi cũ trước khi gửi request
     const result = await handleLogin(username, password);
     if (!result.success) {
       setError(result.success); // Cập nhật lỗi nếu đăng nhập thất bại
+      setLoading(false)
     } else {
-      console.log("Đăng nhập thành công!");
-      // Chuyển hướng hoặc làm gì đó tiếp theo
+      setLoading(false)
+      // window.location.reload();
+      navigate(0)
     }
   };
 
@@ -61,7 +72,13 @@ function Login() {
             Lưu mật khẩu
           </Typography>
         </Box>
-        <Button variant="contained" fullWidth onClick={handleSubmit}>Đăng nhập</Button>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleSubmit}
+        >
+          {loading ? <CircularProgress sx={{ color: 'white' }} size={20} /> : "Đăng nhập"}
+        </Button>
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
