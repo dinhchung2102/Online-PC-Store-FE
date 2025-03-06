@@ -3,11 +3,26 @@ import FormControl from '@mui/material/FormControl';
 //icon
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
+import { useState } from "react";
+import { handleSignUp } from "~/services/authService";
 
-import SelectAddress from "~/utils/SelectAddress/SelectAddress";
 
 function SignUp() {
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSubmit = async () => {
+    console.log("Đăng ký");
+    await handleSignUp(username, password, confirmPassword);
+
+    // if (!result.success) {
+    //   console.error(result.message);
+    // } else {
+    //   console.log("Đăng ký thành công!");
+    // }
+  }
 
   return (
     <FormControl sx={{
@@ -18,12 +33,39 @@ function SignUp() {
       height: '100%',
       gap: 2
     }}>
-      <TextField fullWidth color="info" id="outlined-basic" label="Họ và tên" variant="outlined" size="small" />
-      <TextField fullWidth color="info" id="outlined-basic" label="Tên đăng nhập" variant="outlined" size="small" />
-      <TextField fullWidth color="info" id="outlined-basic" label="Số điện thoại" variant="outlined" size="small" />
-      <TextField type="password" fullWidth color="info" id="outlined-basic" label="Mật khẩu" variant="outlined" size="small" />
-      <TextField type="password" fullWidth color="info" id="outlined-basic" label="Nhập lại mật khẩu" variant="outlined" size="small" />
-      <SelectAddress />
+      <TextField
+        fullWidth
+        color="info"
+        id="outlined-basic"
+        label="Tên đăng nhập"
+        variant="outlined"
+        size="small"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <TextField
+        type="password"
+        fullWidth
+        color="info"
+        id="outlined-basic"
+        label="Mật khẩu"
+        variant="outlined"
+        size="small"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        type="password"
+        fullWidth
+        color="info"
+        id="outlined-basic"
+        label="Nhập lại mật khẩu"
+        variant="outlined"
+        size="small"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+
       <Box sx={{
         width: '100%',
       }}>
@@ -33,7 +75,13 @@ function SignUp() {
             Lưu mật khẩu
           </Typography>
         </Box>
-        <Button variant="contained" fullWidth >Đăng nhập</Button>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleSubmit}
+        >
+          Đăng ký
+        </Button>
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
