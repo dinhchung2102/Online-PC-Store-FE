@@ -11,26 +11,34 @@ import { useNavigate } from "react-router";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(true); // State để lưu lỗi
   const [loading, setLoading] = useState(false);
 
+  //
+  const [errorUsername, setErrorUsername] = useState({ error: false, message: "" });
+  const [errorPassword, setErrorPassword] = useState({ error: false, message: "" });
+
   const navigate = useNavigate();
+  console.log(errorUsername.error)
 
-  useEffect(() => {
-
-  }, []);
 
   const handleSubmit = async () => {
-    console.log("Đăng nhập");
+    if (!username.trim()) {
+      setErrorUsername({ error: true, message: "Vui lòng nhập tên đăng nhập!" });
+      return
+    }
+    setErrorUsername({ error: false, message: "" });
+    if (!password.trim()) {
+      setErrorPassword({ error: true, message: "Vui lòng nhập mật khẩu!" });
+      return
+    }
+    setErrorPassword({ error: false, message: "" });
     setLoading(true)
-    setError(true); // Xóa lỗi cũ trước khi gửi request
     const result = await handleLogin(username, password);
     if (!result.success) {
-      setError(result.success); // Cập nhật lỗi nếu đăng nhập thất bại
+      setErrorPassword({ error: true, message: "Mật khẩu không đúng!" }); // Cập nhật lỗi nếu đăng nhập thất bại
       setLoading(false)
     } else {
       setLoading(false)
-      // window.location.reload();
       navigate(0)
     }
   };
@@ -51,6 +59,8 @@ function Login() {
         size="small"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        error={errorUsername.error}
+        helperText={errorUsername.error ? errorUsername.message : ""}
       />
       <TextField type="password"
         fullWidth color="info"
@@ -60,8 +70,8 @@ function Login() {
         size="small"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        error={!error}
-        helperText={!error ? "Mật khẩu không đúng!" : ""}
+        error={errorPassword.error}
+        helperText={errorPassword.error ? "Mật khẩu không đúng!" : ""}
       />
       <Box sx={{
         width: '100%',

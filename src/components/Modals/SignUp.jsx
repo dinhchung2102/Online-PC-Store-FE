@@ -3,8 +3,9 @@ import FormControl from '@mui/material/FormControl';
 //icon
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { handleSignUp } from "~/services/authService";
+
 
 
 function SignUp() {
@@ -12,16 +13,23 @@ function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState({}); // State để lưu lỗi
+
+
+
 
   const handleSubmit = async () => {
+    if (!username.trim() || !password.trim() || !confirmPassword.trim()) {
+      setError({ success: false, message: "Vui lòng nhập đầy đủ các trường!" });
+    }
+    setError({}); // Xóa lỗi cũ trước khi gửi request
     console.log("Đăng ký");
-    await handleSignUp(username, password, confirmPassword);
-
-    // if (!result.success) {
-    //   console.error(result.message);
-    // } else {
-    //   console.log("Đăng ký thành công!");
-    // }
+    const result = await handleSignUp(username, password, confirmPassword);
+    if (!result.success) {
+      setError(result);
+    } else {
+      console.log("Đăng ký thành công!");
+    }
   }
 
   return (
@@ -64,6 +72,8 @@ function SignUp() {
         size="small"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
+        error={error.status === "ERR_CONFIRM_PASSWORD" ? !error.success : false}
+        helperText={error.status === "ERR_CONFIRM_PASSWORD" ? "Mật khẩu không đúng!" : ""}
       />
 
       <Box sx={{
