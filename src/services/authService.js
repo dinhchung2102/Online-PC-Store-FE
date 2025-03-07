@@ -45,16 +45,13 @@ export const handleSignUp = async (username, password, confirmPassword) => {
 
     const data = response.data;
     console.log("Response:", data);
-
-    // if (data.status === "OK") {
-    //   localStorage.setItem("access_token", data.access_token);
-    //   localStorage.setItem("refresh_token", data.refresh_token);
-    //   localStorage.setItem("userId", data.userId);
-
-    //   return { success: true, message: "Đăng nhập thành công!" };
-    // } else {
-    //   return { success: false, message: data.message || "Đăng nhập thất bại!" };
-    // }
+    if(data.status === "ERR_CONFIRM_PASSWORD") {
+      return { success: false, message: "Mật khẩu không trùng khớp!", status: data.status };
+    } else if(data.status === "ERR_USER") {
+      return { success: false, message: "Tên đăng nhập đã tồn tại!", status: data.status  };
+    } else {
+      return { success: true, message: "Đăng ký thành công!", status: data.status };
+    }
   } catch (error) {
     console.error("Lỗi đăng nhập:", error);
     const errorMessage = error.response?.data?.message || "Có lỗi xảy ra khi đăng nhập!";
