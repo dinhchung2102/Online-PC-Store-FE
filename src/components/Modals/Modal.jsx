@@ -75,10 +75,9 @@ export default function BasicModal({ open, handleClose }) {
             <Login />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <SignUp />
+            <SignUp handleCloseModal={handleClose} />
           </CustomTabPanel>
         </Box>
-
       </Modal>
     </div >
   );

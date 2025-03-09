@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import { handleLogin } from '~/services/authService';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from "react-router";
 

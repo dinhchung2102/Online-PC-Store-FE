@@ -3,32 +3,60 @@ import FormControl from '@mui/material/FormControl';
 //icon
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { handleSignUp } from "~/services/authService";
+import AlertDialog from "~/utils/AlertDialog";
+import { useNavigate } from "react-router";
+import PropTypes from "prop-types";
 
 
+function SignUp({ handleCloseModal }) {
 
-function SignUp() {
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState({}); // State để lưu lỗi
 
+  const [errorUsername, setErrorUsername] = useState({ error: false, message: "" });
+  const [errorPassword, setErrorPassword] = useState({ error: false, message: "" });
+  const [errorConfirmPassword, setErrorConfirmPassword] = useState({ error: false, message: "" });
 
+  //dialog susscess
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleClickOpenDialog = () => setOpenDialog(true)
+  const handleCloseDialog = () => setOpenDialog(false)
 
 
   const handleSubmit = async () => {
-    if (!username.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError({ success: false, message: "Vui lòng nhập đầy đủ các trường!" });
+
+    if (!username.trim()) {
+      setErrorUsername({ error: true, message: "Tên đăng nhập không được để trống!" });
+      return
     }
-    setError({}); // Xóa lỗi cũ trước khi gửi request
-    console.log("Đăng ký");
+    setErrorUsername({ error: false, message: "" });
+    if (!password.trim()) {
+      setErrorPassword({ error: true, message: "Mật khẩu không được để trống!" });
+      return
+    }
+    setErrorPassword({ error: false, message: "" });
+    if (!confirmPassword.trim()) {
+      setErrorConfirmPassword({ error: true, message: "Vui lòng nhập lại mật khẩu!" });
+      return
+    }
+    setErrorConfirmPassword({ error: false, message: "" });
+    // xu li be dang ky
     const result = await handleSignUp(username, password, confirmPassword);
-    if (!result.success) {
-      setError(result);
+    if (result.status === "ERR_USER") {
+      setErrorUsername({ error: true, message: "Tên đăng nhập đã tồn tại!" });
+      return
+    } else if (result.status === "ERR_CONFIRM_PASSWORD") {
+      setErrorConfirmPassword({ error: true, message: "Mật khẩu không trùng khớp!" });
+      return
     } else {
-      console.log("Đăng ký thành công!");
+      handleClickOpenDialog()
+      // handleCloseModal()
+      setTimeout(() => { navigate(0) }, 1000)
     }
   }
 
@@ -50,6 +78,8 @@ function SignUp() {
         size="small"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        error={errorUsername.error}
+        helperText={errorUsername.error ? errorUsername.message : ""}
       />
       <TextField
         type="password"
@@ -61,6 +91,8 @@ function SignUp() {
         size="small"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        error={errorPassword.error}
+        helperText={errorPassword.error ? errorPassword.message : ""}
       />
       <TextField
         type="password"
@@ -72,8 +104,8 @@ function SignUp() {
         size="small"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
-        error={error.status === "ERR_CONFIRM_PASSWORD" ? !error.success : false}
-        helperText={error.status === "ERR_CONFIRM_PASSWORD" ? "Mật khẩu không đúng!" : ""}
+        error={errorConfirmPassword.error}
+        helperText={errorConfirmPassword.error ? errorConfirmPassword.message : ""}
       />
 
       <Box sx={{
@@ -104,8 +136,13 @@ function SignUp() {
         <Button fullWidth startIcon={<GoogleIcon />} variant="outlined">Google</Button>
         <Button fullWidth startIcon={<FacebookRoundedIcon />} variant="outlined">Facebook</Button>
       </Box>
+      <AlertDialog open={openDialog} handleClose={handleCloseDialog} state="success" message="Đăng kí thành công, vui lòng đăng nhập" />
     </FormControl>
   );
 }
+
+SignUp.propTypes = {
+  handleCloseModal: PropTypes.func.isRequired,
+};
 
 export default SignUp;
