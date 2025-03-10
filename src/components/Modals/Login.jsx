@@ -5,22 +5,41 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import { handleLogin } from '~/services/authService';
 import { useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from "react-router";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(true); // State để lưu lỗi
+  const [loading, setLoading] = useState(false);
+
+  //
+  const [errorUsername, setErrorUsername] = useState({ error: false, message: "" });
+  const [errorPassword, setErrorPassword] = useState({ error: false, message: "" });
+
+  const navigate = useNavigate();
+  console.log(errorUsername.error)
+
 
   const handleSubmit = async () => {
-    console.log("Đăng nhập");
-    // e.preventDefault();
-    setError(true); // Xóa lỗi cũ trước khi gửi request
+    if (!username.trim()) {
+      setErrorUsername({ error: true, message: "Vui lòng nhập tên đăng nhập!" });
+      return
+    }
+    setErrorUsername({ error: false, message: "" });
+    if (!password.trim()) {
+      setErrorPassword({ error: true, message: "Vui lòng nhập mật khẩu!" });
+      return
+    }
+    setErrorPassword({ error: false, message: "" });
+    setLoading(true)
     const result = await handleLogin(username, password);
     if (!result.success) {
-      setError(result.success); // Cập nhật lỗi nếu đăng nhập thất bại
+      setErrorPassword({ error: true, message: "Mật khẩu không đúng!" }); // Cập nhật lỗi nếu đăng nhập thất bại
+      setLoading(false)
     } else {
-      console.log("Đăng nhập thành công!");
-      // Chuyển hướng hoặc làm gì đó tiếp theo
+      setLoading(false)
+      navigate(0)
     }
   };
 
@@ -40,6 +59,8 @@ function Login() {
         size="small"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        error={errorUsername.error}
+        helperText={errorUsername.error ? errorUsername.message : ""}
       />
       <TextField type="password"
         fullWidth color="info"
@@ -49,8 +70,8 @@ function Login() {
         size="small"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        error={!error}
-        helperText={!error ? "Mật khẩu không đúng!" : ""}
+        error={errorPassword.error}
+        helperText={errorPassword.error ? "Mật khẩu không đúng!" : ""}
       />
       <Box sx={{
         width: '100%',
@@ -61,7 +82,13 @@ function Login() {
             Lưu mật khẩu
           </Typography>
         </Box>
-        <Button variant="contained" fullWidth onClick={handleSubmit}>Đăng nhập</Button>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleSubmit}
+        >
+          {loading ? <CircularProgress sx={{ color: 'white' }} size={20} /> : "Đăng nhập"}
+        </Button>
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>

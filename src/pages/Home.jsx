@@ -15,12 +15,7 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import SellOutlinedIcon from "@mui/icons-material/SellOutlined"; // Icon Build PC
-import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined"; // Icon Tin công nghệ
-import BuildCircleOutlinedIcon from "@mui/icons-material/BuildCircleOutlined"; // Icon Dịch vụ sửa chữa
-import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined"; // Icon Dịch vụ kỹ thuật
-import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined"; // Icon Thu cũ đổi mới
-import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"; // Icon Tra cứu bảo hành
+
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import "slick-carousel/slick/slick.css";
@@ -33,14 +28,6 @@ import Categories from "~/components/Categories";
 
 
 
-const services = [
-  { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
-  { icon: <ArticleOutlinedIcon />, text: "Tin công nghệ" },
-  { icon: <BuildCircleOutlinedIcon />, text: "Dịch vụ sửa chữa" },
-  { icon: <HomeRepairServiceOutlinedIcon />, text: "Dịch vụ kỹ thuật tại nhà" },
-  { icon: <CurrencyExchangeOutlinedIcon />, text: "Thu cũ đổi mới" },
-  { icon: <VerifiedOutlinedIcon />, text: "Tra cứu bảo hành" },
-];
 
 
 const banners = [
@@ -185,35 +172,6 @@ function Home() {
     >
       {/* Header */}
       <Header />
-
-      {/* Danh mục sản phẩm */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 4,
-          p: 2,
-          borderBottom: "1px solid #ddd",
-        }}
-      >
-        {services.map((service, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              cursor: "pointer",
-            }}
-          >
-            {service.icon}
-            <Typography sx={{ fontSize: "14px", fontWeight: "500" }}>
-              {service.text}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
       <Box
         sx={{
           display: "flex",

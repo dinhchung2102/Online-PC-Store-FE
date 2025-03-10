@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import LaptopMacIcon from "@mui/icons-material/LaptopMac";
 import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
 import ComputerIcon from "@mui/icons-material/Computer";
@@ -58,7 +58,7 @@ const categories = [
 
 function Categories() {
 
-  const [hoverCate, setHoverCate] = useState(true);
+  const [hoverCate, setHoverCate] = useState(false);
   const [cateFocus, setCateFocus] = useState("");
 
   const handleGetLabelName = (e) => {
