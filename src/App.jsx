@@ -21,7 +21,6 @@ function App() {
         <Route path="/mouse-all" element={<Mouse_all />} />
         <Route path="/shopping-cart" element={<Shopping_Cart />} />
         <Route path="/article-details" element={<Article_Details />} />
-        <Route path="/Detail_Account" element={<Detail_Account />} />
         <Route path="/Technology_news" element={<Technology_news />} />
         <Route path="/products/:category" element={<ListProduct />} />
         <Route path="/blogs" element={<Blogs />} />
