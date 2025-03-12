@@ -151,7 +151,6 @@ export default function About() {
             >
               <Button
                 sx={{
-                  
                 }}
                 onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
                 onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state

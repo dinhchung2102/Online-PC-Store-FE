@@ -1,179 +1,749 @@
-import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import LaptopMacIcon from "@mui/icons-material/LaptopMac";
-import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
-import ComputerIcon from "@mui/icons-material/Computer";
-import MemoryIcon from "@mui/icons-material/Memory";
-import PowerIcon from "@mui/icons-material/Power";
-import SdStorageIcon from "@mui/icons-material/SdStorage";
-import SpeakerIcon from "@mui/icons-material/Speaker";
-import TvIcon from "@mui/icons-material/Tv";
-import KeyboardIcon from "@mui/icons-material/Keyboard";
-import MouseIcon from "@mui/icons-material/Mouse";
-import HeadsetIcon from "@mui/icons-material/Headset";
-import ChairIcon from "@mui/icons-material/Chair";
-import WifiIcon from "@mui/icons-material/Wifi";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import UsbIcon from "@mui/icons-material/Usb";
-import InfoIcon from "@mui/icons-material/Info";
-
-import SubCateAccessories from "./subCategory/SubCateAccessories";
-import SubCateCase from "./subCategory/subCateCase";
-import SubCateFurniture from "./subCategory/SubCateFurniture";
-import SubCateHandheld from "./subCategory/SubCateHandheld";
-import SubCateHeadphone from "./subCategory/SubCateHeadphone";
-import SubCateKeyBoard from "./subCategory/SubCateKeyBoard";
-import SubCateLaptop from "./subCategory/SubCateLaptop";
-import SubCateLaptopGaming from "./subCategory/SubCateLaptopGaming";
-import SubCateMain_CPU_VGA from "./subCategory/SubCateMain_CPU_VGA";
-import SubCateMicro_Webcam from "./subCategory/SubCateMicro_Webcam";
-import SubCateMonitor from "./subCategory/SubCateMonitor";
-import SubCateMouse from "./subCategory/SubCateMouse";
-import SubCatePCGVN from "./subCategory/SubCatePCGVN";
-import SubCateRAM from "./subCategory/SubCateRAM";
-import SubCateServices from "./subCategory/SubCateServices";
-import SubCateSoftware from "./subCategory/SubCateSoftware";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { styled } from '@mui/material/styles';
 
-const categories = [
-  { icon: <LaptopMacIcon />, text: "Laptop" },
-  { icon: <LaptopChromebookIcon />, text: "Laptop Gaming" },
-  { icon: <ComputerIcon />, text: "PC GVN" },
-  { icon: <MemoryIcon />, text: "Main, CPU, VGA" },
-  { icon: <PowerIcon />, text: "Case, Nguồn, Tản" },
-  { icon: <SdStorageIcon />, text: "Ổ cứng, RAM, Thẻ nhớ" },
-  { icon: <SpeakerIcon />, text: "Loa, Micro, Webcam" },
-  { icon: <TvIcon />, text: "Màn hình" },
-  { icon: <KeyboardIcon />, text: "Bàn phím" },
-  { icon: <MouseIcon />, text: "Chuột + Lót chuột" },
-  { icon: <HeadsetIcon />, text: "Tai Nghe" },
-  { icon: <ChairIcon />, text: "Ghế - Bàn" },
-  { icon: <WifiIcon />, text: "Phần mềm, mạng" },
-  { icon: <SportsEsportsIcon />, text: "Handheld, Console" },
-  { icon: <UsbIcon />, text: "Phụ kiện (Hub, sạc, cáp..)" },
-  { icon: <InfoIcon />, text: "Dịch vụ và thông tin khác" },
+import Grid from "@mui/material/Unstable_Grid2";
+
+const category = [
+  {
+    id: 1,
+    name: "LAPTOP asdfasfasfsfasfdasfdasfdasdfasfas",
+    filterName: [
+      {
+        type_id: '67b9f9af410eaa776b3f0467',
+        type: "Thương hiệu",
+        icon: '',
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "PC",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "PC 3",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 3",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: "PC 4",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 4",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 5,
+    name: "PC 5",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 5",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 6,
+    name: "PC 6",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 6",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 7,
+    name: "PC 7",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 7",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 8,
+    name: "PC 8",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 8",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 9,
+    name: "PC 9",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 9",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 10,
+    name: "PC 10",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 10",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 11,
+    name: "PC 11",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 11",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 12,
+    name: "PC 12",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 12",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 13,
+    name: "PC 13",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 13",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 14,
+    name: "PC 14",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 14",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 15,
+    name: "PC 15",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 15",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 16,
+    name: "PC 16",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 16",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 17,
+    name: "PC 17",
+    filterName: [
+      {
+        id: 1,
+        type: "Thương hiệu 17",
+        end: [
+          {
+            id: 1,
+            name: "acer",
+          },
+          {
+            id: 2,
+            name: "asus",
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: "Giá bán",
+        end: [
+          {
+            id: 1,
+            name: "5-10",
+          },
+          {
+            id: 2,
+            name: "10-15",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
+// Styled component for truncated text
+const TruncatedText = styled(Typography)({
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '200px', // Adjust this width as needed
+  textTransform: 'capitalize',
+  fontSize: '0.8rem',
+  fontWeight: 'bold',
+  transition: 'none'
+});
+
 function Categories() {
+  const [hoveredId, setHoveredId] = useState(null); // State để theo dõi nút đang hover
 
-  const [hoverCate, setHoverCate] = useState(false);
-  const [cateFocus, setCateFocus] = useState("");
-
-  const handleGetLabelName = (e) => {
-    setCateFocus(e.target.innerText)
-    setHoverCate(true)
-  }
   return (
-    <Box
-      sx={{
-        width: 300,
-        bgcolor: "rgb(255, 255, 255)",
-        borderRadius: "8px",
-        minHeight: "600px",
-        position: 'relative',
-        borderBottomRightRadius: hoverCate ? '0px' : '8px',
-        borderTopRightRadius: hoverCate ? '0px' : '8px',
-      }}
-    >
-      <Box sx={{
-        display: hoverCate ? 'block' : 'none',
-        width: `calc(1442px - 300px)`,
-        minHeight: 'inherit',
-        height: '100%',
-        bgcolor: "white",
-        position: "absolute",
-        left: '100%',
-        zIndex: 99,
-        borderBottomRightRadius: '8px',
-        borderTopRightRadius: '8px',
-        p: 4
-      }}
-        onMouseEnter={() => setHoverCate(true)}
-        onMouseLeave={() => setHoverCate(false)}
-      >
-        {(() => {
-          switch (cateFocus) {
-            case 'Laptop':
-              return <SubCateLaptop />;
-            case 'Laptop Gaming':
-              return <SubCateLaptopGaming />;
-            case 'PC GVN':
-              return <SubCatePCGVN />;
-            case 'Main, CPU, VGA':
-              return <SubCateMain_CPU_VGA />;
-            case 'Case, Nguồn, Tản':
-              return <SubCateCase />;
-            case 'Ổ cứng, RAM, Thẻ nhớ':
-              return <SubCateRAM />;
-            case 'Loa, Micro, Webcam':
-              return <SubCateMicro_Webcam />;
-            case 'Màn hình':
-              return <SubCateMonitor />;
-            case 'Bàn phím':
-              return <SubCateKeyBoard />;
-            case 'Chuột + Lót chuột':
-              return <SubCateMouse />;
-            case 'Tai Nghe':
-              return <SubCateHeadphone />;
-            case 'Ghế - Bàn':
-              return <SubCateFurniture />;
-            case 'Phần mềm, mạng':
-              return <SubCateSoftware />;
-            case 'Handheld, Console':
-              return <SubCateHandheld />;
-            case 'Phụ kiện (Hub, sạc, cáp..)':
-              return <SubCateAccessories />;
-            case 'Dịch vụ và thông tin khác':
-              return <SubCateServices />;
-            default:
-              return null;
-          }
-        })()}
+    <Box sx={{ width: 300, position: 'relative' }}>
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 250,
+          minHeight: 600,
+          bgcolor: 'white',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '1px 1px 20px rgba(0,0,0,0.1)'
+
+        }}>
+        {category.map((item) => {
+          return (
+            <Box
+              sx={{
+                display: "inline-block",
+              }}
+              key={item.id}
+            >
+              <Box
+                sx={{
+                  backgroundColor: item.id === hoveredId ? 'red' : 'white',
+                  position: 'relative',
+
+                  // '&::after': {
+                  //   content: '""',
+                  //   display: "block",
+                  //   width: "20px",
+                  //   height: "40px",
+                  //   backgroundColor: "transparent",
+                  //   position: "absolute",
+                  //   bottom: 0,
+                  //   right: -20,
+                  //   borderTop: '20px solid transparent',
+                  //   borderBottom: '20px solid transparent',
+                  //   borderLeft: `10px solid ${item.id === hoveredId ? 'red' : 'transparent'}`,
+                  //   zIndex: 99,
+                  // }
+                }}
+                onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
+              >
+                <Button
+                  fullWidth
+                  sx={{
+                    justifyContent: 'space-between',
+                    color: item.id === hoveredId ? 'white' : 'black',
+                    paddingX: 2,
+                    paddingY: 1,
+                  }}
+                  endIcon={<KeyboardArrowRightIcon />}
+                  onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                  onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
+                >
+                  <TruncatedText>
+                    {item.name}
+                  </TruncatedText>
+                </Button>
+              </Box>
+
+              {/* Hiển thị Box khi hover vào nút */}
+              {hoveredId === item.id && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: "100%",
+                    height: `calc(36px * ${category.length})`,
+                    width: 'calc(1442px - 300px)',
+                    minHeight: 200,
+                    backgroundColor: "white",
+                    padding: 2,
+                    zIndex: 999,
+                    boxShadow: '1px 1px 20px rgba(0,0,0,0.1)'
+                  }}
+                  onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                  onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
+                >
+                  {/* Hiển thị danh sách các type từ filterName */}
+                  <Grid container spacing={2} columns={5}>
+                    {item.filterName?.map((itemFilter) => {
+                      return (
+                        <Grid key={itemFilter.id} sx={{ mb: 2 }} xs={1}>
+                          <Typography variant="subtitle2" sx={{ color: 'red', cursor: 'pointer' }}>{itemFilter.type}</Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              marginLeft: 2,
+                            }}
+                          >
+                            {/* Hiển thị các item trong 'end' */}
+                            {itemFilter.end?.map((endItem) => (
+                              <Typography
+                                // onClick={() => { navigate(`/products/${endItem.name}`) }}
+                                key={endItem.id}
+                                sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}
+                              >
+                                {endItem.name}
+                              </Typography>
+                            ))}
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Box>
+              )}
+            </Box>
+          );
+        })}
       </Box>
-      <List sx={{
-      }}>
-        {categories.map((item, index) => (
-          <ListItem
-            onMouseEnter={handleGetLabelName}
-            onMouseLeave={() => setHoverCate(false)}
-            sx={{
-
-              cursor: "pointer",
-              paddingY: 0.5,
-
-              "& .MuiListItemIcon-root": {
-                minWidth: "36px",
-              },
-              "& .MuiTypography-root": {
-                fontSize: "0.9rem",
-                fontWeight: "bold",
-              },
-              "&:hover": {
-                backgroundColor: "red",
-                color: "white",
-                "&::after": {
-                  content: '""',
-                  display: "block",
-                  width: "20px",
-                  height: "100%",
-                  backgroundColor: "transparent",
-                  position: "absolute",
-                  bottom: 0,
-                  right: -20,
-                  borderTop: '18.8px solid transparent',
-                  borderBottom: '18.8px solid transparent',
-                  borderLeft: '10px solid red',
-                  zIndex: 999,
-                }
-              },
-            }} key={index}>
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText sx={{ fontSize: '0.5rem' }} primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
 }

@@ -17,7 +17,6 @@ import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Article from "../components/Article";
-import TopicChip from "../components/TopicChip";
 import imgProduct from "../assets/images/expertbook-p1-p1403cva-i5se16-50w__8__f9120f92bbcf40409391d8b907b7c630_0b12de755584415689fecd42c6a95e6a.webp";
 import imgMain from "../assets/images/cpu-new.png";
 import IconButton from "@mui/material/IconButton";

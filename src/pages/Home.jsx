@@ -26,10 +26,6 @@ import Header from "~/components/Header";
 import Categories from "~/components/Categories";
 
 
-
-
-
-
 const banners = [
   "/image/1a.png",
   "/image/1b.png",
@@ -163,7 +159,12 @@ const laptops = [
   },
 ];
 
+
+
+
 function Home() {
+
+
 
   return (
     <Container
@@ -182,7 +183,9 @@ function Home() {
         }}
       >
         {/* Sidebar */}
-        <Categories/>
+        <Categories />
+
+
 
         <Box
           sx={{
