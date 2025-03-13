@@ -2,8 +2,8 @@ import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { styled } from '@mui/material/styles';
-
 import Grid from "@mui/material/Unstable_Grid2";
+import { useNavigate } from "react-router";
 
 const category = [
   {
@@ -628,6 +628,9 @@ const TruncatedText = styled(Typography)({
 });
 
 function Categories() {
+
+  const navigate = useNavigate()
+
   const [hoveredId, setHoveredId] = useState(null); // State để theo dõi nút đang hover
 
   return (
@@ -726,7 +729,7 @@ function Categories() {
                             {/* Hiển thị các item trong 'end' */}
                             {itemFilter.end?.map((endItem) => (
                               <Typography
-                                // onClick={() => { navigate(`/products/${endItem.name}`) }}
+                                onClick={() => { navigate(`/products/${endItem.name}`) }}
                                 key={endItem.id}
                                 sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}
                               >
