@@ -12,6 +12,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { useEffect, useState } from "react";
 import ProductCard from "~/components/ProductCard";
 import { getAllProducts } from "~/services/productService";
+import Pagination from '@mui/material/Pagination';
 
 
 
@@ -34,6 +35,8 @@ function ListProduct() {
     }
     fetchAllProduct();
   }, [])
+
+  console.log(products);
 
   return (
     <Box
@@ -75,41 +78,45 @@ function ListProduct() {
                   onClick={() => setAscendingOrder(prev => !prev)}
                   clickable
                   label="Giá tăng"
-                  icon={ascendingOrder && <DoneIcon />}
+                  icon={ascendingOrder ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setDescendingOrder(prev => !prev)}
                   clickable
                   label="Giá giảm"
-                  icon={descendingOrder && <DoneIcon />}
+                  icon={descendingOrder ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setBestSeller(prev => !prev)}
                   clickable
                   label="Bán chạy nhất"
-                  icon={bestSeller && <DoneIcon />}
+                  icon={bestSeller ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setNewest(prev => !prev)}
                   clickable
                   label="Mới nhất"
-                  icon={newest && <DoneIcon />}
+                  icon={newest ? <DoneIcon /> : null}
                 />
               </Box>
             </Box>
-            <Grid m={0} spacing={2} container sx={{ bgcolor: "#fff", mt: 1 }}>
-              {products?.map((product, index) => {
-                return (
-                  <Grid key={index} lg={4} >
-                    <ProductCard product={product} />
-                  </Grid>
-                )
-              })}
-
-            </Grid>
+            <Box sx={{ bgcolor: "#fff" }}>
+              <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
+                {products?.map((product) => {
+                  return (
+                    <Grid key={product._id} lg={3} md={4} sm={6} xs={12} item>
+                      <ProductCard product={product} />
+                    </Grid>
+                  )
+                })}
+              </Grid>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
+                <Pagination count={10} color="primary" />
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Box>

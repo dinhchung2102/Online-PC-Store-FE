@@ -738,7 +738,6 @@ function Categories() {
                               marginLeft: 2,
                             }}
                           >
-                            
                           </Box>
                         </Grid>
                       );

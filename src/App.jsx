@@ -7,6 +7,7 @@ import ListProduct from "~/pages/ListProduct/ListProduct";
 import Article_Details from "./pages/Article_Details";
 import Technology_news from "./pages/technology_news";
 import Blogs from "./pages/Blogs";
+import DetailProduct from "./pages/DetailProduct";
 function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ function App() {
         <Route path="/article-details" element={<Article_Details />} />
         <Route path="/Technology_news" element={<Technology_news />} />
         <Route path="/products/:category" element={<ListProduct />} />
+        <Route path="/detailProduct/:idProduct" element={<DetailProduct />} />
         <Route path="/blogs" element={<Blogs />} />
       </Routes>
     </Router>
