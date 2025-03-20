@@ -9,57 +9,11 @@ import Filter from "./Filter";
 
 import Chip from '@mui/material/Chip';
 import DoneIcon from '@mui/icons-material/Done';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "~/components/ProductCard";
+import { getAllProducts } from "~/services/productService";
+import Pagination from '@mui/material/Pagination';
 
-
-const products = [
-  {
-    link: "https://cellphones.com.vn/pc-cps-gaming-g4.html",
-    image:
-      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_167_3_.png",
-    name: "PC CPS Gaming G04 i5 12400F / 16GB - 256GB / RX 6500",
-    originalPrice: "16.890.000đ",
-    discountedPrice: "11.290.000đ",
-    discountPercentage: 33,
-  },
-  {
-    link: "#",
-    image:
-      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_167_3_.png",
-    name: "PC CPS Gaming G04 i5 12400F / 16GB - 256GB / RX 6500",
-    originalPrice: "16.890.000đ",
-    discountedPrice: "11.290.000đ",
-    discountPercentage: 33,
-  },
-  {
-    link: "#",
-    image:
-      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_167_3_.png",
-    name: "PC CPS Gaming G04 i5 12400F / 16GB - 256GB / RX 6500",
-    originalPrice: "16.890.000đ",
-    discountedPrice: "11.290.000đ",
-    discountPercentage: 33,
-  },
-  {
-    link: "#",
-    image:
-      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_167_3_.png",
-    name: "PC CPS Gaming G04 i5 12400F / 16GB - 256GB / RX 6500",
-    originalPrice: "16.890.000đ",
-    discountedPrice: "11.290.000đ",
-    discountPercentage: 33,
-  },
-  {
-    link: "#",
-    image:
-      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_167_3_.png",
-    name: "PC CPS Gaming G04 i5 12400F / 16GB - 256GB / RX 6500",
-    originalPrice: "16.890.000đ",
-    discountedPrice: "11.290.000đ",
-    discountPercentage: 33,
-  },
-];
 
 
 function ListProduct() {
@@ -70,6 +24,19 @@ function ListProduct() {
   const [descendingOrder, setDescendingOrder] = useState(false);
   const [bestSeller, setBestSeller] = useState(false);
   const [newest, setNewest] = useState(false);
+
+  // list products
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchAllProduct = async () => {
+      const products = await getAllProducts();
+      setProducts(products);
+    }
+    fetchAllProduct();
+  }, [])
+
+  console.log(products);
 
   return (
     <Box
@@ -103,7 +70,7 @@ function ListProduct() {
               bgcolor: "#fff",
               p: 2
             }}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Lap top Asus chính hãng (100 sản phẩm)</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{category} (100 sản phẩm)</Typography>
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mr: 2 }}>Sắp xếp theo</Typography>
                 <Chip
@@ -111,41 +78,45 @@ function ListProduct() {
                   onClick={() => setAscendingOrder(prev => !prev)}
                   clickable
                   label="Giá tăng"
-                  icon={ascendingOrder && <DoneIcon />}
+                  icon={ascendingOrder ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setDescendingOrder(prev => !prev)}
                   clickable
                   label="Giá giảm"
-                  icon={descendingOrder && <DoneIcon />}
+                  icon={descendingOrder ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setBestSeller(prev => !prev)}
                   clickable
                   label="Bán chạy nhất"
-                  icon={bestSeller && <DoneIcon />}
+                  icon={bestSeller ? <DoneIcon /> : null}
                 />
                 <Chip
                   sx={{ borderRadius: 1, cursor: 'pointer' }}
                   onClick={() => setNewest(prev => !prev)}
                   clickable
                   label="Mới nhất"
-                  icon={newest && <DoneIcon />}
+                  icon={newest ? <DoneIcon /> : null}
                 />
               </Box>
             </Box>
-            <Grid m={0} spacing={2} container sx={{ bgcolor: "#fff", mt: 1 }}>
-              {products.map((product, index) => {
-                return (
-                  <Grid key={index} lg={4} >
-                    <ProductCard product={product} />
-                  </Grid>
-                )
-              })}
-
-            </Grid>
+            <Box sx={{ bgcolor: "#fff" }}>
+              <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
+                {products?.map((product) => {
+                  return (
+                    <Grid key={product._id} lg={3} md={4} sm={6} xs={12} item>
+                      <ProductCard product={product} />
+                    </Grid>
+                  )
+                })}
+              </Grid>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
+                <Pagination count={10} color="primary" />
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Box>

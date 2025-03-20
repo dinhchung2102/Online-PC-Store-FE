@@ -1,9 +1,10 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { styled } from '@mui/material/styles';
 import Grid from "@mui/material/Unstable_Grid2";
 import { useNavigate } from "react-router";
+import { getCategories } from "~/services/productService";
 
 const category = [
   {
@@ -624,7 +625,7 @@ const TruncatedText = styled(Typography)({
   textTransform: 'capitalize',
   fontSize: '0.8rem',
   fontWeight: 'bold',
-  transition: 'none'
+  transition: '0 none'
 });
 
 function Categories() {
@@ -632,6 +633,16 @@ function Categories() {
   const navigate = useNavigate()
 
   const [hoveredId, setHoveredId] = useState(null); // State để theo dõi nút đang hover
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await getCategories();
+      setCategories(data);
+    }
+    fetchCategories();
+  }, [])
 
   return (
     <Box sx={{ width: 300, position: 'relative' }}>
@@ -646,17 +657,17 @@ function Categories() {
           boxShadow: '1px 1px 20px rgba(0,0,0,0.1)'
 
         }}>
-        {category.map((item) => {
+        {categories?.map((item) => {
           return (
             <Box
               sx={{
                 display: "inline-block",
               }}
-              key={item.id}
+              key={item._id}
             >
               <Box
                 sx={{
-                  backgroundColor: item.id === hoveredId ? 'red' : 'white',
+                  backgroundColor: item._id === hoveredId ? 'red' : 'white',
                   position: 'relative',
 
                   // '&::after': {
@@ -674,19 +685,20 @@ function Categories() {
                   //   zIndex: 99,
                   // }
                 }}
-                onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                onMouseEnter={() => setHoveredId(item._id)} // Khi hover vào nút, set state
                 onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
               >
                 <Button
                   fullWidth
                   sx={{
                     justifyContent: 'space-between',
-                    color: item.id === hoveredId ? 'white' : 'black',
+                    color: item._id === hoveredId ? 'white' : 'black',
                     paddingX: 2,
                     paddingY: 1,
                   }}
+                  onClick={() => navigate(`/products/${item.name}`)}
                   endIcon={<KeyboardArrowRightIcon />}
-                  onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                  onMouseEnter={() => setHoveredId(item._id)} // Khi hover vào nút, set state
                   onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
                 >
                   <TruncatedText>
@@ -696,7 +708,7 @@ function Categories() {
               </Box>
 
               {/* Hiển thị Box khi hover vào nút */}
-              {hoveredId === item.id && (
+              {hoveredId === item._id && (
                 <Box
                   sx={{
                     position: "absolute",
@@ -710,7 +722,7 @@ function Categories() {
                     zIndex: 999,
                     boxShadow: '1px 1px 20px rgba(0,0,0,0.1)'
                   }}
-                  onMouseEnter={() => setHoveredId(item.id)} // Khi hover vào nút, set state
+                  onMouseEnter={() => setHoveredId(item._id)} // Khi hover vào nút, set state
                   onMouseLeave={() => setHoveredId(null)} // Khi rời khỏi nút, reset state
                 >
                   {/* Hiển thị danh sách các type từ filterName */}
@@ -726,16 +738,6 @@ function Categories() {
                               marginLeft: 2,
                             }}
                           >
-                            {/* Hiển thị các item trong 'end' */}
-                            {itemFilter.end?.map((endItem) => (
-                              <Typography
-                                onClick={() => { navigate(`/products/${endItem.name}`) }}
-                                key={endItem.id}
-                                sx={{ cursor: 'pointer', '&:hover': { color: 'red' } }}
-                              >
-                                {endItem.name}
-                              </Typography>
-                            ))}
                           </Box>
                         </Grid>
                       );
