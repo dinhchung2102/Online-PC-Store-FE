@@ -107,7 +107,7 @@ function ListProduct() {
               <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
                 {products?.map((product) => {
                   return (
-                    <Grid key={product._id} lg={3} md={4} sm={6} xs={12} item>
+                    <Grid key={product._id} lg={3} md={4} sm={6} xs={12} item={true}>
                       <ProductCard product={product} />
                     </Grid>
                   )
