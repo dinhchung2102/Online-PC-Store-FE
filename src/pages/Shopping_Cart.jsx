@@ -8,6 +8,21 @@ import {
   Button,
   Typography,
   Paper,
+<<<<<<< HEAD
+  Input,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+  Checkbox
+=======
+>>>>>>> 47a5af1d14d3c7082fc3690e8080874fcdc590db
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -24,6 +39,13 @@ import Grid from "@mui/material/Unstable_Grid2";
 import imgProduct from "../assets/images/expertbook-p1-p1403cva-i5se16-50w__8__f9120f92bbcf40409391d8b907b7c630_0b12de755584415689fecd42c6a95e6a.webp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ButtonGroup from "@mui/material/ButtonGroup";
+<<<<<<< HEAD
+import CartItem from "../components/CartItems";
+import PayInformation from "../components/PayInformation";
+import CheckoutForm from "../components/CheckOutForm";
+import { useNavigate } from "react-router-dom";
+
+=======
 import { useSelector } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
 
@@ -38,14 +60,15 @@ const buttons = [
     +
   </Button>,
 ];
+>>>>>>> 47a5af1d14d3c7082fc3690e8080874fcdc590db
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#f0f0f0",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
-  height: "9vh",
+  height: "auto",
 }));
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -72,7 +95,6 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     borderRadius: 1,
   },
 }));
-
 const ColorlibStepIconRoot = styled("div")(({ theme, ownerState }) => ({
   backgroundColor:
     theme.palette.mode === "dark" ? theme.palette.grey[700] : "#ccc",
@@ -136,6 +158,21 @@ function Shopping_Cart() {
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const navigate = useNavigate();
+  const [quantity, setQuantity] = React.useState(1); // Giá trị mặc định là 1
+
+const handleDecrease = () => {
+  setQuantity((prev) => Math.max(prev - 1, 0));
+};
+
+const handleIncrease = () => {
+  setQuantity((prev) => prev + 1);
+};
+const handleNav = () => {
+  // reset form nếu cần
+  navigate("/products/all");
+  window.location.reload(); // điều hướng tới trang sản phẩm
+};
 
   // const isStepOptional = (step) => {
   //   return step === 1;
@@ -165,6 +202,15 @@ function Shopping_Cart() {
   //     throw new Error("You can't skip a step that isn't optional.");
   //   }
 
+<<<<<<< HEAD
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+=======
   //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
   //   setSkipped((prevSkipped) => {
   //     const newSkipped = new Set(prevSkipped.values());
@@ -173,6 +219,7 @@ function Shopping_Cart() {
   //   });
   // };
 
+>>>>>>> 47a5af1d14d3c7082fc3690e8080874fcdc590db
   const handleReset = () => {
     setActiveStep(0);
   };
@@ -182,12 +229,20 @@ function Shopping_Cart() {
         disableGutters
         maxWidth={false}
         sx={{
+<<<<<<< HEAD
+          width: "50%",
+          height: "auto",
+          marginTop: 5,
+          padding: 2,
+          backgroundColor: "#ffffff",
+=======
           pb: 5,
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "center",
           backgroundColor: "#f0f0f0",
+>>>>>>> 47a5af1d14d3c7082fc3690e8080874fcdc590db
         }}
       >
         <Box width="100%">
@@ -202,6 +257,93 @@ function Shopping_Cart() {
             backgroundColor: "#ffffff",
           }}
         >
+<<<<<<< HEAD
+          {steps.map((label, index) => {
+            const stepProps = {};
+            const labelProps = {};
+            if (isStepOptional(index)) {
+            }
+            if (isStepSkipped(index)) {
+              stepProps.completed = false;
+            }
+            return (
+              <Step key={label}>
+                <StepLabel StepIconComponent={ColorlibStepIcon}>
+                  {label}
+                </StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+        {activeStep === steps.length ? (
+  // Bước cuối: hoàn tất
+  <React.Fragment>
+    <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
+    <Typography sx={{ mt: 2, mb: 1 }}>
+      Thanh toán thành công!
+    </Typography>
+    </Box>
+    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+      <Box sx={{ flex: "1 1 auto" }} />
+      <Button variant="contained" color="primary" onClick={handleNav}>Tiếp tục mua sắm</Button>
+    </Box>
+  </React.Fragment>
+) : activeStep === steps.length - 1 ? (
+  // Bước xác nhận đặt hàng
+  <React.Fragment>
+    <CheckoutForm />
+    {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
+    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+      <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+        Quay lại
+      </Button>
+      <Box sx={{ flex: "1 1 auto" }} />
+      <Button variant="contained" color="primary" onClick={handleNext}>Hoàn tất đặt hàng</Button>
+    </Box>
+  </React.Fragment>
+) : activeStep === steps.length - 2 ? (
+  // Bước nhập thông tin giao hàng
+  <React.Fragment>
+    <PayInformation />
+    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+      <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+        Quay lại
+      </Button>
+      <Box sx={{ flex: "1 1 auto" }} />
+      <Button  variant="contained" color="primary" onClick={handleNext}>Tiếp tục</Button>
+    </Box>
+  </React.Fragment>
+) : (
+  // Bước đầu: Giỏ hàng
+  <React.Fragment>
+    <Box sx={{ width: "100%", padding: 5 }}>
+      <Stack spacing={3}>
+        {[1, 2].map((item, index) => (
+          <Item key={index}>
+            <CartItem imgProduct={imgProduct} />
+          </Item>
+        ))}
+      </Stack>
+    </Box>
+
+    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+  <Button
+    color="inherit"
+    onClick={activeStep === 0 ? handleNav : handleBack}
+    sx={{ mr: 1 }}
+  >
+    Tiếp tục mua sắm
+  </Button>
+  <Box sx={{ flex: "1 1 auto" }} />
+  <Button variant="contained" color="primary" onClick={handleNext}>
+    Tiến hành thanh toán
+  </Button>
+</Box>
+
+  </React.Fragment>
+)}
+      </Box>
+=======
           <Stepper
             alternativeLabel
             activeStep={activeStep}
@@ -342,6 +484,7 @@ function Shopping_Cart() {
           )}
         </Box>
       </Container>
+>>>>>>> 47a5af1d14d3c7082fc3690e8080874fcdc590db
       <Footer />
       <BasicModal open={openModal} handleClose={handleCloseModal} />
     </Box>
