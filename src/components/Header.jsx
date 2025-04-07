@@ -33,9 +33,10 @@ import { isLoggedIn } from "~/services/authService";
 import Avatar from '@mui/material/Avatar';
 import Divider from "@mui/material/Divider";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
-import { getUserInfo } from '~/services/userService';
+import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
+import { getCart } from "~/services/cartService";
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -95,16 +96,21 @@ function Header() {
                 // setOpenToast(true)
                 setIsLogin(true);
                 const user = await getUserInfo();
+                const token = getToken();
+                console.log("token", token.token);
                 dispatch(setUserInfo({
                     id: user._id,
                     name: user.name,
                     address: [],
                     phone: "",
                     email: "",
-                    token: user.access_token,
-                    refresh_token: user.refresh_token,
+                    token: token?.token,
+                    refresh_token: token?.refreshToken,
                     avatar: "",
                 }));
+
+                const cart = await getCart(user._id);
+                console.log("cart", cart);
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
