@@ -4,7 +4,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import HomeIcon from '@mui/icons-material/Home';
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Divider from "@mui/material/Divider";
 import StarIcon from '@mui/icons-material/Star';
 import { formatCurrency, keyToVietnamese } from "~/utils/utils";
@@ -34,6 +34,11 @@ function DetailProduct() {
     fetchAllProduct();
   }, [])
 
+
+  const navigate = useNavigate();
+  const handleClickBuy = (e) => {
+    navigate("/shopping-cart");
+  }
   const location = useLocation();
   const { product } = location.state || {};
 
@@ -79,6 +84,7 @@ function DetailProduct() {
             </Box>
             <Box sx={{ mt: 3 }}>
               <Button
+                onClick={handleClickBuy}
                 variant="contained"
                 sx={{
                   display: 'flex',

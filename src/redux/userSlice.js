@@ -25,7 +25,7 @@ const userSlice = createSlice({
         address: user.address || [],
         phone: user.phone || '',
         email: user.email || '',
-        token: user.access_token || '',
+        token: user.token || '',
         refresh_token: user.refresh_token || '',
         avatar: user.avatar || '',
       };

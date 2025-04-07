@@ -7,12 +7,16 @@ export const getUserId = () => {
 
 export const getToken = () => {
   const token = localStorage.getItem("access_token");
-  return token;
+  const refreshToken = localStorage.getItem("refresh_token");
+  return {
+    token,
+    refreshToken
+  };
 }
 
 export const getUserInfo = async () => {
   try {
-    const token = getToken();
+    const token = getToken().token;
 
     const response = await axios.get(
       `http://localhost:5555/api/user/get-detail/` + getUserId(),
