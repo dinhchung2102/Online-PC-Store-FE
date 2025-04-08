@@ -2,6 +2,7 @@ import axios from "axios";
 import * as jwtDecode from "jwt-decode";
 
 export const handleLogin = async (username, password) => {
+
   if (!username.trim() || !password.trim()) {
     return { success: false, message: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!" };
   }
@@ -45,10 +46,10 @@ export const handleSignUp = async (username, password, confirmPassword) => {
 
     const data = response.data;
     console.log("Response:", data);
-    if(data.status === "ERR_CONFIRM_PASSWORD") {
+    if (data.status === "ERR_CONFIRM_PASSWORD") {
       return { success: false, message: "Mật khẩu không trùng khớp!", status: data.status };
-    } else if(data.status === "ERR_USER") {
-      return { success: false, message: "Tên đăng nhập đã tồn tại!", status: data.status  };
+    } else if (data.status === "ERR_USER") {
+      return { success: false, message: "Tên đăng nhập đã tồn tại!", status: data.status };
     } else {
       return { success: true, message: "Đăng ký thành công!", status: data.status };
     }
@@ -61,11 +62,11 @@ export const handleSignUp = async (username, password, confirmPassword) => {
 
 export const isLoggedIn = () => {
   const token = localStorage.getItem("access_token");
-  
+
   if (!token) return false;
-  
+
   try {
-    const decoded = jwtDecode.jwtDecode(token); 
+    const decoded = jwtDecode.jwtDecode(token);
     return decoded.exp * 1000 > Date.now(); // Kiểm tra xem token còn hiệu lực không
   } catch (error) {
     console.error("Lỗi khi giải mã token:", error);

@@ -33,9 +33,10 @@ import { isLoggedIn } from "~/services/authService";
 import Avatar from '@mui/material/Avatar';
 import Divider from "@mui/material/Divider";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
-import { getUserInfo } from '~/services/userService';
-
-
+import { getUserInfo, getToken } from '~/services/userService';
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
+import { getCart } from "~/services/cartService";
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -48,6 +49,10 @@ const services = [
 
 
 function Header() {
+    // redux
+    const dispatch = useDispatch();
+    const userInfo = useSelector((state) => state.user.userInfo);
+
     // Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -74,8 +79,15 @@ function Header() {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("userId");
+        dispatch(clearUserInfo());
         window.location.reload();
     }
+
+    useEffect(() => {
+        if (userInfo) {
+            setName(userInfo.name);
+        }
+    }, [userInfo]);
 
 
     useEffect(() => {
@@ -84,7 +96,21 @@ function Header() {
                 // setOpenToast(true)
                 setIsLogin(true);
                 const user = await getUserInfo();
-                setName(user.name);
+                const token = getToken();
+                console.log("token", token.token);
+                dispatch(setUserInfo({
+                    id: user._id,
+                    name: user.name,
+                    address: [],
+                    phone: "",
+                    email: "",
+                    token: token?.token,
+                    refresh_token: token?.refreshToken,
+                    avatar: "",
+                }));
+
+                const cart = await getCart(user._id);
+                console.log("cart", cart);
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
