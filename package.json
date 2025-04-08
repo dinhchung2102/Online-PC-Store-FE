@@ -37,5 +37,17 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "vite": "^6.0.5"
-  }
+  },
+  "description": "",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinhchung2102/Online-PC-Store-FE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dinhchung2102/Online-PC-Store-FE/issues"
+  },
+  "homepage": "https://github.com/dinhchung2102/Online-PC-Store-FE#readme"
 }
