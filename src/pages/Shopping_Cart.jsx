@@ -44,7 +44,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import CartItem from "../components/CartItems";
 import PayInformation from "../components/PayInformation";
 import CheckoutForm from "../components/CheckOutForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -132,7 +132,7 @@ const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 function Shopping_Cart() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [quantity, setQuantity] = React.useState(1); // Giá trị mặc định là 1
 
 const handleDecrease = () => {
