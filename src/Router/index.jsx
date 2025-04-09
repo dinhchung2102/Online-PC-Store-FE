@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router";
+
 import Home from "~/pages/Home";
 import Configuration_Design from "~/pages/Configuration_Design";
 import Mouse_all from "~/pages/Mouse_all";
@@ -20,7 +21,7 @@ function MyRouter() {
         <Route path="/mouse-all" element={<Mouse_all />} />
         <Route path="/shopping-cart" element={<Shopping_Cart />} />
         <Route path="/article-details" element={<Article_Details />} />
-        <Route path="/Technology_news" element={<Technology_news />} />
+        <Route path="/technology-news" element={<Technology_news />} />
         <Route path="/products/:category" element={<ListProduct />} />
         <Route path="/detailProduct/:idProduct" element={<DetailProduct />} />
         <Route path="/blogs" element={<Blogs />} />
