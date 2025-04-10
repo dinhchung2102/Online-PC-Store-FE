@@ -141,9 +141,9 @@ export default function CartInfoForm() {
 
       {/* Tổng tiền và hành động */}
       <Divider sx={{ my: 2 }} />
-      <Box mb={2} sx={{display: 'flex', flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+      <Box mb={2} sx={{ display: 'flex', flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
         <Typography variant="h6">
-          Tổng tiền: 
+          Tổng tiền:
         </Typography>
         <Typography variant="h6" style={{ color: "#f00" }}>3.890.000₫</Typography>
       </Box>
