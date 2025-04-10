@@ -1,7 +1,7 @@
 import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
 import Header from "~/components/Header";
 import { useParams } from "react-router";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from '@mui/material/Grid';
 
 import HomeIcon from '@mui/icons-material/Home';
 import Footer from "~/components/Footer";
