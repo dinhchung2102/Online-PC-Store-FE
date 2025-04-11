@@ -26,6 +26,8 @@ import CartItem from "../components/CartItems";
 import PayInformation from "../components/PayInformation";
 import CheckoutForm from "../components/CheckOutForm";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import BasicModal from "~/components/Modals/Modal";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -113,11 +115,22 @@ ColorlibStepIcon.propTypes = {
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 
 function Shopping_Cart() {
+
+  // modal login
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  // get user info from redux
+  const userInfo = useSelector((state) => state.user.userInfo);
+  console.log(userInfo);
+
+
   const navigate = useNavigate()
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   // const navigate = useNavigate();
-  const [quantity, setQuantity] = React.useState(1); // Giá trị mặc định là 1
+  // const [quantity, setQuantity] = React.useState(1); // Giá trị mặc định là 1
 
   // const handleDecrease = () => {
   //   setQuantity((prev) => Math.max(prev - 1, 0));
@@ -178,7 +191,7 @@ function Shopping_Cart() {
       disableGutters
       maxWidth={false}
       sx={{
-        height: "100vh",
+        pb: 5,
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -191,8 +204,7 @@ function Shopping_Cart() {
       </Box>
       <Box
         sx={{
-          width: "50%",
-          height: "auto",
+          width: { xs: "90%", sm: "80%", md: "70%", lg: "60%" },
           marginTop: 5,
           padding: 2,
           backgroundColor: "#ffffff",
@@ -220,75 +232,84 @@ function Shopping_Cart() {
             );
           })}
         </Stepper>
-        {activeStep === steps.length ? (
-          // Bước cuối: hoàn tất
-          <React.Fragment>
-            <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                Thanh toán thành công!
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button variant="contained" color="primary" onClick={handleNav}>Tiếp tục mua sắm</Button>
-            </Box>
-          </React.Fragment>
-        ) : activeStep === steps.length - 1 ? (
-          // Bước xác nhận đặt hàng
-          <React.Fragment>
-            <CheckoutForm />
-            {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
-                Quay lại
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button variant="contained" color="primary" onClick={handleNext}>Hoàn tất đặt hàng</Button>
-            </Box>
-          </React.Fragment>
-        ) : activeStep === steps.length - 2 ? (
-          // Bước nhập thông tin giao hàng
-          <React.Fragment>
-            <PayInformation />
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
-                Quay lại
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button variant="contained" color="primary" onClick={handleNext}>Tiếp tục</Button>
-            </Box>
-          </React.Fragment>
+        {userInfo.id === null ? (
+          <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
+            <Button variant="contained" onClick={() => handleOpenModal()}>Vui lòng đăng nhập để xem giỏ hàng của bạn</Button>
+          </Box>
         ) : (
-          // Bước đầu: Giỏ hàng
-          <React.Fragment>
-            <Box sx={{ width: "100%", padding: 5 }}>
-              <Stack spacing={3}>
-                {[1, 2].map((item, index) => (
-                  <Item key={index}>
-                    <CartItem imgProduct={imgProduct} />
-                  </Item>
-                ))}
-              </Stack>
-            </Box>
+          <Box>
+            {activeStep === steps.length ? (
+              // Bước cuối: hoàn tất
+              <React.Fragment>
+                <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
+                  <Typography sx={{ mt: 2, mb: 1 }}>
+                    Thanh toán thành công!
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button variant="contained" color="primary" onClick={handleNav}>Tiếp tục mua sắm</Button>
+                </Box>
+              </React.Fragment>
+            ) : activeStep === steps.length - 1 ? (
+              // Bước xác nhận đặt hàng
+              <React.Fragment>
+                <CheckoutForm />
+                {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                    Quay lại
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button variant="contained" color="primary" onClick={handleNext}>Hoàn tất đặt hàng</Button>
+                </Box>
+              </React.Fragment>
+            ) : activeStep === steps.length - 2 ? (
+              // Bước nhập thông tin giao hàng
+              <React.Fragment>
+                <PayInformation />
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                    Quay lại
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button variant="contained" color="primary" onClick={handleNext}>Tiếp tục</Button>
+                </Box>
+              </React.Fragment>
+            ) : (
+              // Bước đầu: Giỏ hàng
+              <React.Fragment>
+                <Box sx={{ width: "100%", padding: 5 }}>
+                  <Stack spacing={3}>
+                    {[1, 2].map((item, index) => (
+                      <Item key={index}>
+                        <CartItem imgProduct={imgProduct} />
+                      </Item>
+                    ))}
+                  </Stack>
+                </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                onClick={activeStep === 0 ? handleNav : handleBack}
-                sx={{ mr: 1 }}
-              >
-                Tiếp tục mua sắm
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                Tiến hành thanh toán
-              </Button>
-            </Box>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button
+                    color="inherit"
+                    onClick={activeStep === 0 ? handleNav : handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    Tiếp tục mua sắm
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button variant="contained" color="primary" onClick={handleNext}>
+                    Tiến hành thanh toán
+                  </Button>
+                </Box>
 
-          </React.Fragment>
+              </React.Fragment>
+            )}
+          </Box>
         )}
       </Box>
       <Footer />
+      <BasicModal open={openModal} handleClose={handleCloseModal} />
     </Container>
   );
 }
