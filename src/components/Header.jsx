@@ -53,8 +53,6 @@ function Header() {
     // redux
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.user.userInfo);
-    const cartItems = useSelector((state) => state.cart.cartItems);
-    console.log("cartItems", cartItems);
 
     // Modal
     const [open, setOpen] = useState(false);
@@ -114,10 +112,8 @@ function Header() {
 
                 const carts = await getCart(user._id);
                 carts.forEach((item) => {
-                    console.log("item", item);
                     dispatch(addToCart({
-                        productId: item.productId,
-                        name: item.nameProduct,
+                        ...item
                     }))
                 })
 
