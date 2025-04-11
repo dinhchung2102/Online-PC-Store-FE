@@ -7,7 +7,7 @@ import {
   StepLabel,
   Button,
   Typography,
-  Paper,
+  Divider,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -20,7 +20,6 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Stack from "@mui/material/Stack";
-import imgProduct from "../assets/images/expertbook-p1-p1403cva-i5se16-50w__8__f9120f92bbcf40409391d8b907b7c630_0b12de755584415689fecd42c6a95e6a.webp";
 
 import CartItem from "../components/CartItems";
 import PayInformation from "../components/PayInformation";
@@ -29,15 +28,6 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
 
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#f0f0f0",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  height: "auto",
-}));
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -125,6 +115,9 @@ function Shopping_Cart() {
   const userInfo = useSelector((state) => state.user.userInfo);
   console.log(userInfo);
 
+  // get cart from redux
+  const carts = useSelector((state) => state.cart.cartItems);
+
 
   const navigate = useNavigate()
   const [activeStep, setActiveStep] = React.useState(0);
@@ -146,9 +139,9 @@ function Shopping_Cart() {
     window.location.reload(); // điều hướng tới trang sản phẩm
   };
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
+  // const isStepOptional = (step) => {
+  //   return step === 1;
+  // };
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -280,13 +273,27 @@ function Shopping_Cart() {
               // Bước đầu: Giỏ hàng
               <React.Fragment>
                 <Box sx={{ width: "100%", padding: 5 }}>
-                  <Stack spacing={3}>
-                    {[1, 2].map((item, index) => (
-                      <Item key={index}>
-                        <CartItem imgProduct={imgProduct} />
-                      </Item>
-                    ))}
-                  </Stack>
+                  {carts.length > 0 ? (
+                    <Stack>
+                      <Box>
+                        {carts.map((cart, index) => (
+                          <Box key={cart._id}>
+                            <CartItem cart={cart} />
+                            {index < carts.length - 1 && <Divider sx={{ my: 2 }} />}
+                          </Box>
+                        )
+                        )}
+                      </Box>
+                    </Stack>
+                    //{index < products.length - 1 && <Divider sx={{ my: 2 }} />}
+                  ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                        Giỏ hàng của bạn đang trống!
+                      </Typography>
+                    </Box>
+
+                  )}
                 </Box>
 
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
