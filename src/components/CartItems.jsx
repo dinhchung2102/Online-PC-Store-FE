@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Box, Typography, Button, ButtonGroup } from "@mui/material";
+import { Box, Typography, Button, ButtonGroup } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const CartItem = ({ imgProduct }) => {
@@ -13,55 +13,61 @@ const CartItem = ({ imgProduct }) => {
     setQuantity((prev) => prev + 1);
   };
   return (
-    <Grid
-      container
-      spacing={3}
-      sx={{ paddingBottom: 0 }}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingBottom: 0,
+        gap: 3
+      }}
     >
-      <Grid size={{ xs: 2 }} >
-        <Box
-          sx={{
-            width: "8vh",
-            height: "8vh",
-            overflow: "hidden",
-          }}
-        >
-          <img
-            src={imgProduct}
-            alt="Product"
-            style={{
-              height: "100%",
-              width: "auto",
-            }}
-          />
-        </Box>
-      </Grid>
-      <Grid
-
-        size={{ xs: 2 }}
+      {/* Product Image */}
+      <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "space-around",
-          gap: 1,
+          width: '8vh',
+          height: '8vh',
+          overflow: 'hidden',
         }}
       >
-        <Typography sx={{ fontWeight: "bold" }}>
+        <img
+          src={imgProduct}
+          alt="Product"
+          style={{
+            height: '100%',
+            width: 'auto',
+          }}
+        />
+      </Box>
+
+      {/* Product Info */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'space-around',
+          gap: 1,
+          flexGrow: 1,
+        }}
+      >
+        <Typography sx={{ fontWeight: 'bold' }}>
           Laptop ASUS Expertbook P1403CVA-i516-50W
         </Typography>
-        <Typography sx={{ color: "#DF062D" }}>
-          12.999.000đ
+        <Typography sx={{ color: '#DF062D' }}>
+          Giá: 12.999.000đ
         </Typography>
-      </Grid>
-      <Grid
+      </Box>
 
-        size={{ xs: 2 }}
+      {/* Actions */}
+      <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          justifyContent: "space-around",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          justifyContent: 'space-around',
           gap: 1,
         }}
       >
@@ -75,11 +81,11 @@ const CartItem = ({ imgProduct }) => {
         </Button>
         <ButtonGroup size="small" aria-label="Small button group">
           <Button color="secondary" onClick={handleDecrease}>-</Button>
-          <Button color="secondary" >{quantity}</Button>
+          <Button color="secondary">{quantity}</Button>
           <Button color="secondary" onClick={handleIncrease}>+</Button>
         </ButtonGroup>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

@@ -36,6 +36,7 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
+import { addToCart } from "~/redux/cartSlice";
 import { getCart } from "~/services/cartService";
 
 const services = [
@@ -52,6 +53,8 @@ function Header() {
     // redux
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.user.userInfo);
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    console.log("cartItems", cartItems);
 
     // Modal
     const [open, setOpen] = useState(false);
@@ -109,8 +112,15 @@ function Header() {
                     avatar: "",
                 }));
 
-                const cart = await getCart(user._id);
-                console.log("cart", cart);
+                const carts = await getCart(user._id);
+                carts.forEach((item) => {
+                    console.log("item", item);
+                    dispatch(addToCart({
+                        productId: item.productId,
+                        name: item.nameProduct,
+                    }))
+                })
+
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
