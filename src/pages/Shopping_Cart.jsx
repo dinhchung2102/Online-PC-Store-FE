@@ -113,7 +113,6 @@ function Shopping_Cart() {
 
   // get user info from redux
   const userInfo = useSelector((state) => state.user.userInfo);
-  console.log(userInfo);
 
   // get cart from redux
   const carts = useSelector((state) => state.cart.cartItems);
