@@ -1,8 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
   cartItems: [],
 };
+
+export const fetchCart = createAsyncThunk(
+  'cart/fetchCart',
+  async (userId, thunkAPI) => {
+    try {
+      const response = await axios.get(`/api/cart/${userId}`); // chỉnh URL theo API của bạn
+      return response.data; // data là mảng cartItems
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const cartSlice = createSlice({
   name: 'cart',
