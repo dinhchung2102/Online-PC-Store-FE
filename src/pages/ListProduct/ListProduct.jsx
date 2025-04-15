@@ -62,10 +62,10 @@ function ListProduct() {
           container
           spacing={1}
           sx={{ width: "100%", minHeight: "80vh", mt: "10px", }}>
-          <Grid item lg={2} md={2}>
+          <Grid size={{ md: 2, lg: 2}}>
             <Filter />
           </Grid>
-          <Grid item lg={10} md={10}>
+          <Grid size={{ md: 10, lg: 10}}>
             <Box sx={{
               bgcolor: "#fff",
               p: 2
@@ -107,7 +107,7 @@ function ListProduct() {
               <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
                 {products?.map((product) => {
                   return (
-                    <Grid key={product._id} lg={3} md={4} sm={6} xs={12} item={true}>
+                    <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3}}>
                       <ProductCard product={product} />
                     </Grid>
                   )

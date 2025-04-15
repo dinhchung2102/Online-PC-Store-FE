@@ -36,7 +36,7 @@ function DetailProduct() {
 
 
   const navigate = useNavigate();
-  const handleClickBuy = (e) => {
+  const handleClickBuy = () => {
     navigate("/shopping-cart");
   }
   const location = useLocation();
@@ -172,7 +172,7 @@ function DetailProduct() {
 
         </Box>
       </Box>
-      <Footer/>
+      <Footer />
     </Box>
   );
 }

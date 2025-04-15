@@ -36,7 +36,9 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
+import { addToCart } from "~/redux/cartSlice";
 import { getCart } from "~/services/cartService";
+import { useNavigate } from "react-router";
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -49,6 +51,9 @@ const services = [
 
 
 function Header() {
+    // navigate
+    const navigate = useNavigate();
+
     // redux
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.user.userInfo);
@@ -97,7 +102,6 @@ function Header() {
                 setIsLogin(true);
                 const user = await getUserInfo();
                 const token = getToken();
-                console.log("token", token.token);
                 dispatch(setUserInfo({
                     id: user._id,
                     name: user.name,
@@ -108,16 +112,29 @@ function Header() {
                     refresh_token: token?.refreshToken,
                     avatar: "",
                 }));
-
-                const cart = await getCart(user._id);
-                console.log("cart", cart);
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
+
             }
         };
         fetchUserInfo();
     }, [])
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            if (userInfo) {
+                const carts = await getCart(userInfo.id);
+                console.log(carts);
+                carts.forEach((item) => {
+                    dispatch(addToCart({
+                        ...item
+                    }))
+                })
+            }
+        };
+        fetchCart();
+    }, [dispatch]);
 
     return (
         <Box>
@@ -126,10 +143,11 @@ function Header() {
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                     {/* Logo */}
                     <Box
+                        onClick={() => navigate("/")}
                         component="img"
                         src="/image/logo.png"
                         alt="Logo"
-                        sx={{ height: 40, ml: 2 }}
+                        sx={{ height: 40, ml: 2, cursor: "pointer" }}
                     />
 
                     {/* Nút Menu */}
@@ -171,6 +189,7 @@ function Header() {
                             text2="Đơn hàng"
                         />
                         <NavButton
+                            onClick={() => navigate("/shopping-cart")}
                             icon={<ShoppingCartIcon />}
                             text1="Giỏ"
                             text2="hàng"

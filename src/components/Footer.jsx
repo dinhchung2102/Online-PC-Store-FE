@@ -1,8 +1,9 @@
 import Container from "@mui/material/Container";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Box, Typography, IconButton, Grid, Link } from "@mui/material";
+import { Box, Typography, IconButton, Link } from "@mui/material";
 import { Facebook, YouTube, LinkedIn } from "@mui/icons-material";
+import Grid from '@mui/material/Grid';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
