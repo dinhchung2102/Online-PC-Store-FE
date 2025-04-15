@@ -8,6 +8,8 @@ import Article_Details from "~/pages/Article_Details";
 import Technology_news from "~/pages/technology_news";
 import Blogs from "~/pages/Blogs";
 import DetailProduct from "~/pages/DetailProduct";
+import Admin from "../pages/Admin/AdminLayout";
+import Products from "../pages/Admin/Products";
 function MyRouter() {
   return (
     <Router>
@@ -24,6 +26,8 @@ function MyRouter() {
         <Route path="/products/:category" element={<ListProduct />} />
         <Route path="/detailProduct/:idProduct" element={<DetailProduct />} />
         <Route path="/blogs" element={<Blogs />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/products" element={<Products />} />
       </Routes>
     </Router>
   );
