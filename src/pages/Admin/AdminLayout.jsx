@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout, ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
+import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 
 import OrdersTab from './Orders';
 import DashboardTab from './Dashboard';
@@ -38,7 +39,7 @@ const NAVIGATION = [
   {
     segment: 'products',
     title: 'Products',
-    icon: <ShoppingCartIcon />,
+    icon: <ImportantDevicesIcon />,
   },
 ];
 
