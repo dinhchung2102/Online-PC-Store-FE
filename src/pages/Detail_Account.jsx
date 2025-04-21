@@ -2,7 +2,10 @@ import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import NewAddressModal from "./NewAddressModal";
 import React, { useState } from "react";
-
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { getUserInfo } from "../services/userService";
+import { updateUserInfo } from "../services/userService";
 import {
   Avatar,
   Box,
@@ -30,20 +33,78 @@ import {
 } from "@mui/icons-material";
 
 const UserProfile = () => {
+  const [fullName, setFullName] = useState("");
+  const [phone, setphone] = useState("");
+  const [email, setemail] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getUserInfo(); // Gọi API để lấy thông tin người dùng
+        setUserData(data); // Lưu dữ liệu vào state
+        console.log("User data:", data); // In ra dữ liệu để kiểm tra
+        if (data.address && Array.isArray(data.address)) {
+          setAddresses(data.address);
+          console.log("Addresses:", data.address); // In ra địa chỉ để kiểm tra
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng:", error.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleNameChange = (event) => {
+    setFullName(event.target.value);
+  };
+
+  const handlephoneChange = (event) => {
+    setphone(event.target.value);
+  };
+  const handleemailChange = (event) => {
+    setemail(event.target.value);
+  };
+  useEffect(() => {
+    if (userData) {
+      if (userData.name) setFullName(userData.name);
+      if (userData.phone) setphone(userData.phone);
+      if (userData.email) setemail(userData.email);
+    }
+  }, [userData]);
+  const handleSaveChanges = async () => {
+    try {
+      const updatedUser = {
+        name: fullName,
+        phone,
+        email,
+      };
+      await updateUserInfo(updatedUser); // gọi API của bạn
+      alert("Cập nhật thành công!");
+    } catch (err) {
+      alert("Cập nhật thất bại!");
+    }
+  };
+
   const [selectedScreen, setSelectedScreen] = React.useState("account");
   const [open, setOpen] = useState(false);
-  const handleDeleteAddress = (id) => {
-    setAddresses(addresses.filter((addr) => addr.id !== id));
+  const handleDeleteAddress = async (id) => {
+    try {
+      // Lọc ra các địa chỉ còn lại (không bao gồm địa chỉ cần xóa)
+      const updatedAddresses = addresses.filter((addr) => addr._id !== id);
+  
+      // Cập nhật lại danh sách địa chỉ trong state
+      setAddresses(updatedAddresses);
+  
+      // Gọi API cập nhật lại danh sách địa chỉ
+      await updateUserInfo({ address: updatedAddresses });
+  
+      alert("Xóa địa chỉ thành công!");
+    } catch (err) {
+      alert("Lỗi khi xóa địa chỉ!");
+    }
   };
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      name: "Anh Lợi",
-      phone: "0898669176",
-      address: "Huỳnh Khương An, Phường 05, Quận Gò Vấp, Hồ Chí Minh, Vietnam",
-      default: true,
-    },
-  ]);
   const handleAddAddress = (newAddress) => {
     setAddresses([...addresses, { id: addresses.length + 1, ...newAddress }]);
     setOpen(false); // Đóng modal sau khi thêm
@@ -72,10 +133,11 @@ const UserProfile = () => {
           >
             <Avatar sx={{ width: 80, height: 80 }} />
             <Typography variant="h6" mt={2}>
-              Anh Lợi
+              {userData ? userData.name : "Đang tải..."}{" "}
+              {/* Kiểm tra userData trước khi truy cập */}
             </Typography>
             <Typography variant="h6" color="gray">
-              0898669176
+              {userData ? userData.phone : "Đang tải..."}
             </Typography>
             <List>
               <SidebarItem
@@ -130,7 +192,8 @@ const UserProfile = () => {
                   <TextField
                     fullWidth
                     variant="outlined"
-                    defaultValue="Anh Lợi"
+                    value={fullName}
+                    onChange={handleNameChange}
                     sx={{ width: 300 }}
                     size="small"
                   />
@@ -156,8 +219,8 @@ const UserProfile = () => {
                   <Typography sx={{ width: "20%" }}>Số điện thoại</Typography>
                   <TextField
                     fullWidth
-                    variant="outlined"
-                    defaultValue="********76"
+                    value={phone}
+                    onChange={handlephoneChange}
                     sx={{ width: 300 }}
                     size="small"
                   />
@@ -167,8 +230,8 @@ const UserProfile = () => {
                   <Typography sx={{ width: "20%" }}>Email</Typography>
                   <TextField
                     fullWidth
-                    variant="outlined"
-                    defaultValue="lo******@gmail.com"
+                    value={email}
+                    onChange={handleemailChange}
                     sx={{ width: 300 }}
                     size="small"
                   />
@@ -181,7 +244,7 @@ const UserProfile = () => {
                   <Box display="flex" gap={2}>
                     <FormControl sx={{ minWidth: 80 }}>
                       <Select
-                        defaultValue={"01"}
+                        defaultValue={"05"}
                         sx={{ fontSize: 14, padding: "2px", height: 45 }}
                       >
                         {[...Array(31).keys()].map((i) => (
@@ -197,7 +260,7 @@ const UserProfile = () => {
 
                     <FormControl sx={{ minWidth: 100 }}>
                       <Select
-                        defaultValue={"11"}
+                        defaultValue={"02"}
                         sx={{ fontSize: 14, padding: "2px", height: 45 }}
                       >
                         {[...Array(12).keys()].map((i) => (
@@ -213,7 +276,7 @@ const UserProfile = () => {
 
                     <FormControl sx={{ minWidth: 80 }}>
                       <Select
-                        defaultValue={"2025"}
+                        defaultValue={"2003"}
                         sx={{ fontSize: 14, padding: "2px", height: 45 }}
                       >
                         {[...Array(100).keys()].map((i) => (
@@ -230,6 +293,7 @@ const UserProfile = () => {
                   variant="contained"
                   color="error"
                   sx={{ mt: 3, fontWeight: "bold", fontSize: "16px", ml: 22 }}
+                  onClick={handleSaveChanges}
                 >
                   LƯU THAY ĐỔI
                 </Button>
@@ -251,9 +315,9 @@ const UserProfile = () => {
                     + Thêm địa chỉ mới
                   </Button>
                 </Box>
-                {addresses.map((addr) => (
+                {addresses.map((addr, index) => (
                   <Box
-                    key={addr.id}
+                    key={addr._id} // Dùng _id làm key để tránh trùng
                     p={2}
                     border="1px solid #ddd"
                     borderRadius={1}
@@ -269,29 +333,33 @@ const UserProfile = () => {
                         Mặc định
                       </Button>
                     )}
+                    <Typography fontWeight="bold">{fullName} | {phone}</Typography>
+                    
                     <Typography fontWeight="bold">
-                      {addr.name} | {addr.phone}
+                      {`Địa chỉ ${index + 1}: ${addr.ward}, ${addr.district}, ${addr.city}, ${addr.country}`}
                     </Typography>
-                    <Typography>{addr.address}</Typography>
-                    <Box sx={{ display: "flex", }}>
-                    <Typography
-                      color="primary"
-                      sx={{ cursor: "pointer", mt: 1 }}
-                    >
-                      Cập nhật
-                    </Typography>
-                    <Typography
-                      color="primary"
-                      sx={{ cursor: "pointer", mt: 1,ml:2 }}
-                      onClick={() => handleDeleteAddress(addr.id)}
-                    >
-                      Xóa
-                    </Typography >
+                    <Box sx={{ display: "flex" }}>
+                      <Typography
+                        color="primary"
+                        sx={{ cursor: "pointer", mt: 1 }}
+                      >
+                        Cập nhật
+                      </Typography>
+                      <Typography
+                        color="primary"
+                        sx={{ cursor: "pointer", mt: 1, ml: 2 }}
+                        onClick={() => handleDeleteAddress(addr._id)} // Đảm bảo dùng _id để xóa đúng address
+                      >
+                        Xóa
+                      </Typography>
                     </Box>
                   </Box>
                 ))}
-                <NewAddressModal open={open} handleClose={() => setOpen(false)} onAdd={handleAddAddress} />
-               
+                <NewAddressModal
+                  open={open}
+                  handleClose={() => setOpen(false)}
+                  onAdd={handleAddAddress}
+                />
               </>
             )}
             {selectedScreen === "orders" && (
@@ -320,5 +388,11 @@ const SidebarItem = ({ icon, text, active, onClick }) => (
     <ListItemText primary={text} />
   </ListItem>
 );
+SidebarItem.propTypes = {
+  icon: PropTypes.node.isRequired,
+  text: PropTypes.string.isRequired,
+  active: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default UserProfile;

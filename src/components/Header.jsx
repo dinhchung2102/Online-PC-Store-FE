@@ -61,7 +61,10 @@ function Header() {
     // Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        // Điều hướng đến trang Detail_Account
+        navigate('/Detail_Account');
+      };
 
     // login
     const [isLogin, setIsLogin] = useState(false);
