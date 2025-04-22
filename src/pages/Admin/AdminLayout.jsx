@@ -20,7 +20,8 @@ import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 import OrdersTab from './Orders';
 import DashboardTab from './Dashboard';
 import Products from './Products';
-
+import OrderDetails from './OrderDetails';
+import CheckCircle from '@mui/icons-material/ReceiptLong';
 const NAVIGATION = [
   {
     kind: 'header',
@@ -41,6 +42,12 @@ const NAVIGATION = [
     title: 'Products',
     icon: <ImportantDevicesIcon />,
   },
+  {
+    segment: 'order-details',
+    title: 'Order Details',
+    icon: <CheckCircleIcon />
+  }
+  
 ];
 
 const demoTheme = createTheme({
@@ -136,6 +143,9 @@ function DemoPageContent({ pathname }) {
       break;
     case '/products':
       content = <Products />;
+      break;
+    case '/order-details':
+      content = <OrderDetails />; 
       break;
     default:
       content = <Typography>Page not found</Typography>;

@@ -17,7 +17,7 @@
     "@mui/toolpad-core": "^0.1.23",
     "@reduxjs/toolkit": "^2.6.1",
     "@toolpad/core": "^0.13.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
