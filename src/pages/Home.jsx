@@ -5,6 +5,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import FlashSaleBanner from "./FlashSaleBanner";
+import { getAllProducts } from "../services/productService";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -25,7 +27,6 @@ import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import Categories from "~/components/Categories";
 
-
 const banners = [
   "/image/1a.png",
   "/image/1b.png",
@@ -38,11 +39,7 @@ const banners = [
 ];
 const product1 = ["/image/4.png", "/image/5.png"];
 const product2 = [];
-const product3 = [
-  "/image/1.png",
-  "/image/2.png",
-  "/image/3.png",
-];
+const product3 = ["/image/1.png", "/image/2.png", "/image/3.png"];
 
 const productsMouse = [
   {
@@ -102,70 +99,37 @@ const productsMouse = [
     discount: "-24%",
   },
 ];
-const laptops = [
-  {
-    id: 1,
-    name: "Laptop gaming Lenovo LOQ 15IAH",
-    image: "/image/lap1.png",
-    specs: "Intel Core i5-13420H / 8GB / 512GB / RTX 3050",
-    price: "20.490.000đ",
-    oldPrice: "25.490.000đ",
-    discount: "-20%",
-  },
-  {
-    id: 2,
-    name: "Laptop gaming MSI Katana 15 B13V",
-    image: "/image/lap2.png",
-    specs: "Intel Core i7-13620H / 16GB / 512GB / RTX 4060",
-    price: "23.990.000đ",
-    oldPrice: "29.990.000đ",
-    discount: "-20%",
-  },
-  {
-    id: 3,
-    name: "Laptop gaming ASUS TUF F15 AN515",
-    image: "/image/lap3.png",
-    specs: "Intel Core i7-12700H / 8GB / 512GB / RTX 3050 Ti",
-    price: "27.990.000đ",
-    oldPrice: "31.990.000đ",
-    discount: "-12%",
-  },
-  {
-    id: 4,
-    name: "Laptop gaming Acer Nitro 5 NT200",
-    image: "/image/lap4.png",
-    specs: "Intel Core i5-12500H / 8GB / 512GB / RTX 3050",
-    price: "18.990.000đ",
-    oldPrice: "21.990.000đ",
-    discount: "-14%",
-  },
-  {
-    id: 5,
-    name: "Laptop gaming Gigabyte G5 AN515",
-    image: "/image/lap5.png",
-    specs: "Intel Core i5-11400H / 8GB / 512GB / RTX 3050",
-    price: "16.990.000đ",
-    oldPrice: "19.990.000đ",
-    discount: "-15%",
-  },
-  {
-    id: 6,
-    name: "Laptop gaming Dell G15",
-    image: "/image/lap6.png",
-    specs: "AMD Ryzen 7 6800H / 8GB / 512GB / RTX 3050 Ti",
-    price: "21.990.000đ",
-    oldPrice: "24.990.000đ",
-    discount: "-12%",
-  },
-];
-
-
-
 
 function Home() {
+  const [product, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const rawData = await getAllProducts();
+        const formattedData = rawData.map((product) => {
+          const oldPrice = product.old_price || product.price;
+          const price = product.price;
+          const discount = "10%";
 
+          return {
+            id: product._id, // hoặc product.id tuỳ backend
+            image: product.image || "/image/default.png",
+            specs: product.name,
+            name: product.name,
+            oldPrice: oldPrice.toLocaleString("vi-VN") + "đ",
+            price: price.toLocaleString("vi-VN") + "đ",
+            discount: discount,
+          };
+        });
+        setProducts(formattedData);
+        console.log("Formatted products:", formattedData);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
 
-
+    fetchProducts();
+  }, []);
   return (
     <Container
       maxWidth={false}
@@ -179,13 +143,11 @@ function Home() {
           justifyContent: "center",
           gap: 1,
           flexDirection: "row",
-          paddingY: 2
+          paddingY: 2,
         }}
       >
         {/* Sidebar */}
         <Categories />
-
-
 
         <Box
           sx={{
@@ -207,7 +169,7 @@ function Home() {
               autoplay
               autoplaySpeed={2000}
               arrows={false}
-              sx={{ borderRadius: "10px", }}
+              sx={{ borderRadius: "10px" }}
             >
               {banners.map((banner, index) => (
                 <Box
@@ -380,7 +342,6 @@ function Home() {
           p: 2,
         }}
       >
-
         {/* Thanh tiêu đề */}
         <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -391,7 +352,6 @@ function Home() {
             <LocalShippingIcon sx={{ color: "red" }} />
             <Typography variant="body1">Miễn phí giao hàng</Typography>
           </Stack>
-
 
           {/* Đẩy phần brand và link sang phải */}
           <Box sx={{ flexGrow: 1 }} />
@@ -416,7 +376,6 @@ function Home() {
             <Typography>
               <Button>DELL</Button>
             </Typography>
-
           </Stack>
 
           {/* Link 'Xem tất cả' */}
@@ -431,48 +390,95 @@ function Home() {
 
         {/* Slider hiển thị laptop */}
         <Swiper
-
-          slidesPerView={4} // Số laptop hiển thị cùng lúc
-          spaceBetween={20} // Khoảng cách giữa các card
-          navigation={true} // Nút điều hướng
-          modules={[Navigation]} // Import module Navigation
-          style={{ zIndex: 1 }} // Đảm bảo không bị che
-
+          spaceBetween={20}
+          navigation
+          modules={[Navigation]}
+          style={{ zIndex: 1 }}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            600: {
+              slidesPerView: 2,
+            },
+            960: {
+              slidesPerView: 3,
+            },
+            1280: {
+              slidesPerView: 4,
+            },
+          }}
         >
-          {laptops.map((lap) => (
-            <SwiperSlide key={lap.id}>
-              <Card sx={{ textAlign: "center", boxShadow: 5, borderRadius: 0 }}>
+          {product.map((prod) => (
+            <SwiperSlide key={prod.id}>
+              <Card
+                sx={{
+                  textAlign: "center",
+                  boxShadow: 5,
+                  borderRadius: 0,
+                  height: 420,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
                 <CardMedia
                   component="img"
                   height="200"
-                  image={lap.image}
-                  alt={lap.name}
+                  image={prod.image}
+                  alt={prod.name}
                   sx={{ objectFit: "contain" }}
                 />
-                <CardContent>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {lap.name}
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Hiển thị tối đa 2 dòng
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      height: "48px", // phù hợp với 2 dòng text
+                    }}
+                  >
+                    {prod.name}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
-                    {lap.specs}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "gray",
+                      mb: 1,
+                      height: 40,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {prod.specs}
                   </Typography>
 
                   <Typography
                     variant="body2"
                     sx={{ textDecoration: "line-through" }}
                   >
-
-                    {lap.oldPrice}
+                    {prod.oldPrice}
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
-                    {lap.price}{" "}
-
-                    <span style={{ color: "red", fontSize: "0.8rem" }}>
-                      {lap.discount}
+                    {prod.price}
+                    <span
+                      style={{
+                        color: "red",
+                        fontSize: "0.8rem",
+                        marginLeft: 8,
+                      }}
+                    >
+                      {prod.discount}
                     </span>
-
                   </Typography>
-                  <Button variant="contained" color="primary" sx={{ mt: 1 }}>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, width: "100%" }}
+                  >
                     Mua ngay
                   </Button>
                 </CardContent>
