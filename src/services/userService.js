@@ -31,4 +31,27 @@ export const getUserInfo = async () => {
   } catch (err) {
     console.log(err.message);
   }
+  
+};
+export const updateUserInfo = async (updatedData) => {
+  try {
+    const token = getToken().token;
+    const userId = getUserId();
+
+    const response = await axios.put(
+      `http://localhost:5555/api/user/update-user/${userId}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Update user info failed:", error);
+    throw error;
+  }
 };

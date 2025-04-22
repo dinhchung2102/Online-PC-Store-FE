@@ -11,6 +11,7 @@ import Blogs from "~/pages/Blogs";
 import DetailProduct from "~/pages/DetailProduct";
 import Admin from "../pages/Admin/AdminLayout";
 import Products from "../pages/Admin/Products";
+import Detail_Account from "~/pages/Detail_Account";;
 function MyRouter() {
   return (
     <Router>
@@ -29,6 +30,7 @@ function MyRouter() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/Detail_Account" element={<Detail_Account />} />
       </Routes>
     </Router>
   );

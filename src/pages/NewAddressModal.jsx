@@ -1,16 +1,12 @@
 import { useState } from "react";
 import SelectAddress1 from "~/utils/SelectAddress/SelectAddress1";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { updateUserInfo } from "../services/userService";
+import { getUserInfo } from "../services/userService";
 
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
-
-// eslint-disable-next-line react/prop-types
 const NewAddressModal = ({ open, handleClose, onAdd }) => {
+  // Lấy user từ Redux nếu cần
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
@@ -18,25 +14,44 @@ const NewAddressModal = ({ open, handleClose, onAdd }) => {
   const [ward, setWard] = useState("");
   const [detail, setDetail] = useState("");
 
-  // Hàm xử lý cập nhật địa chỉ từ SelectAddress
-  const handleAddressChange = (selectedCity, selectedDistrict, selectedWard) => {
+  const handleAddressChange = (
+    selectedCity,
+    selectedDistrict,
+    selectedWard
+  ) => {
     setCity(selectedCity);
     setDistrict(selectedDistrict);
     setWard(selectedWard);
   };
 
-  // Xử lý khi nhấn hoàn thành
-  const handleSubmit = () => {
-    if (!name || !phone || !city || !district || !ward || !detail) {
+  const handleSubmit = async () => {
+    if (!city || !district || !ward || !detail) {
       alert("Vui lòng nhập đầy đủ thông tin!");
       return;
     }
+
     const newAddress = {
-      name,
-      phone,
-      address: `${detail}, ${ward}, ${district}, ${city}, Vietnam`,
+      ward: `${detail},${ward}`, 
+      district,
+      city,
+      country: "Việt Nam",
     };
-    onAdd(newAddress);
+
+    try {
+      const data = await getUserInfo(); // Fetch dữ liệu user mới nhất
+      console.log("User data:", data);
+      const updatedAddresses = [...(data?.address || []), newAddress];
+      console.log("Updated addresses:", updatedAddresses);
+      await updateUserInfo({address:updatedAddresses });
+      console.log("Địa chỉ đã được cập nhật thành công!");
+      onAdd?.(newAddress);
+      handleClose();
+    } catch (error) {
+      console.error("Lỗi cập nhật địa chỉ:", error);
+      alert("Cập nhật địa chỉ thất bại!");
+    }
+
+    // Reset form
     setName("");
     setPhone("");
     setCity("");
@@ -65,15 +80,39 @@ const NewAddressModal = ({ open, handleClose, onAdd }) => {
         </Typography>
 
         <Typography variant="subtitle1">Thông tin khách hàng</Typography>
-        <TextField fullWidth label="Nhập Họ Tên" value={name} onChange={(e) => setName(e.target.value)} margin="dense" />
-        <TextField fullWidth label="Nhập Số điện thoại" value={phone} onChange={(e) => setPhone(e.target.value)} margin="dense" />
+        <TextField
+          fullWidth
+          label="Nhập Họ Tên"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          margin="dense"
+        />
+        <TextField
+          fullWidth
+          label="Nhập Số điện thoại"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          margin="dense"
+        />
 
         <Typography variant="subtitle1" mt={2}>
           Địa chỉ
         </Typography>
         <SelectAddress1 onAddressChange={handleAddressChange} />
-        <TextField fullWidth label="Chi tiết địa chỉ" value={detail} onChange={(e) => setDetail(e.target.value)} margin="dense" />
-        <Button fullWidth variant="contained" color="error" sx={{ mt: 2 }} onClick={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Chi tiết địa chỉ"
+          value={detail}
+          onChange={(e) => setDetail(e.target.value)}
+          margin="dense"
+        />
+        <Button
+          fullWidth
+          variant="contained"
+          color="error"
+          sx={{ mt: 2 }}
+          onClick={handleSubmit}
+        >
           HOÀN THÀNH
         </Button>
       </Box>

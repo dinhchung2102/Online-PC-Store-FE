@@ -61,7 +61,13 @@ function Header() {
     // Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        // Điều hướng đến trang Detail_Account
+        navigate('/Detail_Account');
+      };
+    const handleTechnical = () => {
+        navigate('/technology-news');
+    };
 
     // login
     const [isLogin, setIsLogin] = useState(false);
@@ -303,6 +309,7 @@ function Header() {
                 {services.map((service, index) => (
                     <Box
                         key={index}
+                        onClick={service.text === "Tin công nghệ" ? handleTechnical : undefined}
                         sx={{
                             display: "flex",
                             alignItems: "center",

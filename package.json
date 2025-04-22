@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.11",
     "@mui/material": "^6.4.11",
+    "@mui/system": "^7.0.2",
     "@mui/toolpad-core": "^0.1.23",
     "@reduxjs/toolkit": "^2.6.1",
     "@toolpad/core": "^0.13.0",
