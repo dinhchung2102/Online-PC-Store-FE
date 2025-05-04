@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getCart } from '~/services/cartService'; // Đường dẫn đến cartService.js
 import axios from 'axios';
 
 const initialState = {
@@ -9,8 +10,9 @@ export const fetchCart = createAsyncThunk(
   'cart/fetchCart',
   async (userId, thunkAPI) => {
     try {
-      const response = await axios.get(`/api/cart/${userId}`); // chỉnh URL theo API của bạn
-      return response.data; // data là mảng cartItems
+      const response = await getCart(userId); // chỉnh URL theo API của bạn
+      console.log('Response:', response.data); // Kiểm tra phản hồi từ server
+      return response; // data là mảng cartItems
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -45,11 +47,16 @@ const cartSlice = createSlice({
         item.amountProduct = amountProduct;
       }
     },
-    
+
     clearCart: (state) => {
       state.cartItems = [];
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCart.fulfilled, (state, action) => {
+      state.cartItems = action.payload;
+    });
+  }
 });
 
 export const {

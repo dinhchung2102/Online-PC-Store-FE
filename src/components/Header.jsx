@@ -127,20 +127,20 @@ function Header() {
         fetchUserInfo();
     }, [])
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            if (userInfo) {
-                const carts = await getCart(userInfo.id);
-                console.log(carts);
-                carts.forEach((item) => {
-                    dispatch(addToCart({
-                        ...item
-                    }))
-                })
-            }
-        };
-        fetchCart();
-    }, [dispatch]);
+    // useEffect(() => {
+    //     const fetchCart = async () => {
+    //         if (userInfo) {
+    //             const carts = await getCart(userInfo.id);
+    //             console.log(carts);
+    //             carts.forEach((item) => {
+    //                 dispatch(addToCart({
+    //                     ...item
+    //                 }))
+    //             })
+    //         }
+    //     };
+    //     fetchCart();
+    // }, [dispatch]);
 
     return (
         <Box>

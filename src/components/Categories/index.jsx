@@ -635,6 +635,7 @@ function Categories() {
   const [hoveredId, setHoveredId] = useState(null); // State để theo dõi nút đang hover
 
   const [categories, setCategories] = useState([]);
+  console.log(categories)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -657,7 +658,7 @@ function Categories() {
           boxShadow: '1px 1px 20px rgba(0,0,0,0.1)'
 
         }}>
-        {categories?.map((item) => {
+        {categories.length > 0 ? (categories?.map((item) => {
           return (
             <Box
               sx={{
@@ -747,7 +748,7 @@ function Categories() {
               )}
             </Box>
           );
-        })}
+        })) : (<></>)}
       </Box>
     </Box>
   );

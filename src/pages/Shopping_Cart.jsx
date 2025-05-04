@@ -25,8 +25,10 @@ import CartItem from "../components/CartItems";
 import PayInformation from "../components/PayInformation";
 import CheckoutForm from "../components/CheckOutForm";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
+import { useEffect } from "react";
+import { fetchCart } from "~/redux/cartSlice";
 
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -106,6 +108,10 @@ const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 
 function Shopping_Cart() {
 
+  const dispatch = useDispatch();
+
+
+
   // modal login
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -116,6 +122,12 @@ function Shopping_Cart() {
 
   // get cart from redux
   const carts = useSelector((state) => state.cart.cartItems);
+  console.log("carts", carts);
+
+  useEffect(() => {
+    console.log('chạy vào đây nè ')
+    dispatch(fetchCart(userInfo.id));
+  }, [dispatch, userInfo.id]);
 
 
   const navigate = useNavigate()
