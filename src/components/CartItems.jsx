@@ -1,17 +1,27 @@
+/* eslint-disable react/prop-types */
 
 import PropTypes from "prop-types";
 import { Box, Typography, Button, ButtonGroup } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatCurrency } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { updateQuantity } from "~/redux/cartSlice";
+import { updateCart } from "~/services/cartService";
 
 const CartItem = ({ cart }) => {
+  const userInfo = useSelector((state) => state.user.userInfo);
+
+  console.log("cart", cart);
+  const dispatch = useDispatch();
 
   const handleDecrease = () => {
-
+    dispatch(updateQuantity({ productId: cart.productId, amountProduct: cart.amountProduct - 1 }));
   };
 
-  const handleIncrease = () => {
-
+  const handleIncrease = async () => {
+    dispatch(updateQuantity({ productId: cart.productId, amountProduct: cart.amountProduct + 1 }));
+    const response = await updateCart(userInfo.id, cart.productId, cart.amountProduct + 1, cart.priceProduct * (cart.amountProduct + 1));
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
   };
   return (
     <Box
@@ -63,6 +73,9 @@ const CartItem = ({ cart }) => {
         </Typography>
         <Typography sx={{ color: '#DF062D' }}>
           Giá: {formatCurrency(cart.priceProduct)}
+        </Typography>
+        <Typography sx={{ fontWeight: 'thin', color: '#333' }}>
+          Tổng tiền: {formatCurrency(cart.priceProduct * cart.amountProduct)}
         </Typography>
       </Box>
 

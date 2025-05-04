@@ -106,6 +106,7 @@ function Home() {
     const fetchProducts = async () => {
       try {
         const rawData = await getAllProducts();
+        if (!rawData) return
         const formattedData = rawData.map((product) => {
           const oldPrice = product.old_price || product.price;
           const price = product.price;
