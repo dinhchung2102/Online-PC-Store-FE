@@ -5,8 +5,8 @@ import { Box, Typography, Button, ButtonGroup } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatCurrency } from "../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { updateQuantity } from "~/redux/cartSlice";
-import { updateCart } from "~/services/cartService";
+import { updateQuantity, removeFromCart } from "~/redux/cartSlice";
+import { updateCart, removeProductFromCart } from "~/services/cartService";
 
 const CartItem = ({ cart }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -25,6 +25,12 @@ const CartItem = ({ cart }) => {
     const response = await updateCart(userInfo.id, cart.productId, cart.amountProduct + 1, cart.priceProduct * (cart.amountProduct + 1));
     console.log("Response:", response); // Kiểm tra phản hồi từ server
   };
+
+  const handleDelete = async () => {
+    dispatch(removeFromCart(cart.productId));
+    const response = await removeProductFromCart(cart._id);
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
+  }
   return (
     <Box
       sx={{
@@ -96,6 +102,7 @@ const CartItem = ({ cart }) => {
           size="small"
           color="error"
           startIcon={<DeleteIcon />}
+          onClick={handleDelete}
         >
           Xóa
         </Button>

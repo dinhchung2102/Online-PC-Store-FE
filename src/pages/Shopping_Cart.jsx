@@ -29,6 +29,7 @@ import { useSelector, useDispatch } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
 import { useEffect } from "react";
 import { fetchCart } from "~/redux/cartSlice";
+import { updateUserInfo } from "../services/userService";
 
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -110,8 +111,6 @@ function Shopping_Cart() {
 
   const dispatch = useDispatch();
 
-
-
   // modal login
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -144,6 +143,8 @@ function Shopping_Cart() {
   //   setQuantity((prev) => prev + 1);
   // };
 
+  // const handleUpdateInfoUser = 
+
   const handleNav = () => {
     // reset form nếu cần
     navigate("/products/all");
@@ -164,7 +165,6 @@ function Shopping_Cart() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -277,7 +277,13 @@ function Shopping_Cart() {
                     Quay lại
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>Tiếp tục</Button>
+                  <Button variant="contained" color="primary"
+                    onClick={() => {
+                      handleNext()
+                      console.log("userInfo", userInfo);
+                      updateUserInfo(userInfo)
+                    }}
+                  >Tiếp tục</Button>
                 </Box>
               </React.Fragment>
             ) : (
@@ -316,7 +322,7 @@ function Shopping_Cart() {
                     Tiếp tục mua sắm
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>
+                  <Button disabled={carts.length < 1 ? true : false} variant="contained" color="primary" onClick={handleNext}>
                     Tiến hành thanh toán
                   </Button>
                 </Box>
