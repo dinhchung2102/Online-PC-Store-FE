@@ -93,7 +93,11 @@ function Header() {
 
     useEffect(() => {
         if (userInfo) {
-            setName(userInfo.name);
+            if (userInfo.fullname) {
+                setName(userInfo.fullname);
+            } else {
+                setName(userInfo.username);
+            }
         }
     }, [userInfo]);
 
@@ -107,13 +111,16 @@ function Header() {
                 const token = getToken();
                 dispatch(setUserInfo({
                     id: user._id,
-                    name: user.name,
+                    username: user.username,
                     address: [],
-                    phone: "",
-                    email: "",
+                    phone: user.phone,
+                    email: user.email,
+                    dateOfBirth: user.dateOfBirth,
                     token: token?.token,
                     refresh_token: token?.refreshToken,
                     avatar: "",
+                    gender: user.gender,
+                    fullname: user.fullname,
                 }));
             } else {
                 setIsLogin(false);

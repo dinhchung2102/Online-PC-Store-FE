@@ -11,7 +11,7 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [errorUsername, setErrorUsername] = useState({ error: false, message: "" });
   const [errorPassword, setErrorPassword] = useState({ error: false, message: "" });
-    
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -44,6 +44,9 @@ function AdminLogin() {
         token: result.data.token || '',
         refresh_token: result.data.refresh_token || '',
         avatar: result.data.user.avatar || '',
+        gender: result.data.user.gender || '',
+        dateOfBirth: result.data.user.dateOfBirth || '',
+        fullname: result.data.user.fullname || '',
       }));
 
       setLoading(false);

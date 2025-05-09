@@ -6,8 +6,8 @@ export const handleLogin = async (username, password) => {
 
   try {
     const response = await axios.post("http://localhost:5555/api/user/sign-in", {
-      name: username,
-      password,
+      username,
+      password
     });
 
     const data = response.data;

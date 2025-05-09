@@ -3,14 +3,16 @@ import React from "react";
 import { callAPI, callApiDistrict, callApiWard, host } from "./callApiProvince";
 
 
-function SelectAddress() {
-  const [ward, setWard] = React.useState([]);
-  const [district, setDistrict] = React.useState([]);
+// eslint-disable-next-line react/prop-types
+function SelectAddress({ setAddress }) {
+  const [wards, setWards] = React.useState([]);
+  const [districts, setDistricts] = React.useState([]);
   const [provinces, setProvinces] = React.useState([]);
 
   const [selectedProvince, setSelectedProvince] = React.useState('');
   const [selectDistrict, setSelectDistrict] = React.useState('');
   const [selectWard, setSelectWard] = React.useState('');
+
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -21,65 +23,75 @@ function SelectAddress() {
   }, []);
 
   const handleChangeWard = (event) => {
-    setSelectWard(event.target.value);
+    const ward = wards.find(w => w.code === event.target.value);
+    setSelectWard(ward);
+    setAddress((prev) => ({
+      ...prev,
+
+      ward: ward.name,
+      district: selectDistrict.name,
+      province: selectedProvince.name,
+    }));
   };
   const handleChangeDistrict = async (event) => {
-    setSelectDistrict(event.target.value);
+    const district = districts.find(d => d.code === event.target.value);
+    setSelectDistrict(district);
 
     try {
       const data = await callApiWard(host + "d/" + `${event.target.value}` + "?depth=2");
-      setWard(data.wards);
+      setWards(data.wards);
     } catch (error) {
       console.error("Error fetching wards:", error);
     }
   };
   const handleChangeProvinces = async (event) => {
-    console.log(event.target.value);
-    setSelectedProvince(event.target.value);
+    const province = provinces.find(p => p.code === event.target.value);
+    console.log(province);
+    setSelectedProvince(province);
 
     try {
       const data = await callApiDistrict(host + "p/" + `${event.target.value}` + "?depth=2");
-      setDistrict(data.districts);
+      setDistricts(data.districts);
     } catch (error) {
       console.error("Error fetching districts:", error);
     }
   };
   return (
-    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', width: '100%' }}>
-      <FormControl sx={{ width: '100%' }} size="small">
+    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', width: '100%', flexDirection: 'row-reverse' }}>
+      <FormControl sx={{ width: '100%' }} size="small" disabled={!selectDistrict}>
         <InputLabel id="select-ward-label">Phường, xã</InputLabel>
         <Select
           labelId="select-ward-label"
           id="select-ward"
-          value={selectWard}
+          value={selectWard.code || ''}
           label="Phường, xã"
           onChange={handleChangeWard}
         >
-          {ward && ward.map((ward) => (
+          {wards && wards.map((ward) => (
             <MenuItem key={ward.code} value={ward.code}>{ward.name}</MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ width: '100%' }} size="small">
+      <FormControl sx={{ width: '100%' }} size="small" disabled={!selectedProvince}>
         <InputLabel id="select-district-label">Quận, huyện</InputLabel>
         <Select
           labelId="select-district-label"
           id="select-district"
-          value={selectDistrict}
+          value={selectDistrict.code || ''}
           label="Quận, huyện"
           onChange={handleChangeDistrict}
         >
-          {district && district.map((district) => (
+          {districts && districts.map((district) => (
             <MenuItem key={district.code} value={district.code}>{district.name}</MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ width: '100%' }} size="small">
+      <FormControl sx={{ width: '100%' }} size="small" >
         <InputLabel id="select-provinces-label">Tỉnh, thành phố</InputLabel>
         <Select
           labelId="select-provinces-label"
           id="select-provinces"
-          value={selectedProvince}
+          value={selectedProvince.code || ''}
           label="Tỉnh, thành phố"
           onChange={handleChangeProvinces}
         >

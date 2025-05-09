@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getCart } from '~/services/cartService'; // Đường dẫn đến cartService.js
-import axios from 'axios';
 
 const initialState = {
   cartItems: [],

@@ -144,7 +144,8 @@ function Home() {
           justifyContent: "center",
           gap: 1,
           flexDirection: "row",
-          paddingY: 2,
+          padding: 2,
+
         }}
       >
         {/* Sidebar */}

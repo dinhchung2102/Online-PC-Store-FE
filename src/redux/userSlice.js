@@ -3,13 +3,16 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   userInfo: {
     id: null,
-    name: '',
+    username: '',
     address: [],
     phone: '',
     email: '',
     token: '',
     refresh_token: '',
     avatar: '',
+    gender: '',
+    dateOfBirth: '',
+    fullname: '',
   },
 };
 
@@ -21,30 +24,43 @@ const userSlice = createSlice({
       const user = action.payload;
       state.userInfo = {
         id: user.id,
-        name: user.name,
+        username: user.username,
         address: user.address || [],
         phone: user.phone || '',
         email: user.email || '',
         token: user.token || '',
         refresh_token: user.refresh_token || '',
         avatar: user.avatar || '',
+        gender: user.gender || '',
+        dateOfBirth: user.dateOfBirth || '',
+        fullname: user.fullname || '',
+      };
+    },
+    updateUserInfo: (state, action) => {
+      const updates = action.payload;
+      state.userInfo = {
+        ...state.userInfo,
+        ...updates,
       };
     },
     clearUserInfo: (state) => {
       state.userInfo = {
         id: null,
-        name: '',
+        username: '',
         address: [],
         phone: '',
         email: '',
         token: '',
         refresh_token: '',
         avatar: '',
+        gender: '',
+        dateOfBirth: '',
+        fullname: '',
       }
     },
   },
 });
 
-export const { setUserInfo, clearUserInfo } = userSlice.actions;
+export const { setUserInfo, updateUserInfo, clearUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;
