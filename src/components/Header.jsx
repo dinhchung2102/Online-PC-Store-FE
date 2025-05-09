@@ -61,10 +61,7 @@ function Header() {
     // Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        // Điều hướng đến trang Detail_Account
-        navigate('/Detail_Account');
-      };
+    const handleClose = () => setOpen(false);
     const handleTechnical = () => {
         navigate('/technology-news');
     };
@@ -260,7 +257,7 @@ function Header() {
                                         }} >
                                         <Typography sx={{ fontWeight: 'bold' }}>Xin chào {name} ❤</Typography>
                                     </Box>
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={() => navigate("/Detail_Account")}>
                                         <ListItemIcon>
                                             <PermIdentityIcon />
                                         </ListItemIcon>

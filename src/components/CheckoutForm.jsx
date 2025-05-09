@@ -32,31 +32,31 @@ const CheckoutForm = () => {
     <Box sx={{ padding: 4 }}>
       {/* --- THÔNG TIN ĐƠN HÀNG --- */}
       <Box component={Paper} elevation={3} sx={{ p: 2, mt: 4 }}>
-      <TextField
-  fullWidth
-  label="Nhập mã giảm giá (chỉ áp dụng 1 lần)"
-  InputProps={{
-    endAdornment: (
-      <InputAdornment position="end">
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          sx={{ whiteSpace: "nowrap", minWidth: "auto", px: 2 }}
-        >
-          Áp dụng
-        </Button>
-      </InputAdornment>
-    ),
-  }}
-/>
+        <TextField
+          fullWidth
+          label="Nhập mã giảm giá (chỉ áp dụng 1 lần)"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  sx={{ whiteSpace: "nowrap", minWidth: "auto", px: 2 }}
+                >
+                  Áp dụng
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+        />
 
         <Box mt={2}>
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <Typography>Số lượng sản phẩm</Typography>
             </Grid>
-            <Grid item xs={6} textAlign="right" fontWeight={500}> 
+            <Grid item xs={6} textAlign="right" fontWeight={500}>
               <Typography fontWeight={500}>01</Typography>
             </Grid>
 
@@ -94,34 +94,33 @@ const CheckoutForm = () => {
           THÔNG TIN THANH TOÁN
         </Typography>
         <Box
-  onClick={() => setOpenPaymentModal(true)}
-  sx={{
-    backgroundColor: "#fff",
-    borderRadius: 2,
-    padding: 2,
-    mt: 4,
-    border: "1px solid #eee",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: 1,
-  }}
->
-  <span role="img" aria-label="pay">💳</span>
-  <Typography color={paymentMethod ? "black" : "error"}>
-    {paymentMethod
-      ? `Phương thức: ${
-          paymentMethod === "cod"
-            ? "Thanh toán khi nhận hàng"
-            : paymentMethod === "bank"
-            ? "Chuyển khoản ngân hàng"
-            : paymentMethod === "momo"
-            ? "Ví MoMo"
-            : "VNPay / ATM / Visa"
-        }`
-      : "Chọn phương thức thanh toán"}
-  </Typography>
-</Box>
+          onClick={() => setOpenPaymentModal(true)}
+          sx={{
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            padding: 2,
+            mt: 4,
+            border: "1px solid #eee",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <span role="img" aria-label="pay">💳</span>
+          <Typography color={paymentMethod ? "black" : "error"}>
+            {paymentMethod
+              ? `Phương thức: ${paymentMethod === "cod"
+                ? "Thanh toán khi nhận hàng"
+                : paymentMethod === "bank"
+                  ? "Chuyển khoản ngân hàng"
+                  : paymentMethod === "momo"
+                    ? "Ví MoMo"
+                    : "VNPay / ATM / Visa"
+              }`
+              : "Chọn phương thức thanh toán"}
+          </Typography>
+        </Box>
 
         <Typography variant="caption" color="text.secondary">
           Nhận thêm nhiều ưu đãi tại cổng
@@ -164,7 +163,7 @@ const CheckoutForm = () => {
           <Grid item xs={4}>
             <Typography>Nhận hàng tại</Typography>
           </Grid>
-          <Grid item xs={8} textAlign="right" fontWeight={500}> 
+          <Grid item xs={8} textAlign="right" fontWeight={500}>
             48/27 đường Lương Thực, Xã Thạnh Phú, Huyện Vĩnh Cửu, Đồng Nai
           </Grid>
         </Grid>

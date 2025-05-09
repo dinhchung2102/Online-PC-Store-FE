@@ -93,13 +93,13 @@ const UserProfile = () => {
     try {
       // Lọc ra các địa chỉ còn lại (không bao gồm địa chỉ cần xóa)
       const updatedAddresses = addresses.filter((addr) => addr._id !== id);
-  
+
       // Cập nhật lại danh sách địa chỉ trong state
       setAddresses(updatedAddresses);
-  
+
       // Gọi API cập nhật lại danh sách địa chỉ
       await updateUserInfo({ address: updatedAddresses });
-  
+
       alert("Xóa địa chỉ thành công!");
     } catch (err) {
       alert("Lỗi khi xóa địa chỉ!");
@@ -111,8 +111,8 @@ const UserProfile = () => {
   };
   return (
     <Container
-      maxWidth={false}
-      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", width: "1442px" }}
+      maxWidth={true}
+      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", "&.MuiContainer-root": { padding: 0 } }}
     >
       {/* Header */}
       <Header />
@@ -334,7 +334,7 @@ const UserProfile = () => {
                       </Button>
                     )}
                     <Typography fontWeight="bold">{fullName} | {phone}</Typography>
-                    
+
                     <Typography fontWeight="bold">
                       {`Địa chỉ ${index + 1}: ${addr.ward}, ${addr.district}, ${addr.city}, ${addr.country}`}
                     </Typography>

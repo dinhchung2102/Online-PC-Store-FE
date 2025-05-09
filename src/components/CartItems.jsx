@@ -14,8 +14,10 @@ const CartItem = ({ cart }) => {
   console.log("cart", cart);
   const dispatch = useDispatch();
 
-  const handleDecrease = () => {
+  const handleDecrease = async () => {
     dispatch(updateQuantity({ productId: cart.productId, amountProduct: cart.amountProduct - 1 }));
+    const response = await updateCart(userInfo.id, cart.productId, cart.amountProduct - 1, cart.priceProduct * (cart.amountProduct - 1));
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
   };
 
   const handleIncrease = async () => {
