@@ -133,8 +133,8 @@ function Home() {
   }, []);
   return (
     <Container
-      maxWidth={false}
-      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", width: "1442px" }}
+      maxWidth={true}
+      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", "&.MuiContainer-root": { padding: 0 } }}
     >
       {/* Header */}
       <Header />

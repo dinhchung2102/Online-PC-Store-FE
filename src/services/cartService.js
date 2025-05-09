@@ -24,8 +24,8 @@ export const getCart = async (userId) => {
         },
       }
     );
-    console.log('Response:', response.data.data[0].cartItems); // Kiểm tra phản hồi từ server
-    return response.data.data[0].cartItems; // Giỏ hàng từ server
+    console.log('Response:', response.data.data.cartItems); // Kiểm tra phản hồi từ server
+    return response.data.data.cartItems; // Giỏ hàng từ server
   } catch (err) {
     console.error('Lỗi lấy giỏ hàng:', err.message);
     return null;
@@ -57,9 +57,51 @@ export const updateCart = async (userId, productId, amountProduct, totalPrice) =
       }
     );
     console.log('Response:', response.data); // Kiểm tra phản hồi từ server
-    return response.data; 
+    return response.data;
   } catch (err) {
     console.error('Lỗi cập nhật giỏ hàng:', err.message);
+    return null;
+  }
+}
+
+export const addProductToCart = async (userId, product) => {
+  try {
+    const token = getToken().token;
+    console.log('Token:', token); // Kiểm tra token
+    if (!token) {
+      console.error('Token không tồn tại');
+      return null;
+    }
+    console.log('User ID:', userId); // Kiểm tra userId
+    console.log('Product ID:', product._id); // Kiểm tra productId
+    console.log('Product Name:', product.name); // Kiểm tra productName
+    console.log('Product Image:', product.image); // Kiểm tra productImage
+    console.log('Product Price:', product.price); // Kiểm tra productPrice
+    console.log('Product Amount:', 1); // Kiểm tra productAmount
+    console.log('Product Total Price:', product.price); // Kiểm tra productTotalPrice
+
+    const response = await axios.post('http://localhost:5555/api/cart/create-cart',
+      {
+        userId,
+        productId: product._id,
+        nameProduct: product.name,
+        imageProduct: product.image,
+        priceProduct: product.price,
+        amountProduct: 1,
+        colorProduct: "",
+        discount: 0,
+        type: "",
+        totalPrice: product.price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    console.log(response)
+  } catch (err) {
+    console.error('Lỗi thêm sản phẩm vào giỏ hàng:', err.message);
     return null;
   }
 }

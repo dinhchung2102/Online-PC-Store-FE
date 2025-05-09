@@ -3,9 +3,6 @@ import * as jwtDecode from "jwt-decode";
 
 export const handleLogin = async (username, password) => {
 
-  if (!username.trim() || !password.trim()) {
-    return { success: false, message: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!" };
-  }
 
   try {
     const response = await axios.post("http://localhost:5555/api/user/sign-in", {
@@ -15,20 +12,23 @@ export const handleLogin = async (username, password) => {
 
     const data = response.data;
     console.log("Response:", data);
+    if (data.status === "ERR USER NOT IN THE DATABASE") {
+      return { field: "username", message: "Tên đăng nhập không tồn tại!" };
+    }
 
     if (data.status === "OK") {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("userId", data.userId);
 
-      return { success: true, message: "Đăng nhập thành công!" };
+      return { field: "", message: "Đăng nhập thành công!" };
     } else {
-      return { success: false, message: data.message || "Đăng nhập thất bại!" };
+      return { field: "password", message: data.message || "Mật khẩu không chính xác!" };
     }
   } catch (error) {
     console.error("Lỗi đăng nhập:", error);
     const errorMessage = error.response?.data?.message || "Có lỗi xảy ra khi đăng nhập!";
-    return { success: false, message: errorMessage };
+    return { field: "", message: errorMessage };
   }
 };
 

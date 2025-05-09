@@ -20,23 +20,36 @@ import Paper from '@mui/material/Paper';
 import React, { useEffect, useState } from "react";
 import { getAllProducts } from "~/services/productService";
 import Footer from "~/components/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { addProductToCart } from "~/services/cartService";
 
 
 function DetailProduct() {
+
+  const userInfo = useSelector((state) => state.user.userInfo);
+
 
   // sản phẩm tương tự
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchAllProduct = async () => {
       const products = await getAllProducts();
-      setProducts(products);
+      setProducts(products.data);
     }
     fetchAllProduct();
   }, [])
 
 
   const navigate = useNavigate();
-  const handleClickBuy = () => {
+
+  const handleClickBuy = async (userId, product) => {
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    if (!userId) {
+      alert("Vui lòng đăng nhập để tiếp tục mua hàng");
+      return
+    }
+    const response = await addProductToCart(userId, product)
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
     navigate("/shopping-cart");
   }
   const location = useLocation();
@@ -84,7 +97,7 @@ function DetailProduct() {
             </Box>
             <Box sx={{ mt: 3 }}>
               <Button
-                onClick={handleClickBuy}
+                onClick={() => handleClickBuy(userInfo.id, product)}
                 variant="contained"
                 sx={{
                   display: 'flex',

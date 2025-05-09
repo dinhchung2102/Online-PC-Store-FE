@@ -15,6 +15,8 @@ import {
   Button,
   Divider
 } from "@mui/material";
+import { useSelector } from "react-redux";
+import { formatCurrency } from "~/utils/utils";
 
 const provinces = [
   { label: "Hồ Chí Minh", value: "HC" },
@@ -26,6 +28,14 @@ const provinces = [
 ];
 
 export default function CartInfoForm() {
+  const user = useSelector((state) => state.user.userInfo)
+  const cart = useSelector((state) => state.cart.cartItems)
+  const totalPrice = cart.reduce((total, item) => total += item.totalPrice, 0)
+
+  console.log("user", user);
+
+  const [name, setName] = useState(user?.name || "");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [gender, setGender] = useState("Anh");
   const [method, setMethod] = useState("Giao hàng tận nơi");
   const [province, setProvince] = useState("");
@@ -49,7 +59,13 @@ export default function CartInfoForm() {
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            <TextField fullWidth label="Nhập họ tên" required />
+            <TextField
+              fullWidth
+              label="Nhập họ tên"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField fullWidth label="Nhập số điện thoại" required inputProps={{ minLength: 10, maxLength: 12 }} />
@@ -145,7 +161,7 @@ export default function CartInfoForm() {
         <Typography variant="h6">
           Tổng tiền:
         </Typography>
-        <Typography variant="h6" style={{ color: "#f00" }}>3.890.000₫</Typography>
+        <Typography variant="h6" style={{ color: "#f00" }}>{formatCurrency(totalPrice)}</Typography>
       </Box>
       <Box>
         <Typography variant="body2" >
