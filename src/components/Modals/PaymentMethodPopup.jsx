@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   Dialog,
   DialogTitle,
@@ -37,6 +37,7 @@ const paymentMethods = [
   },
 ];
 
+// eslint-disable-next-line react/prop-types
 const PaymentMethodPopup = ({ open, onClose, selected, onSelect }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth>

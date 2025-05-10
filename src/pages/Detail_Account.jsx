@@ -33,7 +33,7 @@ import {
 } from "@mui/icons-material";
 
 const UserProfile = () => {
-  const [fullName, setFullName] = useState("");
+  const [fullname, setfullname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
   const [userData, setUserData] = useState(null);
@@ -57,7 +57,7 @@ const UserProfile = () => {
   }, []);
 
   const handleNameChange = (event) => {
-    setFullName(event.target.value);
+    setfullname(event.target.value);
   };
 
   const handlephoneChange = (event) => {
@@ -68,7 +68,7 @@ const UserProfile = () => {
   };
   useEffect(() => {
     if (userData) {
-      if (userData.name) setFullName(userData.name);
+      if (userData.name) setfullname(userData.name);
       if (userData.phone) setphone(userData.phone);
       if (userData.email) setemail(userData.email);
     }
@@ -76,7 +76,7 @@ const UserProfile = () => {
   const handleSaveChanges = async () => {
     try {
       const updatedUser = {
-        name: fullName,
+        name: fullname,
         phone,
         email,
       };
@@ -133,7 +133,7 @@ const UserProfile = () => {
           >
             <Avatar sx={{ width: 80, height: 80 }} />
             <Typography variant="h6" mt={2}>
-              {userData ? userData.name : "Đang tải..."}{" "}
+              {userData ? userData.fullname : "Đang tải..."}{" "}
               {/* Kiểm tra userData trước khi truy cập */}
             </Typography>
             <Typography variant="h6" color="gray">
@@ -192,7 +192,7 @@ const UserProfile = () => {
                   <TextField
                     fullWidth
                     variant="outlined"
-                    value={fullName}
+                    value={fullname}
                     onChange={handleNameChange}
                     sx={{ width: 300 }}
                     size="small"
@@ -333,7 +333,7 @@ const UserProfile = () => {
                         Mặc định
                       </Button>
                     )}
-                    <Typography fontWeight="bold">{fullName} | {phone}</Typography>
+                    <Typography fontWeight="bold">{fullname} | {phone}</Typography>
 
                     <Typography fontWeight="bold">
                       {`Địa chỉ ${index + 1}: ${addr.ward}, ${addr.district}, ${addr.city}, ${addr.country}`}

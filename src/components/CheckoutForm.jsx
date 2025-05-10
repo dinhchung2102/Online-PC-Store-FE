@@ -23,8 +23,29 @@ import {
   Paper,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
+import { useSelector } from "react-redux";
+import {formatCurrency} from "~/utils/utils";
+
 
 const CheckoutForm = () => {
+  const cart = useSelector((state) => state.cart.cartItems);
+  const user = useSelector((state) => state.user.userInfo);
+
+  console.log('cart', cart);
+  console.log('user', user);
+
+  const getQuantityItem = () => cart.reduce((total, item) => total += item.amountProduct, 0)
+
+  const getTotalPrice = () => cart.reduce((total, item) => total += item.totalPrice, 0)
+
+  const userAddress = () => {
+    if (user.address.length > 0) {
+      const values = Object.values(user.address[0]);
+      return `${values.join(", ")}`;
+    }
+    return "Chưa có thông tin";
+  }
+
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
 
@@ -57,14 +78,14 @@ const CheckoutForm = () => {
               <Typography>Số lượng sản phẩm</Typography>
             </Grid>
             <Grid item xs={6} textAlign="right" fontWeight={500}>
-              <Typography fontWeight={500}>01</Typography>
+              <Typography fontWeight={500}>{getQuantityItem()}</Typography>
             </Grid>
 
             <Grid item xs={6}>
               <Typography>Tiền hàng (tạm tính)</Typography>
             </Grid>
             <Grid item xs={6} textAlign="right" fontWeight={500}>
-              <Typography fontWeight={500}>8.290.000đ</Typography>
+              <Typography fontWeight={500}>{formatCurrency(getTotalPrice())}</Typography>
             </Grid>
 
             <Grid item xs={6}>
@@ -82,7 +103,7 @@ const CheckoutForm = () => {
               <Typography fontWeight="bold">Tổng tiền (đã gồm VAT)</Typography>
             </Grid>
             <Grid item xs={6} textAlign="right" >
-              <Typography fontWeight="bold" color="error" >8.290.000đ</Typography>
+              <Typography fontWeight="bold" color="error" >{formatCurrency(getTotalPrice())}</Typography>
             </Grid>
           </Grid>
         </Box>
@@ -143,28 +164,30 @@ const CheckoutForm = () => {
               size="small"
               sx={{ mr: 1 }}
             />
-            Gia Vĩ Nguyễn Hoàng
+            {user.fullname}
           </Grid>
 
           <Grid item xs={4} >
             <Typography>Số điện thoại</Typography>
           </Grid>
           <Grid item xs={8} textAlign="right" fontWeight={500}>
-            0972296068
+            {user.phone}
           </Grid>
 
           <Grid item xs={4}>
             <Typography>Email</Typography>
           </Grid>
           <Grid item xs={8} textAlign="right" fontWeight={500}>
-            nguyenhoanggia...@gmail.com
+            {user.email || "chưa có thông tin"}
           </Grid>
 
           <Grid item xs={4}>
             <Typography>Nhận hàng tại</Typography>
           </Grid>
           <Grid item xs={8} textAlign="right" fontWeight={500}>
-            48/27 đường Lương Thực, Xã Thạnh Phú, Huyện Vĩnh Cửu, Đồng Nai
+            {user.address.length > 0
+              ? (userAddress())
+              : "Chưa có thông tin"}
           </Grid>
         </Grid>
       </Box>

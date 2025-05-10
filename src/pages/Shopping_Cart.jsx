@@ -265,7 +265,15 @@ function Shopping_Cart() {
                     Quay lại
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>Hoàn tất đặt hàng</Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleNext()
+                    }}
+                  >
+                    Hoàn tất đặt hàng
+                  </Button>
                 </Box>
               </React.Fragment>
             ) : activeStep === steps.length - 2 ? (
