@@ -1,10 +1,14 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
 import { callAPI, callApiDistrict, callApiWard, host } from "./callApiProvince";
+// import { useSelector } from "react-redux";
 
 
 // eslint-disable-next-line react/prop-types
 function SelectAddress({ setAddress }) {
+
+  // const cart = useSelector((state) => state.cart.cartItems);
+
   const [wards, setWards] = React.useState([]);
   const [districts, setDistricts] = React.useState([]);
   const [provinces, setProvinces] = React.useState([]);
