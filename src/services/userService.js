@@ -63,11 +63,11 @@ export const updateUserInfo = async (user) => {
       {
         fullname: user.fullname,
         phone: user.phone,
-        // address: user.address,
-        // dateOfBirth: user.dateOfBirth,
-        // avatar: user.avatar,
-        // gender: user.gender,
-        // email: user.email,
+        address: user.address,
+        dateOfBirth: user.dateOfBirth,
+        avatar: user.avatar,
+        gender: user.gender,
+        email: user.email,
       },
       {
         headers: {

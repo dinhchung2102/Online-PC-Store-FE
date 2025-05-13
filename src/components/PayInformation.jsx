@@ -43,6 +43,8 @@ export default function CartInfoForm() {
   const [name, setName] = useState(user?.fullname || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [gender, setGender] = useState(user?.gender || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth || "");
   const [method, setMethod] = useState("Giao hàng tận nơi");
   const [address, setAddress] = useState({
     province: "",
@@ -99,6 +101,32 @@ export default function CartInfoForm() {
               onChange={(e) => {
                 setPhone(e.target.value)
                 dispatch(updateUserInfo({ phone: e.target.value }))
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              size="small"
+              fullWidth
+              label="Nhập email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                dispatch(updateUserInfo({ email: e.target.value }))
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              size="small"
+              fullWidth
+              label="Nhập ngày tháng năm sinh dd/mm/yyyy"
+              required
+              value={dateOfBirth}
+              onChange={(e) => {
+                setDateOfBirth(e.target.value)
+                dispatch(updateUserInfo({ dateOfBirth: e.target.value }))
               }}
             />
           </Grid>
