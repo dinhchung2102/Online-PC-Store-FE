@@ -57,6 +57,8 @@ function Header() {
     // redux
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.user.userInfo);
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const quantityItem = cartItems.reduce((total, item) => total += item.amountProduct, 0);
 
     // Modal
     const [open, setOpen] = useState(false);
@@ -203,7 +205,7 @@ function Header() {
                             icon={<ShoppingCartIcon />}
                             text1="Giỏ"
                             text2="hàng"
-                            badgeContent={1}
+                            badgeContent={quantityItem}
                         />
                         {isLogin ?
                             <Box id="basic-avatar" sx={{ display: 'flex', alignItems: 'center' }} >

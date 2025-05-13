@@ -28,8 +28,10 @@ import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
 import { useEffect } from "react";
-import { fetchCart } from "~/redux/cartSlice";
+import { fetchCart, clearCart } from "~/redux/cartSlice";
 import { updateUserInfo } from "../services/userService";
+import { createOrder } from "../services/orderService";
+import { deleteAllCartItems } from "../services/cartService";
 
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -128,6 +130,12 @@ function Shopping_Cart() {
     dispatch(fetchCart(userInfo.id));
   }, [dispatch, userInfo.id]);
 
+  // checkout form
+  // set phuong thuc thanh toan
+  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  // console.log('paymentMethod', paymentMethod);
+  // eslint-disable-next-line no-unused-vars
+  const [shippingPrice, setShippingPrice] = React.useState(0);
 
   const navigate = useNavigate()
   const [activeStep, setActiveStep] = React.useState(0);
@@ -258,7 +266,7 @@ function Shopping_Cart() {
             ) : activeStep === steps.length - 1 ? (
               // Bước xác nhận đặt hàng
               <React.Fragment>
-                <CheckoutForm />
+                <CheckoutForm _setPaymentMethod={setPaymentMethod} />
                 {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
@@ -268,8 +276,11 @@ function Shopping_Cart() {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {
+                    onClick={async () => {
+                      await createOrder(userInfo.id, carts, shippingPrice, paymentMethod)
                       handleNext()
+                      dispatch(clearCart())
+                      await deleteAllCartItems(userInfo.id)
                     }}
                   >
                     Hoàn tất đặt hàng

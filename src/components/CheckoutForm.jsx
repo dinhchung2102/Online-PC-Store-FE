@@ -1,21 +1,11 @@
-import React from "react";
+
 import { useState } from "react";
 import PaymentMethodPopup from "./Modals/PaymentMethodPopup";
 
 import {
   Box,
   Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
   Grid,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
   TextField,
   Typography,
   Chip,
@@ -24,10 +14,11 @@ import {
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useSelector } from "react-redux";
-import {formatCurrency} from "~/utils/utils";
+import { formatCurrency } from "~/utils/utils";
 
 
-const CheckoutForm = () => {
+// eslint-disable-next-line react/prop-types
+const CheckoutForm = ({ _setPaymentMethod }) => {
   const cart = useSelector((state) => state.cart.cartItems);
   const user = useSelector((state) => state.user.userInfo);
 
@@ -131,13 +122,13 @@ const CheckoutForm = () => {
           <span role="img" aria-label="pay">💳</span>
           <Typography color={paymentMethod ? "black" : "error"}>
             {paymentMethod
-              ? `Phương thức: ${paymentMethod === "cod"
+              ? `Phương thức: ${paymentMethod === "COD"
                 ? "Thanh toán khi nhận hàng"
-                : paymentMethod === "bank"
+                : paymentMethod === "BANK"
                   ? "Chuyển khoản ngân hàng"
-                  : paymentMethod === "momo"
-                    ? "Ví MoMo"
-                    : "VNPay / ATM / Visa"
+                  : paymentMethod === "MOMO"
+                    ? "Ví MOMO"
+                    : "VNPAY / ATM / VISA"
               }`
               : "Chọn phương thức thanh toán"}
           </Typography>
@@ -203,7 +194,10 @@ const CheckoutForm = () => {
         open={openPaymentModal}
         onClose={() => setOpenPaymentModal(false)}
         selected={paymentMethod}
-        onSelect={(value) => setPaymentMethod(value)}
+        onSelect={(value) => {
+          setPaymentMethod(value)
+          _setPaymentMethod(value);
+        }}
       />
     </Box>
   );

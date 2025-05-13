@@ -11,28 +11,28 @@ import {
 
 const paymentMethods = [
   {
-    value: "cod",
+    value: "CASH",
     label: "Thanh toán khi nhận hàng",
     icon: "🧧",
   },
   {
-    value: "bank",
+    value: "INTERNET_BANKING",
     label: "Chuyển khoản ngân hàng qua mã QR",
     icon: "📲",
   },
   {
-    value: "vnpay",
+    value: "VNPAY",
     label: "VNPAY",
     icon: "🏦",
   },
   {
-    value: "visa",
+    value: "CREDIT_CARD",
     label: "Qua thẻ Visa/Master/JCB/Napas",
     icon: "💳",
   },
   {
-    value: "momo",
-    label: "Ví MoMo",
+    value: "MOMO",
+    label: "Ví MOMO",
     icon: "👜",
   },
 ];
