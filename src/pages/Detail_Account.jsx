@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import NewAddressModal from "./NewAddressModal";
@@ -31,8 +32,70 @@ import {
   ExitToApp,
   ShoppingBag,
 } from "@mui/icons-material";
+// import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActionArea from '@mui/material/CardActionArea';
+
+
+
+function SelectActionCard({ summary }) {
+  return (
+    <Card>
+      <CardActionArea
+        sx={{
+          height: '100%',
+          '&[data-active]': {
+            backgroundColor: 'action.selected',
+            '&:hover': {
+              backgroundColor: 'action.selectedHover',
+            },
+          },
+        }}
+      >
+        <CardContent sx={{ height: '100%' }}>
+          <Typography variant="h5" component="div">
+
+            {summary.title}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+}
 
 const UserProfile = () => {
+
+
+
+
+  const summaryOrder = [
+    {
+      id: 1,
+      title: 'Số lượng đơn hàng',
+      quatity: 1
+    },
+    {
+      id: 2,
+      title: 'Đơn hàng đang giao',
+      quatity: 1
+
+    },
+    {
+      id: 3,
+      title: 'Đơn hàng đã giao',
+      quatity: 1
+
+    },
+    {
+      id: 4,
+      title: 'Đơn hàng đã hủy',
+      quatity: 1
+
+    },
+  ];
+
+
   const [fullname, setfullname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
@@ -117,29 +180,28 @@ const UserProfile = () => {
       {/* Header */}
       <Header />
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2} sx={{ padding: 2 }}>
         {/* Sidebar */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
             p={3}
-            mt={3}
             bgcolor="#fff"
-            borderRadius={5}
+            borderRadius={2}
             boxShadow={2}
             sx={{ height: "93.5%" }}
           >
             <Avatar sx={{ width: 80, height: 80 }} />
-            <Typography variant="h6" mt={2}>
+            <Typography variant="h6" mt={2}  >
               {userData ? userData.fullname : "Đang tải..."}{" "}
               {/* Kiểm tra userData trước khi truy cập */}
             </Typography>
             <Typography variant="h6" color="gray">
               {userData ? userData.phone : "Đang tải..."}
             </Typography>
-            <List>
+            <List sx={{ '&:hover': { cursor: "pointer" } }}>
               <SidebarItem
                 icon={
                   <AccountCircle
@@ -180,8 +242,8 @@ const UserProfile = () => {
         </Grid>
 
         {/* Main Content */}
-        <Grid item xs={12} md={8}>
-          <Box p={3} borderRadius={2} boxShadow={2} mt={3} bgcolor="#fff">
+        <Grid item xs={12} md={9}>
+          <Box p={3} borderRadius={2} boxShadow={2} bgcolor="#fff">
             {selectedScreen === "account" && (
               <>
                 <Typography variant="h5" mb={2}>
@@ -364,8 +426,14 @@ const UserProfile = () => {
             )}
             {selectedScreen === "orders" && (
               <>
-                <Typography variant="h5">Quản lý đơn hàng</Typography>
+                <Typography variant="h5" mb={2}>
+                  Thông tin tài khoản
+                </Typography>
                 {/* Nội dung quản lý đơn hàng */}
+                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
+                  {summaryOrder.map((order) => <SelectActionCard key={order.id} summary={order} />)}
+                </Box>
+
               </>
             )}
           </Box>
