@@ -114,7 +114,7 @@ function Header() {
                 dispatch(setUserInfo({
                     id: user._id,
                     username: user.username,
-                    address: [],
+                    address: [...user.address],
                     phone: user.phone,
                     email: user.email,
                     dateOfBirth: user.dateOfBirth,
