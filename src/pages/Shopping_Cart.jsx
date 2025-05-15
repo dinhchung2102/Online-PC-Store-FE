@@ -280,7 +280,7 @@ function Shopping_Cart() {
                       await createOrder(userInfo.id, carts, shippingPrice, paymentMethod)
                       handleNext()
                       dispatch(clearCart())
-                      await deleteAllCartItems(userInfo.id)
+                      await deleteAllCartItems(carts)
                     }}
                   >
                     Hoàn tất đặt hàng

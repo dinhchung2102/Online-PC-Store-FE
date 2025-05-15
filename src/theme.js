@@ -25,6 +25,36 @@ const theme = extendTheme({
         secondary: orange
       }
     }
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          '*::-webkit-scrollbar': {
+            width: '6px',
+            height: '6px'
+          },
+          '*::-webkit-scrollbar-thumb': {
+            backgroundColor: '#dcdde1',
+            borderRadius: '8px'
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: 'white'
+          }
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          borderWidth: '0.5px',
+          '&:hover': {
+            borderWidth: '0.5px'
+          }
+        }
+      }
+    },
   }
 })
 
