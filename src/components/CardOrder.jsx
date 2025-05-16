@@ -6,6 +6,7 @@ import { formatCurrency } from "../utils/utils";
 import React from "react";
 import Divider from "@mui/material/Divider";
 import Button from '@mui/material/Button';
+import { keyToVietnamese } from "../utils/utils";
 
 /* eslint-disable no-unused-vars */
 export default function CardOrder({ order }) {
@@ -13,7 +14,7 @@ export default function CardOrder({ order }) {
     <Box sx={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', mb: 2, boxShadow: '1px 1px 8px 2px rgba(0,0,0,0.1)' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #ccc', borderColor: 'primary.main' }}>
         <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1">Mã đơn hàng: {order._id}</Typography>
-        <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1">Trạng thái: {order.statusOrder}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1">Trạng thái: {keyToVietnamese(order.statusOrder)}</Typography>
       </Box>
       <Box>
         {order.orderDetails.map((item, index) => (
@@ -44,11 +45,18 @@ export default function CardOrder({ order }) {
         </Box>
         <Box sx={{ mt: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography>Phương thức thanh toán: {order.paymentMethod}</Typography>
-          <Box sx={{ display: 'flex', gap: 1}}>
-            <Button variant="contained">Đã nhận hàng</Button>
-            <Button variant="outlined">Yêu cầu hoàn tiền</Button>
-            <Button variant="outlined">Liên hệ shop</Button>
-          </Box>
+          {order.statusOrder === "pending" ? (
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button variant="contained">Đã nhận hàng</Button>
+              <Button variant="outlined">Yêu cầu hoàn tiền</Button>
+              <Button variant="outlined">Liên hệ shop</Button>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button variant="contained">Mua lại</Button>
+              <Button variant="outlined">Liên hệ shop</Button>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>)

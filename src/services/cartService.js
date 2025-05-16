@@ -133,11 +133,11 @@ export const removeProductFromCart = async (cartId) => {
 
 export const deleteAllCartItems = async (cart) => {
   try {
-    const cartIds = cart.map((item) => { return { cartId: item._id } });
     if (!cart) {
       console.error('User ID không tồn tại');
       return null;
     }
+    const cartIds = cart.map((item) => { return { cartId: item._id } });
     console.log('cartIds:', cartIds); // Kiểm tra cart
     const token = getToken().token;
     console.log('Token:', token); // Kiểm tra token
@@ -145,8 +145,14 @@ export const deleteAllCartItems = async (cart) => {
       console.error('Token không tồn tại');
       return null;
     }
-    const response = await axios.delete(
-      `http://localhost:5555/api/cart/delete-many-cart`, cartIds);
+    const response = await axios.post(
+      `http://localhost:5555/api/cart/delete-many-cart`, cartIds,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     console.log('Response delete all cart:', response.data); // Kiểm tra phản hồi từ server
     return response.data;
   } catch (err) {

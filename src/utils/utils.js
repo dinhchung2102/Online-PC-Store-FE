@@ -30,6 +30,7 @@ export const keyToVietnamese = (key) => {
     'processor': 'Bộ vi xử lý',
     'os': 'Hệ điều hành',
     'series': 'Dòng sản phẩm',
+    'pending': 'Đang giao hàng'
     // Thêm các từ khóa khác vào đây
   };
 
