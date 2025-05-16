@@ -36,9 +36,8 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
-import { addToCart } from "~/redux/cartSlice";
-import { getCart } from "~/services/cartService";
 import { useNavigate } from "react-router";
+import {fetchOrders } from "~/redux/orderSlice";
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -124,6 +123,7 @@ function Header() {
                     gender: user.gender,
                     fullname: user.fullname,
                 }));
+                dispatch(fetchOrders(user._id));
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");

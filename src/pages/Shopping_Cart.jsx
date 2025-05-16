@@ -32,6 +32,8 @@ import { fetchCart, clearCart } from "~/redux/cartSlice";
 import { updateUserInfo } from "../services/userService";
 import { createOrder } from "../services/orderService";
 import { deleteAllCartItems } from "../services/cartService";
+import CardOrder from "~/components/CardOrder";
+import { fetchOrders } from "~/redux/orderSlice";
 
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -112,6 +114,9 @@ const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 function Shopping_Cart() {
 
   const dispatch = useDispatch();
+
+  //order
+  const orders = useSelector((state) => state.order.orders);
 
   // modal login
   const [openModal, setOpenModal] = React.useState(false);
@@ -253,10 +258,13 @@ function Shopping_Cart() {
             {activeStep === steps.length ? (
               // Bước cuối: hoàn tất
               <React.Fragment>
-                <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
-                  <Typography sx={{ mt: 2, mb: 1 }}>
-                    Thanh toán thành công!
-                  </Typography>
+                <Box sx={{ maxHeight: '600px', width: "100%", padding: 5, textAlign: 'center', overflowY: 'auto' }}>
+                  {orders.map((order) => (
+                    <Box key={order._id}>
+                      <CardOrder order={order} />
+                      <Divider sx={{ my: 2 }} />
+                    </Box>
+                  ))}
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Box sx={{ flex: "1 1 auto" }} />
@@ -281,6 +289,7 @@ function Shopping_Cart() {
                       handleNext()
                       dispatch(clearCart())
                       await deleteAllCartItems(carts)
+                      dispatch(fetchOrders(userInfo.id));
                     }}
                   >
                     Hoàn tất đặt hàng

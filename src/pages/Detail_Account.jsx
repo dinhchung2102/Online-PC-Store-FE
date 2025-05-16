@@ -38,7 +38,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardOrder from "~/components/CardOrder";
-import { getOrderByUserId } from "~/services/orderService";
 import { useSelector } from "react-redux";
 
 
@@ -58,7 +57,7 @@ function SelectActionCard({ summary }) {
         }}
       >
         <CardContent sx={{ height: '100%' }}>
-          <Typography variant="h6" component="div">
+          <Typography variant="subtitle1" component="div" sx={{ fontWeight: 'bold' }}>
             {summary.title}: {summary.quatity}
           </Typography>
         </CardContent>
@@ -71,45 +70,36 @@ const UserProfile = () => {
 
 
   // order
-  const userInfo = useSelector((state) => state.user.userInfo);
-  const [orders, setOrders] = useState([]);
+  const orders = useSelector((state) => state.order.orders);
+  // const userInfo = useSelector((state) => state.user.userInfo);
   console.log('orders:', orders);
-  useEffect(() => {
-
-    const handleGetOrderByUserId = async () => {
-      if (!userInfo) return;
-      const data = await getOrderByUserId(userInfo.id)
-      setOrders(data); // In ra dữ liệu để kiểm tra
-    }
-    handleGetOrderByUserId()
-  }, []);
 
 
   const summaryOrder = [
     {
       id: 1,
       title: 'Số lượng đơn hàng',
-      quatity: 1,
+      quatity: orders.length,
       color: '#88FF98'
     },
     {
       id: 2,
       title: 'Đơn hàng đang giao',
-      quatity: 1,
+      quatity: orders.filter(order => order.statusOrder === "pending").length,
       color: '#88BCFF',
 
     },
     {
       id: 3,
       title: 'Đơn hàng đã giao',
-      quatity: 1,
+      quatity: orders.filter(order => order.statusOrder === "completed").length,
       color: '#F9FF88'
 
     },
     {
       id: 4,
       title: 'Đơn hàng đã hủy',
-      quatity: 1,
+      quatity: orders.filter(order => order.statusOrder === "cancelled").length,
       color: '#FF8888'
 
     },
@@ -453,8 +443,10 @@ const UserProfile = () => {
                 <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
                   {summaryOrder.map((order) => <SelectActionCard key={order.id} summary={order} />)}
                 </Box>
-                <Box sx={{ mt: 2 }}>
-                  {orders.map(order => <CardOrder key={order._id} order={order} />)}
+                <Box sx={{ mt: 2, maxHeight: "70vh", overflowY: "auto", mr: -2 }}>
+                  <Box sx={{ mr: 1}}>
+                    {orders.map(order => <CardOrder key={order._id} order={order} />)}
+                  </Box>
                 </Box>
 
               </>
