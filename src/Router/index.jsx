@@ -11,7 +11,10 @@ import Blogs from "~/pages/Blogs";
 import DetailProduct from "~/pages/DetailProduct";
 import Admin from "../pages/Admin/AdminLayout";
 import Products from "../pages/Admin/Products";
-import Detail_Account from "~/pages/Detail_Account";;
+import Detail_Account from "~/pages/Detail_Account";
+import AdminRoute from "./privateRoute";
+import NotFoundPage from "~/pages/NotFound";
+;
 function MyRouter() {
   return (
     <Router>
@@ -28,9 +31,17 @@ function MyRouter() {
         <Route path="/products/:category" element={<ListProduct />} />
         <Route path="/detailProduct/:idProduct" element={<DetailProduct />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
         <Route path="/products" element={<Products />} />
         <Route path="/Detail_Account" element={<Detail_Account />} />
+        <Route path="*" element={<NotFoundPage/>} />
       </Routes>
     </Router>
   );

@@ -38,6 +38,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
 import { useNavigate } from "react-router";
 import {fetchOrders } from "~/redux/orderSlice";
+import { transformISOToTime, transformTimeToISO } from "../utils/utils";
+import { checkAdmin } from "../services/authService";
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -116,7 +118,7 @@ function Header() {
                     address: [...user.address],
                     phone: user.phone,
                     email: user.email,
-                    dateOfBirth: user.dateOfBirth,
+                    dateOfBirth: transformISOToTime(user.dateOfBirth),
                     token: token?.token,
                     refresh_token: token?.refreshToken,
                     avatar: "",
@@ -124,6 +126,7 @@ function Header() {
                     fullname: user.fullname,
                 }));
                 dispatch(fetchOrders(user._id));
+                console.log("check admin",checkAdmin())
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
