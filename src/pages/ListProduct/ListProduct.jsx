@@ -28,11 +28,17 @@ function ListProduct() {
   // list products
   const [products, setProducts] = useState([]);
 
+  // pagination
+  const [page, setPage] = useState(1);
+  const [numOfPages, setNumOfPages] = useState(0);
+
   useEffect(() => {
     const fetchAllProduct = async () => {
       const products = await getAllProducts();
       console.log('products', products);
       setProducts(products.data);
+      setNumOfPages(products.pagination.total_pages);
+      setPage(products.pagination.page);
     }
     fetchAllProduct();
   }, [])
@@ -115,7 +121,7 @@ function ListProduct() {
                 })}
               </Grid>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
-                <Pagination count={10} color="primary" />
+                <Pagination count={numOfPages} color="primary" page={page} />
               </Box>
             </Box>
           </Grid>
