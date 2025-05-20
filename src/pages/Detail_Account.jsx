@@ -41,10 +41,13 @@ import CardOrder from "~/components/CardOrder";
 import { useSelector } from "react-redux";
 
 
-function SelectActionCard({ summary }) {
+function SelectActionCard({ summary, setSelectedFilterOrder }) {
   return (
     <Card sx={{ bgcolor: summary.color, }}>
       <CardActionArea
+        onClick={() => {
+          setSelectedFilterOrder(summary.title);
+        }}
         sx={{
 
           height: '100%',
@@ -67,12 +70,26 @@ function SelectActionCard({ summary }) {
 }
 
 const UserProfile = () => {
-
-
   // order
   const orders = useSelector((state) => state.order.orders);
   // const userInfo = useSelector((state) => state.user.userInfo);
   console.log('orders:', orders);
+
+  const [selectedFilterOrder, setSelectedFilterOrder] = useState("Số lượng đơn hàng");
+
+  const [orderFilter, setOrderFilter] = useState(orders)
+
+  useEffect(() => {
+    if (selectedFilterOrder === "Số lượng đơn hàng") {
+      setOrderFilter(orders);
+    } else if (selectedFilterOrder === "Đơn hàng đang giao") {
+      setOrderFilter(orders.filter(order => order.statusOrder === "pending"));
+    } else if (selectedFilterOrder === "Đơn hàng đã giao") {
+      setOrderFilter(orders.filter(order => order.statusOrder === "completed"));
+    } else if (selectedFilterOrder === "Đơn hàng đã hủy") {
+      setOrderFilter(orders.filter(order => order.statusOrder === "cancelled"));
+    }
+  }, [selectedFilterOrder, orders]);
 
 
   const summaryOrder = [
@@ -441,11 +458,11 @@ const UserProfile = () => {
                 </Typography>
                 {/* Nội dung quản lý đơn hàng */}
                 <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
-                  {summaryOrder.map((order) => <SelectActionCard key={order.id} summary={order} />)}
+                  {summaryOrder.map((order) => <SelectActionCard key={order.id} summary={order} setSelectedFilterOrder={setSelectedFilterOrder} />)}
                 </Box>
                 <Box sx={{ mt: 2, maxHeight: "70vh", overflowY: "auto", mr: -2 }}>
                   <Box sx={{ mr: 1}}>
-                    {orders.map(order => <CardOrder key={order._id} order={order} />)}
+                    {orderFilter.map(order => <CardOrder key={order._id} order={order} />)}
                   </Box>
                 </Box>
 
