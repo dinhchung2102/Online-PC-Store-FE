@@ -3,6 +3,7 @@ export const formatCurrency = (amount) => {
 }
 
 export const keyToVietnamese = (key) => {
+
   const dictionary = {
     'brand': 'Thương hiệu',
     'product': 'Sản phẩm',
@@ -30,9 +31,14 @@ export const keyToVietnamese = (key) => {
     'processor': 'Bộ vi xử lý',
     'os': 'Hệ điều hành',
     'series': 'Dòng sản phẩm',
-    'pending': 'Đang giao hàng'
+    'pending': 'Đang giao hàng',
+    'screen size': 'Kích thước màng hình',
+    'graphics card': 'Card đồ họa',
+    'usage': 'Mục đích sử dụng',
+    'operating system': 'Hệ điều hành',
+    'weight': 'Trọng lượng',
     // Thêm các từ khóa khác vào đây
   };
 
-  return dictionary[key] || key;
+  return dictionary[key.toLowerCase()] || key;
 };

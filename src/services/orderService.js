@@ -80,6 +80,8 @@ export const getOrderByUserId = async (userId) => {
     });
     const _orders = response.data.data.orders; // Kiểm tra phản hồi từ server
 
+    console.log('_orders:', _orders); // Kiểm tra danh sách đơn hàng
+
     if (response.statusText === "OK") {
       finalOrders = await Promise.all(_orders.map(async (order) => {
         let _orderDetails = await getOrderDetailsByOrderId(order._id)

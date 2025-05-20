@@ -72,7 +72,8 @@ function SelectActionCard({ summary, setSelectedFilterOrder }) {
 const UserProfile = () => {
   // order
   const orders = useSelector((state) => state.order.orders);
-  // const userInfo = useSelector((state) => state.user.userInfo);
+  const userInfo = useSelector((state) => state.user.userInfo);
+  console.log('userInfo:', userInfo);
   console.log('orders:', orders);
 
   const [selectedFilterOrder, setSelectedFilterOrder] = useState("Số lượng đơn hàng");
