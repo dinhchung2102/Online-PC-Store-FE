@@ -15,6 +15,7 @@ import Detail_Account from "~/pages/Detail_Account";
 import AdminRoute from "./PrivateRoute";
 import NotFoundPage from "~/pages/NotFound";
 import FilterProduct from "~/pages/ListProduct/FilterProduct";
+import OrderSuccess from "~/pages/OrderSuccess";
 
 function MyRouter() {
   return (
@@ -43,6 +44,8 @@ function MyRouter() {
         />
         <Route path="/products" element={<Products />} />
         <Route path="/Detail_Account" element={<Detail_Account />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
