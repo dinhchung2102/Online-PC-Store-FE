@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
@@ -26,6 +27,7 @@ import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairService
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined"; // Icon Thu cũ đổi mới
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"; // Icon Tra cứu bảo hành
 
+import Modal from '@mui/material/Modal';
 import { useState, useEffect } from "react";
 import BasicModal from "./Modals/Modal";
 import PropTypes from 'prop-types';
@@ -37,9 +39,11 @@ import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
 import { useNavigate } from "react-router";
-import {fetchOrders } from "~/redux/orderSlice";
-import { transformISOToTime, transformTimeToISO } from "../utils/utils";
+import { fetchOrders } from "~/redux/orderSlice";
+import { transformISOToTime } from "../utils/utils";
 import { checkAdmin } from "../services/authService";
+import Categories from "~/components/Categories"
+
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -49,6 +53,24 @@ const services = [
     { icon: <CurrencyExchangeOutlinedIcon />, text: "Thu cũ đổi mới" },
     { icon: <VerifiedOutlinedIcon />, text: "Tra cứu bảo hành" },
 ];
+
+const ModalCategory = ({ openModalCate, handleCloseModalCate }) => {
+    return (
+        <Modal
+            open={openModalCate}
+            onClose={handleCloseModalCate}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: "95vw", paddingX: 'auto', mt: "30px" }}>
+                    <Categories />
+
+                </Box>
+            </Box>
+        </Modal>
+    )
+}
 
 
 function Header() {
@@ -68,6 +90,11 @@ function Header() {
     const handleTechnical = () => {
         navigate('/technology-news');
     };
+
+    // modal cate
+    const [openModalCate, setOpenModalCate] = useState(false)
+    const handleOpenModalCate = () => setOpenModalCate(true)
+    const handleCloseModalCate = () => setOpenModalCate(false)
 
     // login
     const [isLogin, setIsLogin] = useState(false);
@@ -126,7 +153,7 @@ function Header() {
                     fullname: user.fullname,
                 }));
                 dispatch(fetchOrders(user._id));
-                console.log("check admin",checkAdmin())
+                console.log("check admin", checkAdmin())
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
@@ -153,7 +180,6 @@ function Header() {
 
     return (
         <Box>
-
             <AppBar position="static" sx={{ bgcolor: "red", p: 1 }}>
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                     {/* Logo */}
@@ -168,7 +194,7 @@ function Header() {
                     {/* Nút Menu */}
                     <IconButton color="inherit" aria-label="menu" sx={{ ml: 2 }}>
                         <MenuIcon />
-                        <Typography variant="h6" sx={{ ml: 1 }}>
+                        <Typography variant="h6" sx={{ ml: 1 }} onClick={() => handleOpenModalCate()}>
                             Danh mục
                         </Typography>
                     </IconButton>
@@ -199,6 +225,7 @@ function Header() {
                         />
                         <NavButton icon={<RoomIcon />} text1="Hệ thống" text2="Showroom" />
                         <NavButton
+                            onClick={() => navigate("/Detail_Account")}
                             icon={<AssignmentLateIcon />}
                             text1="Tra cứu"
                             text2="Đơn hàng"
@@ -303,6 +330,7 @@ function Header() {
                     </Box>
                 </Toolbar>
                 <BasicModal open={open} handleClose={handleClose} />
+                <ModalCategory openModalCate={openModalCate} handleCloseModalCate={handleCloseModalCate} />
             </AppBar>
             {/* Danh mục sản phẩm */}
             <Box

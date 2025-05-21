@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
 import Header from "~/components/Header";
-import { useParams } from "react-router";
+import { useLocation } from "react-router";
 import Grid from "@mui/material/Grid2";
 
 import HomeIcon from '@mui/icons-material/Home';
@@ -9,15 +10,25 @@ import Filter from "./Filter";
 
 import Chip from '@mui/material/Chip';
 import DoneIcon from '@mui/icons-material/Done';
-import { useEffect, useState } from "react";
 import ProductCard from "~/components/ProductCard";
-import { getAllProducts } from "~/services/productService";
 import Pagination from '@mui/material/Pagination';
+import { keyToVietnamese } from "~/utils/utils";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 
 
-function ListProduct() {
-  const { category } = useParams();
+function FilterProduct() {
+  const location = useLocation();
+
+  console.log("ocation.search", location.search);
+
+  const product = useSelector((state) => state.product.products);
+  console.log('product', product);
+
+
+  const queryParams = new URLSearchParams(location.search);
+  const brand = queryParams.get("brand");
 
   // sort pproducts
   const [ascendingOrder, setAscendingOrder] = useState(false);
@@ -26,24 +37,24 @@ function ListProduct() {
   const [newest, setNewest] = useState(false);
 
   // list products
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
 
   // pagination
   const [page, setPage] = useState(1);
-  const [numOfPages, setNumOfPages] = useState(0);
+  const [numOfPages, setNumOfPages] = useState(1);
 
-  useEffect(() => {
-    const fetchAllProduct = async () => {
-      const products = await getAllProducts();
-      console.log('products', products);
-      setProducts(products.data);
-      setNumOfPages(products.pagination.total_pages);
-      setPage(products.pagination.page);
-    }
-    fetchAllProduct();
-  }, [])
+  // useEffect(() => {
+  //   const fetchAllProduct = async () => {
+  //     const products = await getFilterByKey(url);
+  //     console.log('products', products);
+  //     setProducts(products.data);
+  //     setNumOfPages(products?.pagination.total_pages || 1);
+  //     setPage(products?.pagination.page || 1);
+  //   }
+  //   fetchAllProduct();
+  // }, [])
 
-  console.log(products);
+  // console.log(products);
 
   return (
     <Box
@@ -62,7 +73,7 @@ function ListProduct() {
             <HomeIcon />
             Trang chủ
           </Link>
-          <Typography sx={{}}>{category}</Typography>
+          <Typography sx={{}}>{keyToVietnamese(brand)}</Typography>
         </Breadcrumbs>
 
         <Grid
@@ -77,7 +88,7 @@ function ListProduct() {
               bgcolor: "#fff",
               p: 2
             }}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{category} (100 sản phẩm)</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{keyToVietnamese(brand)}</Typography>
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mr: 2 }}>Sắp xếp theo</Typography>
                 <Chip
@@ -112,7 +123,7 @@ function ListProduct() {
             </Box>
             <Box sx={{ bgcolor: "#fff" }}>
               <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
-                {products?.map((product) => {
+                {product?.map((product) => {
                   return (
                     <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                       <ProductCard product={product} />
@@ -132,4 +143,4 @@ function ListProduct() {
   );
 }
 
-export default ListProduct;
+export default FilterProduct;

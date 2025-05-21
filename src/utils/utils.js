@@ -37,6 +37,9 @@ export const keyToVietnamese = (key) => {
     'usage': 'Mục đích sử dụng',
     'operating system': 'Hệ điều hành',
     'weight': 'Trọng lượng',
+    'hp': "Hãng HP",
+    'dell': "Hãng Dell",
+    'lenovo': "Hãng Lenovo",
     // Thêm các từ khóa khác vào đây
   };
 
