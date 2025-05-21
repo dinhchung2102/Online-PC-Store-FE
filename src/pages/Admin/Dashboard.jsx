@@ -6,6 +6,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import axios from "axios"; // Import axios
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -34,10 +35,10 @@ ChartJS.register(
 function Dashboard() {
   // Mock data cho các thống kê
   const [stats, setStats] = useState({
-    totalProducts: 120,
-    totalOrders: 150,
-    totalRevenue: 25000,
-    totalCustomers: 300,
+    // totalProducts: 120,
+    // totalOrders: 150,
+    // totalRevenue: 25000,
+    // totalCustomers: 300,
   });
 
   // Biểu đồ doanh thu theo tháng
@@ -66,15 +67,47 @@ function Dashboard() {
     ],
   };
 
-  useEffect(() => {
-    // Gọi API hoặc lấy dữ liệu từ backend (ví dụ)
-    // setStats({
-    //   totalProducts: response.totalProducts,
-    //   totalOrders: response.totalOrders,
-    //   totalRevenue: response.totalRevenue,
-    //   totalCustomers: response.totalCustomers,
-    // });
-  }, []);
+useEffect(() => {
+  const fetchData = async () => {
+    const token = localStorage.getItem('access_token');
+
+    try {
+      // Gọi API đơn hàng
+      const orderRes = await axios.get("http://localhost:5003/api/order/admin/revenue-stats", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+console.log(orderRes.data)
+      // Gọi API user
+      const userRes = await axios.get(`http://localhost:5001/api/user/admin/count-users`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+       const productRes = await axios.get('http://localhost:5002/api/product/get-all', {
+                   headers: { 'Cache-Control': 'no-cache' }
+                });
+      const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      });
+
+      const cleanMoney = (value) =>
+        formatter.format(Number(String(value).replace(/\$/g, '').replace(/,/g, '')));
+
+      // Cập nhật thống kê
+      setStats({
+         totalProducts: productRes.data.pagination?.total ?? 0,
+    totalOrders: orderRes.data.data?.totalOrders ?? 0,
+    totalRevenue: cleanMoney(orderRes.data.data?.totalRevenue ?? 0),
+        totalCustomers: userRes.data.data?.totalUsers ?? 0,
+      });
+    } catch (error) {
+      console.error("Failed to fetch dashboard stats:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
@@ -116,7 +149,7 @@ function Dashboard() {
               avatar={<AttachMoneyIcon sx={{ backgroundColor: '#ffc107', color: 'white' }} />}
             />
             <CardContent>
-              <Typography variant="h6">${stats.totalRevenue}</Typography>
+              <Typography variant="h6">{stats.totalRevenue}</Typography>
             </CardContent>
           </Card>
         </Grid>

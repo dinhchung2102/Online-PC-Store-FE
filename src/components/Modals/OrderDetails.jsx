@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -9,25 +10,57 @@ import {
   CardContent,
   Avatar,
   Stack,
+  CircularProgress,
 } from "@mui/material";
 
 const OrderDetails = ({ order }) => {
-  if (!order) return null;
+  const [orderDetail, setOrderDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const shipping = order.shippingAddress?.[0];
-  const customer = order.customerInformation?.[0];
+  useEffect(() => {
+    const fetchDetail = async () => {
+      if (!order?._id) return;
 
-  // Hàm này sẽ trả về màu sắc cho trạng thái đơn hàng
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `http://localhost:5003/api/order/get-detail-order/${order._id}`
+        );
+        setOrderDetail(res.data?.data);
+        console.log(res.data)
+      } catch (err) {
+        console.error("Failed to fetch order detail:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
+  }, [order]);
+
+  if (!order || loading) {
+    return (
+      <Box display="flex" justifyContent="center" py={4}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!orderDetail) return null;
+
+  const shipping = orderDetail.shippingAddress;
+  const customer = orderDetail.customerInformation;
+
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "warning";  // Màu cam cho trạng thái Pending
+        return "warning";
       case "completed":
-        return "success";  // Màu xanh lá cho trạng thái Completed
+        return "success";
       case "cancelled":
-        return "error";    // Màu đỏ cho trạng thái Cancelled
+        return "error";
       default:
-        return "default";  // Màu mặc định nếu không nhận dạng được
+        return "default";
     }
   };
 
@@ -47,20 +80,19 @@ const OrderDetails = ({ order }) => {
       <Typography variant="h6" gutterBottom>
         Customer Info
       </Typography>
-      <Typography>Name: {customer?.name}</Typography>
-      <Typography>Phone: {customer?.phone}</Typography>
+      <Typography>Name: {order.customerInformation?.fullname || "N/A"}</Typography>
+      <Typography>Phone: {order.customerInformation?.phone || "N/A"}</Typography>
 
       <Divider sx={{ my: 2 }} />
 
       <Typography variant="h6" gutterBottom>
         Shipping Address
       </Typography>
-      {/* Hiển thị địa chỉ giao hàng chi tiết */}
       <Typography>
-        Ward {shipping?.ward || "N/A"},
-        District {shipping?.district || "N/A"},
-        City {shipping?.city || "N/A"},
-        Country {shipping?.country || "N/A"},
+         {order.shippingAddress?.ward || "N/A"},
+         {order.shippingAddress?.district || "N/A"},
+         {order.shippingAddress?.province || ""},
+         {order.shippingAddress?.country || ""}
       </Typography>
 
       <Divider sx={{ my: 2 }} />
@@ -69,10 +101,7 @@ const OrderDetails = ({ order }) => {
         Order Status
       </Typography>
       <Stack direction="row" spacing={2} alignItems="center">
-        <Chip
-          label={`Order: ${order.statusOrder}`}
-          color={getStatusColor(order.statusOrder)}
-        />
+        <Chip label={`Order: ${order.statusOrder}`} color={getStatusColor(order.statusOrder)} />
         <Chip label={`Payment: ${order.paymentMethod}`} color="default" />
         <Chip
           label={order.isDelivered ? "Delivered" : "Pending"}
@@ -86,37 +115,39 @@ const OrderDetails = ({ order }) => {
         Products
       </Typography>
 
-      <Grid container spacing={2}>
-        {order.orderDetails?.map((item, index) => (
-          <Grid item xs={12} md={6} key={index}>
-            <Card variant="outlined">
-              <CardContent sx={{ display: "flex", gap: 2 }}>
-                <Avatar
-                  variant="rounded"
-                  src={item.image}
-                  alt={item.name}
-                  sx={{ width: 80, height: 80 }}
-                />
-                <Box>
-                  <Typography fontWeight="bold">{item.name}</Typography>
-                  <Typography>Quantity: {item.amount}</Typography>
-                  <Typography>Discount: {item.discount}%</Typography>
-                  <Typography>
-                    Total:{" "}
-                    {new Intl.NumberFormat("vi-VN").format(item.total_price)}₫
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+      <Grid container spacing={0}>
+        {orderDetail.orderDetailIds?.map((item, index) => {
+          const product = item.productId || {}; // dữ liệu sản phẩm thực tế
+          return (
+            <Grid item xs={12} md={12} key={index}>
+              <Card variant="outlined">
+                <CardContent sx={{ display: "flex", gap: 2 }}>
+                  <Avatar
+                    variant="rounded"
+                    src={item.image || ""}
+                    alt={item.name || "Product"}
+                    sx={{ width: 80, height: 80 }}
+                  />
+                  <Box>
+                    <Typography fontWeight="bold">{item.name || "N/A"}</Typography>
+                    <Typography>Quantity: {item.amount}</Typography>
+                    <Typography>Discount: {item.discount || 0}%</Typography>
+                    <Typography >
+                      Total: {new Intl.NumberFormat("vi-VN").format(item.total_price || 0)}₫
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="body1">
+      <Typography sx={{fontSize: "20px"}}>
         <strong>Total Price: </strong>
-        {new Intl.NumberFormat("vi-VN").format(order.totalPrice)}₫
+        {new Intl.NumberFormat("vi-VN").format(order.totalPrice || 0)}₫
       </Typography>
 
       <Typography variant="body2" color="text.secondary">

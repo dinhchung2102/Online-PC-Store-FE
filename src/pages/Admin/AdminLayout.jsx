@@ -19,6 +19,7 @@ import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 
 import OrdersTab from './Orders';
 import DashboardTab from './Dashboard';
+import UserTab from './Users';
 import Products from './Products';
 import OrderDetails from './OrderDetails';
 import CheckCircle from '@mui/icons-material/ReceiptLong';
@@ -32,19 +33,25 @@ const NAVIGATION = [
     title: 'Dashboard',
     icon: <DashboardIcon />,
   },
-  {
-    segment: 'orders',
-    title: 'Orders',
-    icon: <ShoppingCartIcon />,
-  },
+  
   {
     segment: 'products',
     title: 'Products',
     icon: <ImportantDevicesIcon />,
   },
   {
+    segment: 'orders',
+    title: 'Orders',
+    icon: <ShoppingCartIcon />,
+  },
+  {
     segment: 'order-details',
     title: 'Order Details',
+    icon: <CheckCircleIcon />
+  },
+   {
+    segment: 'users',
+    title: 'Users',
     icon: <CheckCircleIcon />
   }
   
@@ -146,6 +153,9 @@ function DemoPageContent({ pathname }) {
       break;
     case '/order-details':
       content = <OrderDetails />; 
+      break;
+    case '/users':
+      content = <UserTab />; 
       break;
     default:
       content = <Typography>Page not found</Typography>;
