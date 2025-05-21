@@ -6,17 +6,13 @@ import NewAddressModal from "./NewAddressModal";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { getUserInfo } from "../services/userService";
-import { updateUserInfo } from "../services/userService";
+import { updateUserInfo } from "~/services/userService";
 import {
   Avatar,
   Box,
   Button,
   Container,
-  FormControl,
   Grid,
-  MenuItem,
-  Select,
   TextField,
   Typography,
   Radio,
@@ -38,7 +34,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardOrder from "~/components/CardOrder";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUserInfo } from "../redux/userSlice";
 
 
 function SelectActionCard({ summary, setSelectedFilterOrder }) {
@@ -70,6 +67,8 @@ function SelectActionCard({ summary, setSelectedFilterOrder }) {
 }
 
 const UserProfile = () => {
+
+  const dispatch = useDispatch()
   // order
   const orders = useSelector((state) => state.order.orders);
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -127,25 +126,26 @@ const UserProfile = () => {
   const [fullname, setfullname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
-  const [userData, setUserData] = useState(null);
   const [addresses, setAddresses] = useState([]);
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await getUserInfo(); // Gọi API để lấy thông tin người dùng
-        setUserData(data); // Lưu dữ liệu vào state
-        console.log("User data:", data); // In ra dữ liệu để kiểm tra
-        if (data.address && Array.isArray(data.address)) {
-          setAddresses(data.address);
-          console.log("Addresses:", data.address); // In ra địa chỉ để kiểm tra
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error.message);
-      }
-    };
+  const [userData, setUserData] = useState(null);
+  const [dayOfBirth, setDayOfBirth] = useState("");
+  const [gender, setGender] = useState("")
 
-    fetchUserData();
-  }, []);
+  useEffect(() => {
+    if (!userInfo) return;
+    setUserData(userInfo)
+    if (userInfo.address && Array.isArray(userInfo.address)) {
+      setAddresses(userInfo.address);
+      console.log("Addresses:", userInfo.address); // In ra địa chỉ để kiểm tra
+    }
+    if (userInfo) {
+      if (userInfo.fullname) setfullname(userInfo.fullname);
+      if (userInfo.phone) setphone(userInfo.phone);
+      if (userInfo.email) setemail(userInfo.email);
+      if (userInfo.dateOfBirth) setDayOfBirth(userInfo.dateOfBirth);
+      if (userInfo.gender) setGender(userInfo.gender)
+    }
+  }, [userInfo]);
 
   const handleNameChange = (event) => {
     setfullname(event.target.value);
@@ -154,29 +154,40 @@ const UserProfile = () => {
   const handlephoneChange = (event) => {
     setphone(event.target.value);
   };
+
   const handleemailChange = (event) => {
     setemail(event.target.value);
   };
-  useEffect(() => {
-    if (userData) {
-      if (userData.name) setfullname(userData.name);
-      if (userData.phone) setphone(userData.phone);
-      if (userData.email) setemail(userData.email);
-    }
-  }, [userData]);
+
+  const handleDayOfBirthChange = (event) => {
+    setDayOfBirth(event.target.value);
+  }
+
   const handleSaveChanges = async () => {
     try {
       const updatedUser = {
-        name: fullname,
+        ...userInfo,
+        fullname,
         phone,
         email,
+        dateOfBirth: dayOfBirth,
+        gender
       };
       await updateUserInfo(updatedUser); // gọi API của bạn
       alert("Cập nhật thành công!");
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Cập nhật thất bại!");
     }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("userId");
+    dispatch(clearUserInfo());
+    window.location.reload();
+  }
 
   const [selectedScreen, setSelectedScreen] = React.useState("account");
   const [open, setOpen] = useState(false);
@@ -192,6 +203,7 @@ const UserProfile = () => {
       await updateUserInfo({ address: updatedAddresses });
 
       alert("Xóa địa chỉ thành công!");
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Lỗi khi xóa địa chỉ!");
     }
@@ -223,7 +235,8 @@ const UserProfile = () => {
           >
             <Avatar sx={{ width: 80, height: 80 }} />
             <Typography variant="h6" mt={2}  >
-              {userData ? userData.fullname : "Đang tải..."}{" "}
+              {userInfo.id == null && "Vui lòng đăng nhập"}
+              {userData ? userData.fullname : "Đang tải..."}
               {/* Kiểm tra userData trước khi truy cập */}
             </Typography>
             <Typography variant="h6" color="gray">
@@ -263,7 +276,7 @@ const UserProfile = () => {
               <SidebarItem
                 icon={<ExitToApp />}
                 text="Đăng xuất"
-                onClick={() => alert("Đăng xuất thành công!")}
+                onClick={() => handleLogout()}
               />
             </List>
           </Box>
@@ -291,16 +304,18 @@ const UserProfile = () => {
 
                 <Box display="flex" alignItems="center" mb={2}>
                   <Typography sx={{ width: "20%" }}>Giới tính</Typography>
-                  <RadioGroup row defaultValue="male">
+                  <RadioGroup value={gender} row >
                     <FormControlLabel
                       value="male"
                       control={<Radio />}
                       label="Nam"
+                      onChange={(e) => setGender(e.target.value)}
                     />
                     <FormControlLabel
                       value="female"
                       control={<Radio />}
                       label="Nữ"
+                      onChange={(e) => setGender(e.target.value)}
                     />
                   </RadioGroup>
                 </Box>
@@ -331,52 +346,13 @@ const UserProfile = () => {
                 </Box>
                 <Box display="flex" alignItems="center" mb={2}>
                   <Typography sx={{ width: "20%" }}>Ngày sinh</Typography>
-                  <Box display="flex" gap={2}>
-                    <FormControl sx={{ minWidth: 80 }}>
-                      <Select
-                        defaultValue={"05"}
-                        sx={{ fontSize: 14, padding: "2px", height: 45 }}
-                      >
-                        {[...Array(31).keys()].map((i) => (
-                          <MenuItem
-                            key={i}
-                            value={(i + 1).toString().padStart(2, "0")}
-                          >
-                            {i + 1}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl sx={{ minWidth: 100 }}>
-                      <Select
-                        defaultValue={"02"}
-                        sx={{ fontSize: 14, padding: "2px", height: 45 }}
-                      >
-                        {[...Array(12).keys()].map((i) => (
-                          <MenuItem
-                            key={i}
-                            value={(i + 1).toString().padStart(2, "0")}
-                          >
-                            {i + 1}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl sx={{ minWidth: 80 }}>
-                      <Select
-                        defaultValue={"2003"}
-                        sx={{ fontSize: 14, padding: "2px", height: 45 }}
-                      >
-                        {[...Array(100).keys()].map((i) => (
-                          <MenuItem key={i} value={(2025 - i).toString()}>
-                            {2025 - i}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
+                  <TextField
+                    fullWidth
+                    value={dayOfBirth}
+                    onChange={handleDayOfBirthChange}
+                    sx={{ width: 300 }}
+                    size="small"
+                  />
                 </Box>
 
                 <Button
@@ -462,7 +438,7 @@ const UserProfile = () => {
                   {summaryOrder.map((order) => <SelectActionCard key={order.id} summary={order} setSelectedFilterOrder={setSelectedFilterOrder} />)}
                 </Box>
                 <Box sx={{ mt: 2, maxHeight: "70vh", overflowY: "auto", mr: -2 }}>
-                  <Box sx={{ mr: 1}}>
+                  <Box sx={{ mr: 1 }}>
                     {orderFilter.map(order => <CardOrder key={order._id} order={order} />)}
                   </Box>
                 </Box>

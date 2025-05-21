@@ -14,6 +14,7 @@ import Products from "../pages/Admin/Products";
 import Detail_Account from "~/pages/Detail_Account";
 import AdminRoute from "./privateRoute";
 import NotFoundPage from "~/pages/NotFound";
+import FilterProduct from "~/pages/ListProduct/FilterProduct";
 ;
 function MyRouter() {
   return (
@@ -28,7 +29,8 @@ function MyRouter() {
         <Route path="/shopping-cart" element={<Shopping_Cart />} />
         <Route path="/article-details" element={<Article_Details />} />
         <Route path="/technology-news" element={<Technology_news />} />
-        <Route path="/products/:category" element={<ListProduct />} />
+        <Route path="/products/*" element={<ListProduct />} />
+        <Route path="/search/*" element={<FilterProduct />} />
         <Route path="/detailProduct/:idProduct" element={<DetailProduct />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route
