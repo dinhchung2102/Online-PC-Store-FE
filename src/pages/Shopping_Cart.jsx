@@ -17,24 +17,23 @@ import StepConnector, {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 import Stack from "@mui/material/Stack";
 
-import CartItem from "../components/CartItems";
-import PayInformation from "../components/PayInformation";
-import CheckoutForm from "../components/CheckOutForm";
+import CartItem from "~/components/CartItems";
+import PayInformation from "~/components/PayInformation";
+import CheckoutForm from "~/components/CheckoutForm";
 import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
 import { useEffect } from "react";
 import { fetchCart, clearCart } from "~/redux/cartSlice";
-import { updateUserInfo } from "../services/userService";
-import { createOrder } from "../services/orderService";
-import { deleteAllCartItems } from "../services/cartService";
+import { updateUserInfo } from "~/services/userService";
+import { createOrder } from "~/services/orderService";
+import { deleteAllCartItems } from "~/services/cartService";
 import CardOrder from "~/components/CardOrder";
 import { fetchOrders } from "~/redux/orderSlice";
-
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -112,7 +111,6 @@ ColorlibStepIcon.propTypes = {
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 
 function Shopping_Cart() {
-
   const dispatch = useDispatch();
 
   //order
@@ -131,7 +129,7 @@ function Shopping_Cart() {
   console.log("carts", carts);
 
   useEffect(() => {
-    console.log('chạy vào đây nè ')
+    console.log("chạy vào đây nè ");
     dispatch(fetchCart(userInfo.id));
   }, [dispatch, userInfo.id]);
 
@@ -142,7 +140,7 @@ function Shopping_Cart() {
   // eslint-disable-next-line no-unused-vars
   const [shippingPrice, setShippingPrice] = React.useState(0);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   // const navigate = useNavigate();
@@ -156,7 +154,7 @@ function Shopping_Cart() {
   //   setQuantity((prev) => prev + 1);
   // };
 
-  // const handleUpdateInfoUser = 
+  // const handleUpdateInfoUser =
 
   const handleNav = () => {
     // reset form nếu cần
@@ -204,9 +202,11 @@ function Shopping_Cart() {
   // };
 
   return (
-    <Container maxWidth="xl" sx={{ "&.MuiContainer-root": { padding: 0 }, backgroundColor: "#f0f0f0", }}>
+    <Container
+      maxWidth="xl"
+      sx={{ "&.MuiContainer-root": { padding: 0 }, backgroundColor: "#f0f0f0" }}
+    >
       <Container
-
         maxWidth="xl"
         sx={{
           pb: 5,
@@ -252,15 +252,25 @@ function Shopping_Cart() {
             })}
           </Stepper>
           {userInfo.id === null ? (
-            <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
-              <Button variant="contained" onClick={() => handleOpenModal()}>Vui lòng đăng nhập để xem giỏ hàng của bạn</Button>
+            <Box sx={{ width: "100%", padding: 5, textAlign: "center" }}>
+              <Button variant="contained" onClick={() => handleOpenModal()}>
+                Vui lòng đăng nhập để xem giỏ hàng của bạn
+              </Button>
             </Box>
           ) : (
             <Box>
               {activeStep === steps.length ? (
                 // Bước cuối: hoàn tất
                 <React.Fragment>
-                  <Box sx={{ maxHeight: '600px', width: "100%", padding: 5, textAlign: 'center', overflowY: 'auto' }}>
+                  <Box
+                    sx={{
+                      maxHeight: "600px",
+                      width: "100%",
+                      padding: 5,
+                      textAlign: "center",
+                      overflowY: "auto",
+                    }}
+                  >
                     {orders.map((order) => (
                       <Box key={order._id}>
                         <CardOrder order={order} />
@@ -270,7 +280,13 @@ function Shopping_Cart() {
                   </Box>
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    <Button variant="contained" color="primary" onClick={handleNav}>Tiếp tục mua sắm</Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNav}
+                    >
+                      Tiếp tục mua sắm
+                    </Button>
                   </Box>
                 </React.Fragment>
               ) : activeStep === steps.length - 1 ? (
@@ -287,10 +303,15 @@ function Shopping_Cart() {
                       variant="contained"
                       color="primary"
                       onClick={async () => {
-                        await createOrder(userInfo.id, carts, shippingPrice, paymentMethod)
-                        handleNext()
-                        dispatch(clearCart())
-                        await deleteAllCartItems(carts)
+                        await createOrder(
+                          userInfo.id,
+                          carts,
+                          shippingPrice,
+                          paymentMethod
+                        );
+                        handleNext();
+                        dispatch(clearCart());
+                        await deleteAllCartItems(carts);
                         dispatch(fetchOrders(userInfo.id));
                       }}
                     >
@@ -307,13 +328,17 @@ function Shopping_Cart() {
                       Quay lại
                     </Button>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    <Button variant="contained" color="primary"
+                    <Button
+                      variant="contained"
+                      color="primary"
                       onClick={() => {
-                        handleNext()
+                        handleNext();
                         console.log("userInfo", userInfo);
-                        updateUserInfo(userInfo)
+                        updateUserInfo(userInfo);
                       }}
-                    >Tiếp tục</Button>
+                    >
+                      Tiếp tục
+                    </Button>
                   </Box>
                 </React.Fragment>
               ) : (
@@ -326,20 +351,26 @@ function Shopping_Cart() {
                           {carts.map((cart, index) => (
                             <Box key={cart._id}>
                               <CartItem cart={cart} />
-                              {index < carts.length - 1 && <Divider sx={{ my: 2 }} />}
+                              {index < carts.length - 1 && (
+                                <Divider sx={{ my: 2 }} />
+                              )}
                             </Box>
-                          )
-                          )}
+                          ))}
                         </Box>
                       </Stack>
-                      //{index < products.length - 1 && <Divider sx={{ my: 2 }} />}
                     ) : (
-                      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      //{index < products.length - 1 && <Divider sx={{ my: 2 }} />}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
                         <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                           Giỏ hàng của bạn đang trống!
                         </Typography>
                       </Box>
-
                     )}
                   </Box>
 
@@ -352,11 +383,15 @@ function Shopping_Cart() {
                       Tiếp tục mua sắm
                     </Button>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    <Button disabled={carts.length < 1 ? true : false} variant="contained" color="primary" onClick={handleNext}>
+                    <Button
+                      disabled={carts.length < 1 ? true : false}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                    >
                       Tiến hành thanh toán
                     </Button>
                   </Box>
-
                 </React.Fragment>
               )}
             </Box>
@@ -367,7 +402,6 @@ function Shopping_Cart() {
       </Container>
       <Footer />
     </Container>
-
   );
 }
 
