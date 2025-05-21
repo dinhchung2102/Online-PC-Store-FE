@@ -12,10 +12,10 @@ import DetailProduct from "~/pages/DetailProduct";
 import Admin from "../pages/Admin/AdminLayout";
 import Products from "../pages/Admin/Products";
 import Detail_Account from "~/pages/Detail_Account";
-import AdminRoute from "./privateRoute";
+import AdminRoute from "./PrivateRoute";
 import NotFoundPage from "~/pages/NotFound";
 import FilterProduct from "~/pages/ListProduct/FilterProduct";
-;
+
 function MyRouter() {
   return (
     <Router>
@@ -43,7 +43,7 @@ function MyRouter() {
         />
         <Route path="/products" element={<Products />} />
         <Route path="/Detail_Account" element={<Detail_Account />} />
-        <Route path="*" element={<NotFoundPage/>} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
