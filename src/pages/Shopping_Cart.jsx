@@ -17,17 +17,23 @@ import StepConnector, {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 import Stack from "@mui/material/Stack";
 
-import CartItem from "../components/CartItems";
-import PayInformation from "../components/PayInformation";
-import CheckoutForm from "../components/CheckOutForm";
+import CartItem from "~/components/CartItems";
+import PayInformation from "~/components/PayInformation";
+import CheckoutForm from "~/components/CheckoutForm";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import BasicModal from "~/components/Modals/Modal";
-
+import { useEffect } from "react";
+import { fetchCart, clearCart } from "~/redux/cartSlice";
+import { updateUserInfo } from "~/services/userService";
+import { createOrder } from "~/services/orderService";
+import { deleteAllCartItems } from "~/services/cartService";
+import CardOrder from "~/components/CardOrder";
+import { fetchOrders } from "~/redux/orderSlice";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -105,6 +111,10 @@ ColorlibStepIcon.propTypes = {
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 
 function Shopping_Cart() {
+  const dispatch = useDispatch();
+
+  //order
+  const orders = useSelector((state) => state.order.orders);
 
   // modal login
   const [openModal, setOpenModal] = React.useState(false);
@@ -116,9 +126,21 @@ function Shopping_Cart() {
 
   // get cart from redux
   const carts = useSelector((state) => state.cart.cartItems);
+  console.log("carts", carts);
 
+  useEffect(() => {
+    console.log("chạy vào đây nè ");
+    dispatch(fetchCart(userInfo.id));
+  }, [dispatch, userInfo.id]);
 
-  const navigate = useNavigate()
+  // checkout form
+  // set phuong thuc thanh toan
+  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  // console.log('paymentMethod', paymentMethod);
+  // eslint-disable-next-line no-unused-vars
+  const [shippingPrice, setShippingPrice] = React.useState(0);
+
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   // const navigate = useNavigate();
@@ -131,6 +153,8 @@ function Shopping_Cart() {
   // const handleIncrease = () => {
   //   setQuantity((prev) => prev + 1);
   // };
+
+  // const handleUpdateInfoUser =
 
   const handleNav = () => {
     // reset form nếu cần
@@ -152,7 +176,6 @@ function Shopping_Cart() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -180,142 +203,204 @@ function Shopping_Cart() {
 
   return (
     <Container
-      disableGutters
-      maxWidth={false}
-      sx={{
-        pb: 5,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        backgroundColor: "#f0f0f0",
-      }}
+      maxWidth="xl"
+      sx={{ "&.MuiContainer-root": { padding: 0 }, backgroundColor: "#f0f0f0" }}
     >
-      <Box width="100%">
-        <Header />
-      </Box>
-      <Box
+      <Container
+        maxWidth="xl"
         sx={{
-          width: { xs: "90%", sm: "80%", md: "70%", lg: "60%" },
-          marginTop: 5,
-          padding: 2,
-          backgroundColor: "#ffffff",
+          pb: 5,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          backgroundColor: "#f0f0f0",
+          "&.MuiContainer-root": { padding: 0 },
         }}
       >
-        <Stepper
-          alternativeLabel
-          activeStep={activeStep}
-          connector={<ColorlibConnector />}
+        <Box width="100%">
+          <Header />
+        </Box>
+        <Box
+          sx={{
+            width: { xs: "90%", sm: "80%", md: "70%", lg: "60%" },
+            marginTop: 5,
+            padding: 2,
+            backgroundColor: "#ffffff",
+          }}
         >
-          {steps.map((label, index) => {
-            const stepProps = {};
-            // const labelProps = {};
-            // if (isStepOptional(index)) {
-            // }
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
-            return (
-              <Step key={label}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}>
-                  {label}
-                </StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        {userInfo.id === null ? (
-          <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
-            <Button variant="contained" onClick={() => handleOpenModal()}>Vui lòng đăng nhập để xem giỏ hàng của bạn</Button>
-          </Box>
-        ) : (
-          <Box>
-            {activeStep === steps.length ? (
-              // Bước cuối: hoàn tất
-              <React.Fragment>
-                <Box sx={{ width: "100%", padding: 5, textAlign: 'center' }}>
-                  <Typography sx={{ mt: 2, mb: 1 }}>
-                    Thanh toán thành công!
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNav}>Tiếp tục mua sắm</Button>
-                </Box>
-              </React.Fragment>
-            ) : activeStep === steps.length - 1 ? (
-              // Bước xác nhận đặt hàng
-              <React.Fragment>
-                <CheckoutForm />
-                {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
-                    Quay lại
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>Hoàn tất đặt hàng</Button>
-                </Box>
-              </React.Fragment>
-            ) : activeStep === steps.length - 2 ? (
-              // Bước nhập thông tin giao hàng
-              <React.Fragment>
-                <PayInformation />
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
-                    Quay lại
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>Tiếp tục</Button>
-                </Box>
-              </React.Fragment>
-            ) : (
-              // Bước đầu: Giỏ hàng
-              <React.Fragment>
-                <Box sx={{ width: "100%", padding: 5 }}>
-                  {carts.length > 0 ? (
-                    <Stack>
-                      <Box>
-                        {carts.map((cart, index) => (
-                          <Box key={cart._id}>
-                            <CartItem cart={cart} />
-                            {index < carts.length - 1 && <Divider sx={{ my: 2 }} />}
-                          </Box>
-                        )
-                        )}
-                      </Box>
-                    </Stack>
-                    //{index < products.length - 1 && <Divider sx={{ my: 2 }} />}
-                  ) : (
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                      <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                        Giỏ hàng của bạn đang trống!
-                      </Typography>
-                    </Box>
-
-                  )}
-                </Box>
-
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Button
-                    color="inherit"
-                    onClick={activeStep === 0 ? handleNav : handleBack}
-                    sx={{ mr: 1 }}
+          <Stepper
+            alternativeLabel
+            activeStep={activeStep}
+            connector={<ColorlibConnector />}
+          >
+            {steps.map((label, index) => {
+              const stepProps = {};
+              // const labelProps = {};
+              // if (isStepOptional(index)) {
+              // }
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
+              return (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}>
+                    {label}
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {userInfo.id === null ? (
+            <Box sx={{ width: "100%", padding: 5, textAlign: "center" }}>
+              <Button variant="contained" onClick={() => handleOpenModal()}>
+                Vui lòng đăng nhập để xem giỏ hàng của bạn
+              </Button>
+            </Box>
+          ) : (
+            <Box>
+              {activeStep === steps.length ? (
+                // Bước cuối: hoàn tất
+                <React.Fragment>
+                  <Box
+                    sx={{
+                      maxHeight: "600px",
+                      width: "100%",
+                      padding: 5,
+                      textAlign: "center",
+                      overflowY: "auto",
+                    }}
                   >
-                    Tiếp tục mua sắm
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button variant="contained" color="primary" onClick={handleNext}>
-                    Tiến hành thanh toán
-                  </Button>
-                </Box>
+                    {orders.map((order) => (
+                      <Box key={order._id}>
+                        <CardOrder order={order} />
+                        <Divider sx={{ my: 2 }} />
+                      </Box>
+                    ))}
+                  </Box>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNav}
+                    >
+                      Tiếp tục mua sắm
+                    </Button>
+                  </Box>
+                </React.Fragment>
+              ) : activeStep === steps.length - 1 ? (
+                // Bước xác nhận đặt hàng
+                <React.Fragment>
+                  <CheckoutForm _setPaymentMethod={setPaymentMethod} />
+                  {/* TODO: Hiển thị thông tin đơn hàng hoặc tóm tắt */}
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                      Quay lại
+                    </Button>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={async () => {
+                        await createOrder(
+                          userInfo.id,
+                          carts,
+                          shippingPrice,
+                          paymentMethod
+                        );
+                        handleNext();
+                        dispatch(clearCart());
+                        await deleteAllCartItems(carts);
+                        dispatch(fetchOrders(userInfo.id));
+                      }}
+                    >
+                      Hoàn tất đặt hàng
+                    </Button>
+                  </Box>
+                </React.Fragment>
+              ) : activeStep === steps.length - 2 ? (
+                // Bước nhập thông tin giao hàng
+                <React.Fragment>
+                  <PayInformation />
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                      Quay lại
+                    </Button>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleNext();
+                        console.log("userInfo", userInfo);
+                        updateUserInfo(userInfo);
+                      }}
+                    >
+                      Tiếp tục
+                    </Button>
+                  </Box>
+                </React.Fragment>
+              ) : (
+                // Bước đầu: Giỏ hàng
+                <React.Fragment>
+                  <Box sx={{ width: "100%", padding: 5 }}>
+                    {carts.length > 0 ? (
+                      <Stack>
+                        <Box>
+                          {carts.map((cart, index) => (
+                            <Box key={cart._id}>
+                              <CartItem cart={cart} />
+                              {index < carts.length - 1 && (
+                                <Divider sx={{ my: 2 }} />
+                              )}
+                            </Box>
+                          ))}
+                        </Box>
+                      </Stack>
+                    ) : (
+                      //{index < products.length - 1 && <Divider sx={{ my: 2 }} />}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                          Giỏ hàng của bạn đang trống!
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
 
-              </React.Fragment>
-            )}
-          </Box>
-        )}
-      </Box>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Button
+                      color="inherit"
+                      onClick={activeStep === 0 ? handleNav : handleBack}
+                      sx={{ mr: 1 }}
+                    >
+                      Tiếp tục mua sắm
+                    </Button>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button
+                      disabled={carts.length < 1 ? true : false}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                    >
+                      Tiến hành thanh toán
+                    </Button>
+                  </Box>
+                </React.Fragment>
+              )}
+            </Box>
+          )}
+        </Box>
+
+        <BasicModal open={openModal} handleClose={handleCloseModal} />
+      </Container>
       <Footer />
-      <BasicModal open={openModal} handleClose={handleCloseModal} />
     </Container>
   );
 }

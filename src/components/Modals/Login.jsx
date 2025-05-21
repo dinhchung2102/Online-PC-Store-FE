@@ -20,7 +20,6 @@ function Login() {
   const navigate = useNavigate();
   console.log(errorUsername.error)
 
-
   const handleSubmit = async () => {
     if (!username.trim()) {
       setErrorUsername({ error: true, message: "Vui lòng nhập tên đăng nhập!" });
@@ -34,8 +33,11 @@ function Login() {
     setErrorPassword({ error: false, message: "" });
     setLoading(true)
     const result = await handleLogin(username, password);
-    if (!result.success) {
+    if (result.field === "password") {
       setErrorPassword({ error: true, message: "Mật khẩu không đúng!" }); // Cập nhật lỗi nếu đăng nhập thất bại
+      setLoading(false)
+    } else if (result.field === "username") {
+      setErrorUsername({ error: true, message: result.message });
       setLoading(false)
     } else {
       setLoading(false)

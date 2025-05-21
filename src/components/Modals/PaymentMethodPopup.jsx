@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   Dialog,
   DialogTitle,
@@ -11,32 +11,33 @@ import {
 
 const paymentMethods = [
   {
-    value: "cod",
+    value: "CASH",
     label: "Thanh toán khi nhận hàng",
     icon: "🧧",
   },
   {
-    value: "bank",
+    value: "INTERNET_BANKING",
     label: "Chuyển khoản ngân hàng qua mã QR",
     icon: "📲",
   },
   {
-    value: "vnpay",
+    value: "VNPAY",
     label: "VNPAY",
     icon: "🏦",
   },
   {
-    value: "visa",
+    value: "CREDIT_CARD",
     label: "Qua thẻ Visa/Master/JCB/Napas",
     icon: "💳",
   },
   {
-    value: "momo",
-    label: "Ví MoMo",
+    value: "MOMO",
+    label: "Ví MOMO",
     icon: "👜",
   },
 ];
 
+// eslint-disable-next-line react/prop-types
 const PaymentMethodPopup = ({ open, onClose, selected, onSelect }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth>

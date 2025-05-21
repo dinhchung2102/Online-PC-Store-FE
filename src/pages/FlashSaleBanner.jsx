@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { ButtonBase } from "@mui/material";
 import { getAllProducts } from "../services/productService";
+
 import {
   Box,
   Typography,
@@ -13,6 +14,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { formatCurrency } from "~/utils/utils"
 
 const calculateTimeLeft = () => {
   const now = new Date();
@@ -43,11 +45,26 @@ const FlashSaleBanner = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const [products1, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const product = await getAllProducts();
+        const data = product.data
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   if (!timeLeft) return null;
 
   const renderCountdown = (time) => {
     return [time.hours, time.minutes, time.seconds].map((value, index) => (
-      <React.Fragment key={index}>
+      <Fragment key={index}>
         <Typography
           sx={{
             background: "#000",
@@ -67,46 +84,16 @@ const FlashSaleBanner = () => {
             :
           </Typography>
         )}
-      </React.Fragment>
+      </Fragment>
     ));
   };
-  const [products1, setProducts] = useState([]);
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const rawData = await getAllProducts();
-        const formattedData = rawData.map((product) => {
-          const oldPrice = product.old_price || product.price;
-          const price = product.price;
-          const discount ="10%";
-            
-  
-          return {
-            id: product._id, // hoặc product.id tuỳ backend
-            image: product.image || "/image/default.png",
-            name: product.name,
-            oldPrice: oldPrice.toLocaleString("vi-VN") + "đ",
-            price: price.toLocaleString("vi-VN") + "đ",
-            discount: discount,
-            sold: product.sold || 0,
-          };
-        });
-        setProducts(formattedData);
-        console.log("Formatted products:", formattedData);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      }
-    };
-  
-    fetchProducts();
-  }, []);
 
   return (
     <Box
       sx={{
         background: "linear-gradient(to right, #00c6ff, #0072ff)",
         borderRadius: "10px",
-        
+
       }}
     >
       <Box
@@ -117,7 +104,7 @@ const FlashSaleBanner = () => {
           background: "linear-gradient(to right, #00c6ff, #0072ff)",
           padding: "10px 20px",
           borderRadius: "10px",
-          marginLeft:"35px"
+          marginLeft: "35px"
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
@@ -160,54 +147,54 @@ const FlashSaleBanner = () => {
         </Button>
       </Box>
       <Box sx={{ padding: "20px" }}>
-      <Swiper
-  navigation={true}
-  modules={[Navigation]}
-  spaceBetween={20}
-  slidesPerView={4}
-  loop={true}
->
-  {products1.map((product) => (
-    <SwiperSlide key={product.id}>
-      <ButtonBase onClick={() => console.log(`Clicked on ${product.name}`)}>
-        <Card sx={{ width: "250px", boxShadow: 3, padding: "10px", marginLeft: "35px" }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={product.image}
-            alt={product.name}
-          />
-          
-          <CardContent sx={{ textAlign: "center" }}>
-            <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
-              {product.name}
-            </Typography>
-            <Typography sx={{ textDecoration: "line-through", color: "gray", fontSize: "14px" }}>
-              {product.oldPrice}
-            </Typography>
-            <Typography sx={{ color: "red", fontSize: "20px", fontWeight: "bold" }}>
-              {product.price}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                color: "white",
-                fontWeight: "bold",
-                background: "#ff6666",
-                padding: "4px 8px",
-                borderRadius: "8px",
-                display: "inline-block",
-                marginTop: "5px",
-              }}
-            >
-              🔥 Đã bán: {product.sold}
-            </Typography>
-          </CardContent>
-        </Card>
-      </ButtonBase>
-    </SwiperSlide>
-  ))}
-</Swiper>
+        <Swiper
+          navigation={true}
+          modules={[Navigation]}
+          spaceBetween={20}
+          slidesPerView={4}
+          loop={true}
+        >
+          {products1.map((product, index) => (
+            <SwiperSlide key={index}>
+              <ButtonBase onClick={() => console.log(`Clicked on ${product.name}`)}>
+                <Card sx={{ width: "250px", boxShadow: 3, padding: "10px", marginLeft: "35px" }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={product.image}
+                    alt={product.name}
+                  />
+
+                  <CardContent sx={{ textAlign: "center" }}>
+                    <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
+                      {product.name}
+                    </Typography>
+                    <Typography sx={{ textDecoration: "line-through", color: "gray", fontSize: "14px" }}>
+                      {formatCurrency(product.price)}
+                    </Typography>
+                    <Typography sx={{ color: "red", fontSize: "20px", fontWeight: "bold" }}>
+                      {formatCurrency(product.price)}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        color: "white",
+                        fontWeight: "bold",
+                        background: "#ff6666",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
+                        display: "inline-block",
+                        marginTop: "5px",
+                      }}
+                    >
+                      🔥 Đã bán: {product.sold || 0}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </ButtonBase>
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <Box sx={{ textAlign: "center", marginTop: "20px" }}>
           <Button
             variant="contained"

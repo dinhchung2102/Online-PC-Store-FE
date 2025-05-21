@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
@@ -26,6 +27,7 @@ import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairService
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined"; // Icon Thu cũ đổi mới
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"; // Icon Tra cứu bảo hành
 
+import Modal from '@mui/material/Modal';
 import { useState, useEffect } from "react";
 import BasicModal from "./Modals/Modal";
 import PropTypes from 'prop-types';
@@ -36,9 +38,12 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { getUserInfo, getToken } from '~/services/userService';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, clearUserInfo } from "~/redux/userSlice";
-import { addToCart } from "~/redux/cartSlice";
-import { getCart } from "~/services/cartService";
 import { useNavigate } from "react-router";
+import { fetchOrders } from "~/redux/orderSlice";
+import { transformISOToTime } from "../utils/utils";
+import { checkAdmin } from "../services/authService";
+import Categories from "~/components/Categories"
+
 
 const services = [
     { icon: <SellOutlinedIcon />, text: "Tự Build PC theo ý của bạn" },
@@ -49,6 +54,24 @@ const services = [
     { icon: <VerifiedOutlinedIcon />, text: "Tra cứu bảo hành" },
 ];
 
+const ModalCategory = ({ openModalCate, handleCloseModalCate }) => {
+    return (
+        <Modal
+            open={openModalCate}
+            onClose={handleCloseModalCate}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: "95vw", paddingX: 'auto', mt: "30px" }}>
+                    <Categories />
+
+                </Box>
+            </Box>
+        </Modal>
+    )
+}
+
 
 function Header() {
     // navigate
@@ -57,17 +80,21 @@ function Header() {
     // redux
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.user.userInfo);
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const quantityItem = cartItems.reduce((total, item) => total += item.amountProduct, 0);
 
     // Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        // Điều hướng đến trang Detail_Account
-        navigate('/Detail_Account');
-      };
+    const handleClose = () => setOpen(false);
     const handleTechnical = () => {
         navigate('/technology-news');
     };
+
+    // modal cate
+    const [openModalCate, setOpenModalCate] = useState(false)
+    const handleOpenModalCate = () => setOpenModalCate(true)
+    const handleCloseModalCate = () => setOpenModalCate(false)
 
     // login
     const [isLogin, setIsLogin] = useState(false);
@@ -96,7 +123,11 @@ function Header() {
 
     useEffect(() => {
         if (userInfo) {
-            setName(userInfo.name);
+            if (userInfo.fullname) {
+                setName(userInfo.fullname);
+            } else {
+                setName(userInfo.username);
+            }
         }
     }, [userInfo]);
 
@@ -110,14 +141,19 @@ function Header() {
                 const token = getToken();
                 dispatch(setUserInfo({
                     id: user._id,
-                    name: user.name,
-                    address: [],
-                    phone: "",
-                    email: "",
+                    username: user.username,
+                    address: [...user.address],
+                    phone: user.phone,
+                    email: user.email,
+                    dateOfBirth: transformISOToTime(user.dateOfBirth),
                     token: token?.token,
                     refresh_token: token?.refreshToken,
                     avatar: "",
+                    gender: user.gender,
+                    fullname: user.fullname,
                 }));
+                dispatch(fetchOrders(user._id));
+                console.log("check admin", checkAdmin())
             } else {
                 setIsLogin(false);
                 console.log("Người dùng chưa đăng nhập");
@@ -127,24 +163,23 @@ function Header() {
         fetchUserInfo();
     }, [])
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            if (userInfo) {
-                const carts = await getCart(userInfo.id);
-                console.log(carts);
-                carts.forEach((item) => {
-                    dispatch(addToCart({
-                        ...item
-                    }))
-                })
-            }
-        };
-        fetchCart();
-    }, [dispatch]);
+    // useEffect(() => {
+    //     const fetchCart = async () => {
+    //         if (userInfo) {
+    //             const carts = await getCart(userInfo.id);
+    //             console.log(carts);
+    //             carts.forEach((item) => {
+    //                 dispatch(addToCart({
+    //                     ...item
+    //                 }))
+    //             })
+    //         }
+    //     };
+    //     fetchCart();
+    // }, [dispatch]);
 
     return (
         <Box>
-
             <AppBar position="static" sx={{ bgcolor: "red", p: 1 }}>
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                     {/* Logo */}
@@ -159,7 +194,7 @@ function Header() {
                     {/* Nút Menu */}
                     <IconButton color="inherit" aria-label="menu" sx={{ ml: 2 }}>
                         <MenuIcon />
-                        <Typography variant="h6" sx={{ ml: 1 }}>
+                        <Typography variant="h6" sx={{ ml: 1 }} onClick={() => handleOpenModalCate()}>
                             Danh mục
                         </Typography>
                     </IconButton>
@@ -190,6 +225,7 @@ function Header() {
                         />
                         <NavButton icon={<RoomIcon />} text1="Hệ thống" text2="Showroom" />
                         <NavButton
+                            onClick={() => navigate("/Detail_Account")}
                             icon={<AssignmentLateIcon />}
                             text1="Tra cứu"
                             text2="Đơn hàng"
@@ -199,7 +235,7 @@ function Header() {
                             icon={<ShoppingCartIcon />}
                             text1="Giỏ"
                             text2="hàng"
-                            badgeContent={1}
+                            badgeContent={quantityItem}
                         />
                         {isLogin ?
                             <Box id="basic-avatar" sx={{ display: 'flex', alignItems: 'center' }} >
@@ -260,7 +296,7 @@ function Header() {
                                         }} >
                                         <Typography sx={{ fontWeight: 'bold' }}>Xin chào {name} ❤</Typography>
                                     </Box>
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={() => navigate("/Detail_Account")}>
                                         <ListItemIcon>
                                             <PermIdentityIcon />
                                         </ListItemIcon>
@@ -294,6 +330,7 @@ function Header() {
                     </Box>
                 </Toolbar>
                 <BasicModal open={open} handleClose={handleClose} />
+                <ModalCategory openModalCate={openModalCate} handleCloseModalCate={handleCloseModalCate} />
             </AppBar>
             {/* Danh mục sản phẩm */}
             <Box

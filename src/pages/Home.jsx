@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import FlashSaleBanner from "./FlashSaleBanner";
 import { getAllProducts } from "../services/productService";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -26,6 +26,8 @@ import Footer from "~/components/Footer";
 
 import Header from "~/components/Header";
 import Categories from "~/components/Categories";
+import { useNavigate } from "react-router";
+import { formatCurrency } from "~/utils/utils";
 
 const banners = [
   "/image/1a.png",
@@ -102,27 +104,15 @@ const productsMouse = [
 
 function Home() {
   const [product, setProducts] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const rawData = await getAllProducts();
-        const formattedData = rawData.map((product) => {
-          const oldPrice = product.old_price || product.price;
-          const price = product.price;
-          const discount = "10%";
-
-          return {
-            id: product._id, // hoặc product.id tuỳ backend
-            image: product.image || "/image/default.png",
-            specs: product.name,
-            name: product.name,
-            oldPrice: oldPrice.toLocaleString("vi-VN") + "đ",
-            price: price.toLocaleString("vi-VN") + "đ",
-            discount: discount,
-          };
-        });
-        setProducts(formattedData);
-        console.log("Formatted products:", formattedData);
+        const product = await getAllProducts();
+        const data = product.data;
+        console.log("Product data:", data);
+        if (!data) return
+        setProducts(data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
@@ -131,9 +121,8 @@ function Home() {
     fetchProducts();
   }, []);
   return (
-    <Container
-      maxWidth={false}
-      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", width: "1442px" }}
+    <Container maxWidth="xl"
+      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", "&.MuiContainer-root": { padding: 0 },  }}
     >
       {/* Header */}
       <Header />
@@ -143,7 +132,8 @@ function Home() {
           justifyContent: "center",
           gap: 1,
           flexDirection: "row",
-          paddingY: 2,
+          padding: 2,
+
         }}
       >
         {/* Sidebar */}
@@ -410,7 +400,7 @@ function Home() {
           }}
         >
           {product.map((prod) => (
-            <SwiperSlide key={prod.id}>
+            <SwiperSlide key={prod._id}>
               <Card
                 sx={{
                   textAlign: "center",
@@ -428,7 +418,7 @@ function Home() {
                   alt={prod.name}
                   sx={{ objectFit: "contain" }}
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
+                <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
                   <Typography
                     variant="subtitle1"
                     fontWeight="bold"
@@ -439,6 +429,7 @@ function Home() {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       height: "48px", // phù hợp với 2 dòng text
+
                     }}
                   >
                     {prod.name}
@@ -448,21 +439,25 @@ function Home() {
                     sx={{
                       color: "gray",
                       mb: 1,
-                      height: 40,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2, // Hiển thị tối đa 2 dòng
+                      WebkitBoxOrient: "vertical",
                       overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      height: "40px", // phù hợp với 2 dòng text
                     }}
                   >
-                    {prod.specs}
+                    {prod.description}
                   </Typography>
 
                   <Typography
                     variant="body2"
-                    sx={{ textDecoration: "line-through" }}
+                    sx={{ textDecoration: "line-through", height: "20px" }}
                   >
-                    {prod.oldPrice}
+                    {prod.promotion && formatCurrency(prod.price * (prod.promotion.discountValue / 100))}
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
-                    {prod.price}
+                    {formatCurrency(prod.price)}
                     <span
                       style={{
                         color: "red",
@@ -477,7 +472,8 @@ function Home() {
                   <Button
                     variant="contained"
                     color="primary"
-                    sx={{ mt: 2, width: "100%" }}
+                    sx={{ mt: "auto", width: "100%" }}
+                    onClick={() => navigate(`/detailProduct/${prod._id}`, { state: { product: prod } })}
                   >
                     Mua ngay
                   </Button>

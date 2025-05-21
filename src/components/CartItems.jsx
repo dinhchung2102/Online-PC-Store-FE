@@ -1,18 +1,36 @@
+/* eslint-disable react/prop-types */
 
 import PropTypes from "prop-types";
 import { Box, Typography, Button, ButtonGroup } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatCurrency } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { updateQuantity, removeFromCart } from "~/redux/cartSlice";
+import { updateCart, removeProductFromCart } from "~/services/cartService";
 
 const CartItem = ({ cart }) => {
+  const userInfo = useSelector((state) => state.user.userInfo);
 
-  const handleDecrease = () => {
+  console.log("cart", cart);
+  const dispatch = useDispatch();
 
+  const handleDecrease = async () => {
+    dispatch(updateQuantity({ productId: cart.productId, amountProduct: cart.amountProduct - 1 }));
+    const response = await updateCart(userInfo.id, cart.productId, cart.amountProduct - 1, cart.priceProduct * (cart.amountProduct - 1));
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
   };
 
-  const handleIncrease = () => {
-
+  const handleIncrease = async () => {
+    dispatch(updateQuantity({ productId: cart.productId, amountProduct: cart.amountProduct + 1 }));
+    const response = await updateCart(userInfo.id, cart.productId, cart.amountProduct + 1, cart.priceProduct * (cart.amountProduct + 1));
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
   };
+
+  const handleDelete = async () => {
+    dispatch(removeFromCart(cart.productId));
+    const response = await removeProductFromCart(cart._id);
+    console.log("Response:", response); // Kiểm tra phản hồi từ server
+  }
   return (
     <Box
       sx={{
@@ -64,6 +82,9 @@ const CartItem = ({ cart }) => {
         <Typography sx={{ color: '#DF062D' }}>
           Giá: {formatCurrency(cart.priceProduct)}
         </Typography>
+        <Typography sx={{ fontWeight: 'thin', color: '#333' }}>
+          Tổng tiền: {formatCurrency(cart.priceProduct * cart.amountProduct)}
+        </Typography>
       </Box>
 
       {/* Actions */}
@@ -81,6 +102,7 @@ const CartItem = ({ cart }) => {
           size="small"
           color="error"
           startIcon={<DeleteIcon />}
+          onClick={handleDelete}
         >
           Xóa
         </Button>
