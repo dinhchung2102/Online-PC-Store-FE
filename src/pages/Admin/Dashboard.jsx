@@ -40,51 +40,32 @@ function Dashboard() {
     // totalRevenue: 25000,
     // totalCustomers: 300,
   });
+const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+const [availableYears, setAvailableYears] = useState([]);
+  const [revenueData, setRevenueData] = useState({
+  labels: [],
+  datasets: [],
+});
 
-  // Biểu đồ doanh thu theo tháng
-  const revenueData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Revenue',
-        data: [5000, 4000, 6000, 7000, 8000, 7500], // Dữ liệu giả lập
-        borderColor: '#1976d2',
-        backgroundColor: 'rgba(25, 118, 210, 0.2)',
-        fill: true,
-      },
-    ],
-  };
 
   // Biểu đồ đơn hàng theo tháng
-  const orderData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Orders',
-        data: [120, 140, 110, 130, 150, 180],
-        backgroundColor: '#28a745',
-      },
-    ],
-  };
+ const [orderData, setOrderData] = useState({
+  labels: [],
+  datasets: [],
+});
+
 
 useEffect(() => {
   const fetchData = async () => {
     const token = localStorage.getItem('access_token');
 
     try {
-      // Gọi API đơn hàng
-      const orderRes = await axios.get("http://localhost:5003/api/order/admin/revenue-stats", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-console.log(orderRes.data)
-      // Gọi API user
-      const userRes = await axios.get(`http://localhost:5001/api/user/admin/count-users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const [orderRes, userRes, productRes] = await Promise.all([
+        axios.get("http://localhost:5003/api/order/admin/summary-stats", { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get("http://localhost:5001/api/user/admin/count-users", { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get("http://localhost:5002/api/product/get-all", { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
 
-       const productRes = await axios.get('http://localhost:5002/api/product/get-all', {
-                   headers: { 'Cache-Control': 'no-cache' }
-                });
       const formatter = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
@@ -104,7 +85,67 @@ console.log(orderRes.data)
       console.error("Failed to fetch dashboard stats:", error);
     }
   };
+ const fetchChartDataAllYears = async () => {
+    const token = localStorage.getItem('access_token');
+    try { 
 
+      const years = [2024, 2025];
+      setAvailableYears(years);
+
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      const colorList = ['#1976d2', '#ff9800', '#4caf50', '#e91e63', '#9c27b0'];
+
+      const revenueDataset = [];
+      const orderDataset = [];
+
+      for (let i = 0; i < years.length; i++) {
+        const year = years[i];
+        const res = await axios.get("http://localhost:5003/api/order/admin/revenue-stats-by-year", {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { year },
+        });
+
+        const rawData = res.data.data;
+
+        const revenueValues = rawData.map(item =>
+          parseFloat(item.totalRevenue.replace(/[$,]/g, '')) || 0
+        );
+        const orderValues = rawData.map(item => item.totalOrders || 0);
+
+        revenueDataset.push({
+          label: `${year}`,
+          data: revenueValues,
+          borderColor: colorList[i % colorList.length],
+          backgroundColor: 'transparent',
+          fill: false,
+          tension: 0.2,
+        });
+
+        orderDataset.push({
+          label: `${year}`,
+          data: orderValues,
+          backgroundColor: colorList[i % colorList.length],
+        });
+      }
+
+      setRevenueData({
+        labels,
+        datasets: revenueDataset,
+      });
+
+      setOrderData({
+        labels,
+        datasets: orderDataset,
+      });
+
+    } catch (error) {
+      console.error("Failed to fetch multi-year chart data:", error);
+    }
+  };
+
+  fetchChartDataAllYears();
   fetchData();
 }, []);
 

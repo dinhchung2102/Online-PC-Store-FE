@@ -31,7 +31,7 @@ useEffect(() => {
   const fetchData = async () => {
     const token = localStorage.getItem('access_token');
     try {
-      const res = await axios.get("http://localhost:5555/api/order/admin/sales-stats", {
+      const res = await axios.get("http://localhost:5003/api/order/admin/sales-stats", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
