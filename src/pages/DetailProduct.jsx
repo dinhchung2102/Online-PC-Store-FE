@@ -22,9 +22,18 @@ import { getAllProducts } from "~/services/productService";
 import Footer from "~/components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductToCart } from "~/services/cartService";
+import ToastMessage from "~/utils/ToastMessage";
 
 
 function DetailProduct() {
+
+  // rate limiter
+  const [requestCount, setRequestCount] = React.useState(0);
+  const firstRequestTime = React.useRef(null);
+  const [openNotification, setOpenNotification] = React.useState(false);
+  const handleCloseNotification = () => setOpenNotification(false);
+  const handleOpenNotification = () => setOpenNotification(true);
+  const [message, setMessage] = React.useState("");
 
   const userInfo = useSelector((state) => state.user.userInfo);
 
@@ -44,6 +53,20 @@ function DetailProduct() {
   const navigate = useNavigate();
 
   const handleClickBuy = async (userId, product) => {
+    const now = Date.now();
+    const LIMIT = 5;
+    const WINDOW_MS = 60000; // 1 minute
+
+    if (!firstRequestTime.current || now - firstRequestTime.current > WINDOW_MS) {
+      firstRequestTime.current = now;
+      setRequestCount(1);
+    } else if (requestCount < LIMIT) {
+      setRequestCount(prev => prev + 1);
+    } else {
+      setMessage('Bạn đã gọi API quá 5 lần trong 1 phút!');
+      handleOpenNotification();
+      return;
+    }
     // Kiểm tra xem người dùng đã đăng nhập chưa
     if (!userId) {
       alert("Vui lòng đăng nhập để tiếp tục mua hàng");
@@ -187,6 +210,7 @@ function DetailProduct() {
         </Box>
       </Box>
       <Footer />
+      <ToastMessage open={openNotification} handleClose={handleCloseNotification} message={message} />
     </Box>
   );
 }
