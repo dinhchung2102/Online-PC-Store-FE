@@ -28,6 +28,8 @@ import Header from "~/components/Header";
 import Categories from "~/components/Categories";
 import { useNavigate } from "react-router";
 import { formatCurrency } from "~/utils/utils";
+import ChatToggleButton from "../components/ChatToggleButton";
+
 
 const banners = [
   "/image/1a.png",
@@ -122,7 +124,7 @@ function Home() {
   }, []);
   return (
     <Container maxWidth="xl"
-      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", "&.MuiContainer-root": { padding: 0 },  }}
+      sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", "&.MuiContainer-root": { padding: 0 }, }}
     >
       {/* Header */}
       <Header />
@@ -483,7 +485,7 @@ function Home() {
           ))}
         </Swiper>
       </Box>
-
+      <ChatToggleButton />
       {/* Footer */}
       <Footer />
     </Container>
