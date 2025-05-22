@@ -43,7 +43,7 @@ export const keyToVietnamese = (key) => {
     // Thêm các từ khóa khác vào đây
   };
 
-  return dictionary[key.toLowerCase()] || key;
+  return dictionary[key.toLowerCase()] || key || "Lọc thông tin";
 };
 
 export const transformISOToTime = (time) => {

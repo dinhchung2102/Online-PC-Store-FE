@@ -192,9 +192,9 @@ function Header() {
                     />
 
                     {/* Nút Menu */}
-                    <IconButton color="inherit" aria-label="menu" sx={{ ml: 2 }}>
+                    <IconButton color="inherit" aria-label="menu" sx={{ ml: 2 }} onClick={() => handleOpenModalCate()}>
                         <MenuIcon />
-                        <Typography variant="h6" sx={{ ml: 1 }} onClick={() => handleOpenModalCate()}>
+                        <Typography variant="h6" sx={{ ml: 1 }} >
                             Danh mục
                         </Typography>
                     </IconButton>

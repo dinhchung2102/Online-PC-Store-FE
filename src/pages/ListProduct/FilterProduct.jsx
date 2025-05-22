@@ -73,7 +73,7 @@ function FilterProduct() {
             <HomeIcon />
             Trang chủ
           </Link>
-          <Typography sx={{}}>{keyToVietnamese(brand)}</Typography>
+          <Typography sx={{}}>{keyToVietnamese(brand || "Lọc thông tin")}</Typography>
         </Breadcrumbs>
 
         <Grid
@@ -88,7 +88,7 @@ function FilterProduct() {
               bgcolor: "#fff",
               p: 2
             }}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{keyToVietnamese(brand)}</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{keyToVietnamese(brand || "Lọc thông tin")}</Typography>
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mr: 2 }}>Sắp xếp theo</Typography>
                 <Chip
@@ -123,13 +123,11 @@ function FilterProduct() {
             </Box>
             <Box sx={{ bgcolor: "#fff" }}>
               <Grid spacing={1} container sx={{ my: 1, mx: 0 }}>
-                {product?.map((product) => {
-                  return (
-                    <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                      <ProductCard product={product} />
-                    </Grid>
-                  )
-                })}
+                {(Array.isArray(product) ? product : product?.products || []).map((item) => (
+                  <Grid key={item._id} item xs={12} sm={6} md={4} lg={3}>
+                    <ProductCard product={item} />
+                  </Grid>
+                ))}
               </Grid>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
                 <Pagination count={numOfPages} color="primary" page={page} />
