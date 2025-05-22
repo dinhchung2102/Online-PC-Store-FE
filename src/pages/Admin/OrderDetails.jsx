@@ -8,30 +8,60 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import OrderDetails from "../../components/Modals/OrderDetails";
 import axios from "axios"; // Import axios
-import { Add, Delete, Edit, Refresh } from '@mui/icons-material';
+import { Add, Delete, Edit, Refresh } from "@mui/icons-material";
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]); // State lưu trữ danh sách đơn hàng
   const [loading, setLoading] = useState(true); // Trạng thái tải
   const [error, setError] = useState(""); // Trạng thái lỗi
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [userNames, setUserNames] = useState({});
+  useEffect(() => {
+    const fetchUserNames = async () => {
+      const missingIds = [
+        ...new Set(
+          orders.map((p) => p.userId).filter((id) => id && !userNames[id])
+        ),
+      ];
 
+      if (missingIds.length === 0) return;
+
+      const updatedNames = { ...userNames };
+
+      await Promise.all(
+        missingIds.map(async (id) => {
+          try {
+            const res = await axios.get(
+              `http://localhost:5001/api/user/get-detail/${id}`,
+              {
+                headers: { "Cache-Control": "no-cache" },
+              }
+            );
+            updatedNames[id] = res.data?.name || "Unknown";
+          } catch (err) {
+            console.warn("Failed to fetch user", id);
+            updatedNames[id] = "Unknown";
+          }
+        })
+      );
+
+      setUserNames(updatedNames);
+    };
+
+    fetchUserNames();
+  }, [orders]);
   const columns = [
     { field: "_id", headerName: "Order ID", flex: 1 },
     {
-      field: "customerInformation",
+      field: "customerName",
       headerName: "Customer",
       width: 200,
       renderCell: (params) => {
-        const customerInfo = params.row?.customerInformation;
-        if (Array.isArray(customerInfo) && customerInfo.length > 0) {
-          return customerInfo[0]?.name || "N/A";
-        }
-        return "N/A";
+        return params.row?.customerInformation?.fullname || "Unknown";
       },
     },
     {
@@ -89,14 +119,18 @@ const OrdersPage = () => {
       }
 
       // Gọi API để lấy danh sách đơn hàng
-      const response = await axios.get("http://localhost:5555/api/order/admin/get-all-order", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5003/api/order/admin/get-all-order",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Lưu dữ liệu vào state
       setOrders(response.data.data); // Giả sử response.data.data là danh sách đơn hàng
+      console.log(response.data.data);
     } catch (error) {
       setError(error.response?.data?.message || "Không thể tải đơn hàng");
     } finally {
@@ -111,7 +145,7 @@ const OrdersPage = () => {
 
   // Hàm reload đơn hàng
   const reloadOrders = () => {
-    setLoading(true);  // Thiết lập lại trạng thái loading
+    setLoading(true); // Thiết lập lại trạng thái loading
     fetchOrders(); // Gọi lại API để tải đơn hàng mới
   };
 
@@ -127,8 +161,7 @@ const OrdersPage = () => {
   if (error) {
     return (
       <div>
-        {error}{" "}
-        <Button onClick={reloadOrders}>Thử lại</Button>
+        {error} <Button onClick={reloadOrders}>Thử lại</Button>
       </div>
     );
   }
@@ -139,8 +172,8 @@ const OrdersPage = () => {
         Orders List
       </Typography>
       <IconButton onClick={reloadOrders}>
-                <Refresh />
-              </IconButton>
+        <Refresh />
+      </IconButton>
       <Box sx={{ height: 500, mt: 2 }}>
         <DataGrid
           rows={orders}

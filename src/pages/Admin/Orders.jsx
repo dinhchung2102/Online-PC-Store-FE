@@ -1,42 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import {
   Box,
-  IconButton,
-  Menu,
-  MenuItem,
   Typography,
   Chip,
   Stack,
+  CircularProgress,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import ViewColumnIcon from "@mui/icons-material/ViewColumn";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
-const orders = [
-  {
-    id: 1,
-    product: "Premium Wireless Headphones",
-    status: "In Stock",
-    totalOrders: 8345,
-    revenue: "$212,423",
-    avgOrder: "$185.50",
-    processingTime: "2d 15h",
-  },
-  {
-    id: 2,
-    product: "Smart Fitness Watch",
-    status: "Low Stock",
-    totalOrders: 12567,
-    revenue: "$458,945",
-    avgOrder: "$149.99",
-    processingTime: "1d 8h",
-  },
-  // ... thêm các đơn hàng khác ở đây nếu có
-];
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -52,37 +23,61 @@ const getStatusColor = (status) => {
 };
 
 const OrdersPage = () => {
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [sortModel, setSortModel] = useState([]);
 
-  const handleMenuClick = (event) => {
-    setMenuAnchor(event.currentTarget);
+useEffect(() => {
+  const fetchData = async () => {
+    const token = localStorage.getItem('access_token');
+    try {
+      const res = await axios.get("http://localhost:5003/api/order/admin/sales-stats", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = res.data;
+      const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      });
+
+      const cleanMoney = (value) =>
+        formatter.format(Number(String(value).replace(/\$/g, '').replace(/,/g, '')));
+
+      if (data && Array.isArray(data.data)) {
+        const formatted = data.data.map((item) => ({
+          id: item.productId,
+          product: item.productName,
+          status: item.status,
+          totalOrders: item.totalOrders,
+          revenue: cleanMoney(item.revenue),
+          avgOrder: cleanMoney(item.avgOrderValue),
+          processingTime: item.processingTime,
+        }));
+        setOrders(formatted);
+      }
+    } catch (error) {
+      console.error("Failed to fetch sales stats:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
-  };
+  fetchData();
+}, []);
 
-  const handleSort = (direction) => {
-    setSortModel([
-      {
-        field: "product",
-        sort: direction,
-      },
-    ]);
-    handleMenuClose();
-  };
+
 
   const columns = [
     {
       field: "product",
       headerName: "Product Name",
       flex: 1.5,
-      // ❌ Không cần renderCell => tránh chèn icon thừa
       renderHeader: () => (
         <Stack direction="row" alignItems="center" spacing={1}>
           <span>Product Name</span>
-          
         </Stack>
       ),
     },
@@ -107,16 +102,22 @@ const OrdersPage = () => {
       </Typography>
 
       <Box sx={{ height: 550 }}>
-        <DataGrid
-          rows={orders}
-          columns={columns}
-          pageSize={7}
-          rowsPerPageOptions={[7]}
-          disableRowSelectionOnClick
-          sortingOrder={["asc", "desc"]}
-          sortModel={sortModel}
-          onSortModelChange={(model) => setSortModel(model)}
-        />
+        {loading ? (
+          <Stack alignItems="center" justifyContent="center" sx={{ height: "100%" }}>
+            <CircularProgress />
+          </Stack>
+        ) : (
+          <DataGrid
+            rows={orders}
+            columns={columns}
+            pageSize={7}
+            rowsPerPageOptions={[7]}
+            disableRowSelectionOnClick
+            sortingOrder={["asc", "desc"]}
+            sortModel={sortModel}
+            onSortModelChange={(model) => setSortModel(model)}
+          />
+        )}
       </Box>
     </Box>
   );
