@@ -1,1 +1,0 @@
-export const apiUrl = "https://kientruc-apigateway.up.railway.app/api";
