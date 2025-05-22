@@ -306,7 +306,7 @@ function Home() {
                     color="text.secondary"
                     sx={{ textDecoration: "line-through" }}
                   >
-                    {product.oldPrice}
+                    {product.price}
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
                     {product.price}{" "}

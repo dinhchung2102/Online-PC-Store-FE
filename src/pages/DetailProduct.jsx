@@ -34,6 +34,7 @@ function DetailProduct() {
   useEffect(() => {
     const fetchAllProduct = async () => {
       const products = await getAllProducts();
+      console.log("product:", product);
       setProducts(products.data);
     }
     fetchAllProduct();
