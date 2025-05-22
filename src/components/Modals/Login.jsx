@@ -55,7 +55,7 @@ function Login() {
       gap: 2
     }}>
       <TextField fullWidth color="info"
-        id="outlined-basic"
+        id="text-field-username"
         label="Tên đăng nhập"
         variant="outlined"
         size="small"
@@ -66,7 +66,7 @@ function Login() {
       />
       <TextField type="password"
         fullWidth color="info"
-        id="outlined-basic"
+        id="text-field-password"
         label="Mật khẩu"
         variant="outlined"
         size="small"

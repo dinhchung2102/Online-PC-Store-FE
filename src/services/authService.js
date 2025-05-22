@@ -1,11 +1,12 @@
 import axios from "axios";
 import * as jwtDecode from "jwt-decode";
+import { apiUrl } from "./utils";
 
 export const handleLogin = async (username, password) => {
 
 
   try {
-    const response = await axios.post("http://localhost:5555/api/user/sign-in", {
+    const response = await axios.post(apiUrl + "/user/sign-in", {
       username,
       password
     });
@@ -38,7 +39,7 @@ export const handleSignUp = async (username, password, confirmPassword) => {
   }
 
   try {
-    const response = await axios.post("http://localhost:5555/api/user/sign-up", {
+    const response = await axios.post(apiUrl + "/user/sign-up", {
       username,
       password,
       confirmPassword

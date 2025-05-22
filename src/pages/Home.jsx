@@ -219,7 +219,7 @@ function Home() {
       </Box>
 
       <Box>
-        <FlashSaleBanner />
+        {/* <FlashSaleBanner /> */}
       </Box>
 
       {/* Chuột bán chạy */}
