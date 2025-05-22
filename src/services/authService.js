@@ -1,12 +1,12 @@
 import axios from "axios";
 import * as jwtDecode from "jwt-decode";
-import { apiUrl } from "./utils";
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5555/api';
 
 export const handleLogin = async (username, password) => {
 
-
   try {
-    const response = await axios.post(apiUrl + "/user/sign-in", {
+    const response = await axios.post(API_URL + "/user/sign-in", {
       username,
       password
     });
@@ -39,7 +39,7 @@ export const handleSignUp = async (username, password, confirmPassword) => {
   }
 
   try {
-    const response = await axios.post(apiUrl + "/user/sign-up", {
+    const response = await axios.post(API_URL + "/user/sign-up", {
       username,
       password,
       confirmPassword
