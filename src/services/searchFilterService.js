@@ -1,9 +1,10 @@
 import axios from "axios";
-import { apiUrl } from "./utils"
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5555/api';
 
 export const getAllFilter = async () => {
   try {
-    const response = await axios.get(apiUrl + `/search/filter/get-all`);
+    const response = await axios.get(API_URL + `/search/filter/get-all`);
     return response.data;
   } catch (error) {
     console.error("Error fetching all filters:", error);
@@ -15,7 +16,7 @@ export const getFilterByKey = async (key) => {
 
   try {
     console.log("key", key);
-    const response = await axios.get(`${apiUrl}${key}`);
+    const response = await axios.get(`${API_URL}${key}`);
     console.log("response", response.data);
     return response.data;
   } catch (error) {

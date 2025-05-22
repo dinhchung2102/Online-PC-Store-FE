@@ -1,6 +1,8 @@
 import axios from "axios";
 import { transformTimeToISO } from "../utils/utils";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5555/api';
+
 export const getUserId = () => {
   const userId = localStorage.getItem("userId");
   return userId;
@@ -20,7 +22,7 @@ export const getUserInfo = async () => {
     const token = getToken().token;
 
     const response = await axios.get(
-      `http://localhost:5555/api/user/get-detail/` + getUserId(),
+      `${API_URL}/user/get-detail/` + getUserId(),
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -40,7 +42,7 @@ export const updateUserInfo = async (user) => {
     const userId = getUserId();
 
     const response = await axios.put(
-      `http://localhost:5555/api/user/update-user/${userId}`,
+      `${API_URL}/user/update-user/${userId}`,
       {
         fullname: user.fullname,
         phone: user.phone,

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from './userService';
 
-const apiUrl = "http://localhost:5555/api/order";
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5555/api';
 
 const transformCartItemsToOrder = (userId, cartItems, shippingPrice, paymentMethod) => {
 
@@ -30,7 +30,7 @@ export const createOrder = async (userId, cartItems, shippingPrice, paymentMetho
       console.error('Token không tồn tại');
       return null;
     }
-    const response = await axios.post(`${apiUrl}/create-order`,
+    const response = await axios.post(`${API_URL}/order/create-order`,
       order,
       // {
       //   userId: "",
@@ -73,7 +73,7 @@ export const getOrderByUserId = async (userId) => {
       return null;
     }
 
-    const response = await axios.get(`${apiUrl}/get-all-order-user/${userId}`, {
+    const response = await axios.get(`${API_URL}/order/get-all-order-user/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -111,7 +111,7 @@ export const getOrderDetailsByOrderId = async (orderId) => {
       console.error('Token không tồn tại');
       return null;
     }
-    const response = await axios.get(`${apiUrl}/get-detail-order/${orderId}`, {
+    const response = await axios.get(`${API_URL}/order/get-detail-order/${orderId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

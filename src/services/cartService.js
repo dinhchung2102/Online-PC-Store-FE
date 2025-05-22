@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getToken } from './userService';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5555/api';
 
 
 export const getCart = async (userId) => {
@@ -17,7 +18,7 @@ export const getCart = async (userId) => {
       return null;
     }
     const response = await axios.get(
-      `http://localhost:5555/api/cart/get-cart/${userId}`,
+      `${API_URL}/cart/get-cart/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +46,7 @@ export const updateCart = async (userId, productId, amountProduct, totalPrice) =
     console.log('Amount Product:', amountProduct); // Kiểm tra amountProduct
     console.log('Total Price:', totalPrice); // Kiểm tra totalPrice
     const response = await axios.put(
-      `http://localhost:5555/api/cart/update-cart/${userId}/${productId}`,
+      `${API_URL}/cart/update-cart/${userId}/${productId}`,
       {
         amountProduct,
         totalPrice,
@@ -80,7 +81,7 @@ export const addProductToCart = async (userId, product) => {
     console.log('Product Amount:', 1); // Kiểm tra productAmount
     console.log('Product Total Price:', product.price); // Kiểm tra productTotalPrice
 
-    const response = await axios.post('http://localhost:5555/api/cart/create-cart',
+    const response = await axios.post(API_URL + '/cart/create-cart',
       {
         userId,
         productId: product._id,
@@ -116,7 +117,7 @@ export const removeProductFromCart = async (cartId) => {
     }
 
     const response = await axios.delete(
-      `http://localhost:5555/api/cart/delete-cart/${cartId}`,
+      `${API_URL}/cart/delete-cart/${cartId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -146,7 +147,7 @@ export const deleteAllCartItems = async (cart) => {
       return null;
     }
     const response = await axios.post(
-      `http://localhost:5555/api/cart/delete-many-cart`, cartIds,
+      `${API_URL}/cart/delete-many-cart`, cartIds,
       {
         headers: {
           Authorization: `Bearer ${token}`,
