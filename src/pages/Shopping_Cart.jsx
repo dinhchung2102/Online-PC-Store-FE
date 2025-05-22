@@ -34,6 +34,7 @@ import { createOrder } from "~/services/orderService";
 import { deleteAllCartItems } from "~/services/cartService";
 import CardOrder from "~/components/CardOrder";
 import { fetchOrders } from "~/redux/orderSlice";
+import ToastMessage from "~/utils/ToastMessage";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -113,6 +114,14 @@ const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán"];
 function Shopping_Cart() {
   const dispatch = useDispatch();
 
+  // rate limiter
+  const [requestCount, setRequestCount] = React.useState(0);
+  const firstRequestTime = React.useRef(null);
+  const [openNotification, setOpenNotification] = React.useState(false);
+  const handleCloseNotification = () => setOpenNotification(false);
+  const handleOpenNotification = () => setOpenNotification(true);
+  const [message, setMessage] = React.useState("");
+
   //order
   const orders = useSelector((state) => state.order.orders);
 
@@ -132,6 +141,25 @@ function Shopping_Cart() {
     console.log("chạy vào đây nè ");
     dispatch(fetchCart(userInfo.id));
   }, [dispatch, userInfo.id]);
+
+  const handleCreateOrder = async (userId, carts, shippingPrice, paymentMethod) => {
+    const now = Date.now();
+    const LIMIT = 5;
+    const WINDOW_MS = 60000; // 1 minute
+
+    if (!firstRequestTime.current || now - firstRequestTime.current > WINDOW_MS) {
+      firstRequestTime.current = now;
+      setRequestCount(1);
+    } else if (requestCount < LIMIT) {
+      setRequestCount(prev => prev + 1);
+    } else {
+      setMessage('Bạn đã gọi API quá 5 lần trong 1 phút!');
+      handleOpenNotification();
+      return;
+    }
+    await createOrder(userId, carts, shippingPrice, paymentMethod);
+
+  }
 
   // checkout form
   // set phuong thuc thanh toan
@@ -303,16 +331,11 @@ function Shopping_Cart() {
                       variant="contained"
                       color="primary"
                       onClick={async () => {
-                        await createOrder(
-                          userInfo.id,
-                          carts,
-                          shippingPrice,
-                          paymentMethod
-                        );
-                        handleNext();
+                        await handleCreateOrder(userInfo.id, carts, shippingPrice, paymentMethod);
                         dispatch(clearCart());
                         await deleteAllCartItems(carts);
                         dispatch(fetchOrders(userInfo.id));
+                        handleNext();
                       }}
                     >
                       Hoàn tất đặt hàng
@@ -387,7 +410,10 @@ function Shopping_Cart() {
                       disabled={carts.length < 1 ? true : false}
                       variant="contained"
                       color="primary"
-                      onClick={handleNext}
+                      onClick={() => {
+                        dispatch(fetchCart(userInfo.id))
+                        handleNext()
+                      }}
                     >
                       Tiến hành thanh toán
                     </Button>
@@ -401,6 +427,7 @@ function Shopping_Cart() {
         <BasicModal open={openModal} handleClose={handleCloseModal} />
       </Container>
       <Footer />
+      <ToastMessage open={openNotification} handleClose={handleCloseNotification} message={message} />
     </Container>
   );
 }

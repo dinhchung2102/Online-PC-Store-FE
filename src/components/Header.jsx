@@ -301,7 +301,14 @@ function Header() {
                                             <PermIdentityIcon />
                                         </ListItemIcon>
                                         Thông tin cá nhân
-                                    </MenuItem>
+                                    </MenuItem>checkAdmin
+                                    {checkAdmin() && (<MenuItem onClick={() => navigate("/admin")}>
+                                        <ListItemIcon>
+                                            <PermIdentityIcon />
+                                        </ListItemIcon>
+                                        Truy cập Admin
+                                    </MenuItem>)}
+
                                     <Divider />
                                     <MenuItem onClick={handleClose}>
                                         <ListItemIcon>
