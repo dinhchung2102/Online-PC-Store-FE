@@ -1,12 +1,7 @@
-
-
-export const getCategories = async () => {
-    const response = await fetch('http://localhost:5555/api/product/category/get-all');
-    return response.json();
-}
+import { apiUrl } from "./utils";
+import axios from "axios";
 
 export const getAllProducts = async () => {
-    const response = await fetch('http://localhost:5555/api/product/product/get-all');
-    const data = await response.json();
-    return data;
+    const response = await axios.get(apiUrl + '/search/product/get-all');
+    return response;
 }
