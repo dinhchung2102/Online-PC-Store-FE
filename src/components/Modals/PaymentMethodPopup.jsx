@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogTitle,
@@ -26,11 +25,6 @@ const paymentMethods = [
     icon: "🏦",
   },
   {
-    value: "CREDIT_CARD",
-    label: "Qua thẻ Visa/Master/JCB/Napas",
-    icon: "💳",
-  },
-  {
     value: "MOMO",
     label: "Ví MOMO",
     icon: "👜",
@@ -56,7 +50,9 @@ const PaymentMethodPopup = ({ open, onClose, selected, onSelect }) => {
               padding: 2,
               mb: 1,
               border:
-                selected === method.value ? "2px solid #1976d2" : "1px solid #ccc",
+                selected === method.value
+                  ? "2px solid #1976d2"
+                  : "1px solid #ccc",
               borderRadius: 2,
               cursor: "pointer",
               backgroundColor: selected === method.value ? "#e3f2fd" : "#fff",
@@ -73,11 +69,7 @@ const PaymentMethodPopup = ({ open, onClose, selected, onSelect }) => {
         <Button onClick={onClose} color="inherit">
           Hủy
         </Button>
-        <Button
-          variant="contained"
-          disabled={!selected}
-          onClick={onClose}
-        >
+        <Button variant="contained" disabled={!selected} onClick={onClose}>
           Xác nhận
         </Button>
       </DialogActions>

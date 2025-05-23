@@ -325,12 +325,9 @@ function Shopping_Cart() {
                       </div>
                     ) : (
                       <Box>
-                        {orders.map((order) => (
-                          <Box key={order._id}>
-                            <CardOrder order={order} />
-                            <Divider sx={{ my: 2 }} />
-                          </Box>
-                        ))}
+                        <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                          Cảm ơn bạn đã đặt hàng!
+                        </Typography>
                       </Box>
                     )}
                   </Box>
