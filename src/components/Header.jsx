@@ -163,7 +163,7 @@ function Header() {
       }
     };
     fetchUserInfo();
-  }, [userInfo, dispatch]);
+  }, []);
 
   // useEffect(() => {
   //     const fetchCart = async () => {
