@@ -121,6 +121,8 @@ function Shopping_Cart() {
   const handleCloseNotification = () => setOpenNotification(false);
   const handleOpenNotification = () => setOpenNotification(true);
   const [message, setMessage] = React.useState("");
+  const [payUrl, setPayUrl] = React.useState("");
+  console.log("payUrl", payUrl);
 
   //order
   const orders = useSelector((state) => state.order.orders);
@@ -142,28 +144,38 @@ function Shopping_Cart() {
     dispatch(fetchCart(userInfo.id));
   }, [dispatch, userInfo.id]);
 
-  const handleCreateOrder = async (userId, carts, shippingPrice, paymentMethod) => {
+  const handleCreateOrder = async (
+    userId,
+    carts,
+    shippingPrice,
+    paymentMethod
+  ) => {
     const now = Date.now();
     const LIMIT = 5;
     const WINDOW_MS = 60000; // 1 minute
 
-    if (!firstRequestTime.current || now - firstRequestTime.current > WINDOW_MS) {
+    if (
+      !firstRequestTime.current ||
+      now - firstRequestTime.current > WINDOW_MS
+    ) {
       firstRequestTime.current = now;
       setRequestCount(1);
     } else if (requestCount < LIMIT) {
-      setRequestCount(prev => prev + 1);
+      setRequestCount((prev) => prev + 1);
     } else {
-      setMessage('Bạn đã gọi API quá 5 lần trong 1 phút!');
+      setMessage("Bạn đã gọi API quá 5 lần trong 1 phút!");
       handleOpenNotification();
       return;
     }
-    await createOrder(userId, carts, shippingPrice, paymentMethod);
 
-  }
+    const res = await createOrder(userId, carts, shippingPrice, paymentMethod);
+    setPayUrl(res?.data?.payUrl);
+  };
 
   // checkout form
   // set phuong thuc thanh toan
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  console.log("paymentMethod", paymentMethod);
   // console.log('paymentMethod', paymentMethod);
   // eslint-disable-next-line no-unused-vars
   const [shippingPrice, setShippingPrice] = React.useState(0);
@@ -299,12 +311,28 @@ function Shopping_Cart() {
                       overflowY: "auto",
                     }}
                   >
-                    {orders.map((order) => (
+                    {/* {orders.map((order) => (
                       <Box key={order._id}>
                         <CardOrder order={order} />
                         <Divider sx={{ my: 2 }} />
                       </Box>
-                    ))}
+                    ))} */}
+                    {paymentMethod === "MOMO" ? (
+                      <div>
+                        <a target="_blank" href={payUrl}>
+                          Thanh toán với momo
+                        </a>
+                      </div>
+                    ) : (
+                      <Box>
+                        {orders.map((order) => (
+                          <Box key={order._id}>
+                            <CardOrder order={order} />
+                            <Divider sx={{ my: 2 }} />
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
                   </Box>
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Box sx={{ flex: "1 1 auto" }} />
@@ -331,7 +359,12 @@ function Shopping_Cart() {
                       variant="contained"
                       color="primary"
                       onClick={async () => {
-                        await handleCreateOrder(userInfo.id, carts, shippingPrice, paymentMethod);
+                        await handleCreateOrder(
+                          userInfo.id,
+                          carts,
+                          shippingPrice,
+                          paymentMethod
+                        );
                         dispatch(clearCart());
                         await deleteAllCartItems(carts);
                         dispatch(fetchOrders(userInfo.id));
@@ -411,8 +444,8 @@ function Shopping_Cart() {
                       variant="contained"
                       color="primary"
                       onClick={() => {
-                        dispatch(fetchCart(userInfo.id))
-                        handleNext()
+                        dispatch(fetchCart(userInfo.id));
+                        handleNext();
                       }}
                     >
                       Tiến hành thanh toán
@@ -427,7 +460,11 @@ function Shopping_Cart() {
         <BasicModal open={openModal} handleClose={handleCloseModal} />
       </Container>
       <Footer />
-      <ToastMessage open={openNotification} handleClose={handleCloseNotification} message={message} />
+      <ToastMessage
+        open={openNotification}
+        handleClose={handleCloseNotification}
+        message={message}
+      />
     </Container>
   );
 }
